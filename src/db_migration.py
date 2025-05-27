@@ -2,10 +2,14 @@ import os
 import sys
 import sqlite3
 from datetime import datetime
-from werkzeug.security import generate_password_hash
 
 # Adicionar o diretório atual ao PYTHONPATH
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+# Função simples para gerar hash de senha
+def generate_password_hash(password):
+    import hashlib
+    return hashlib.sha256(password.encode()).hexdigest()
 
 def main():
     # Definir o caminho do banco de dados
@@ -231,3 +235,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
