@@ -13,8 +13,8 @@ echo "Diretórios de upload criados"
 
 # Executar migração do banco de dados
 echo "Executando migração do banco de dados..."
-python src/db_migration.py
+python -c "import os, sys; sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))); sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'src')); from src.db_migration import main; main()"
 
 # Iniciar o servidor Gunicorn
 echo "Iniciando o servidor Gunicorn..."
-gunicorn "src.main:create_app()" --bind 0.0.0.0:$PORT --log-level info
+gunicorn wsgi:application --bind 0.0.0.0:$PORT --log-level info
