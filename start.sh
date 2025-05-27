@@ -1,8 +1,6 @@
 #!/bin/bash
 
 # Script de inicialização para o Render
-# Este script é executado pelo Render durante o processo de deploy
-
 echo "Iniciando script de inicialização para o Render..."
 
 # Garantir que o diretório de uploads existe
