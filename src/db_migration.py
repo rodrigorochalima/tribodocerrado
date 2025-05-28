@@ -1,11 +1,9 @@
 import os
 import sys
-sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
-
-from flask import Flask
 import logging
 import sqlite3
 from datetime import datetime
+from flask import Flask
 
 # Configuração de logging
 logging.basicConfig(level=logging.INFO)
@@ -92,21 +90,30 @@ def migrate_database():
         logger.info("Tabelas verificadas/criadas")
         
         # Adiciona colunas que podem estar faltando na tabela user
-        add_column('user', 'nickname', 'VARCHAR(50)')
-        add_column('user', 'birth_date', 'DATE')
-        add_column('user', 'collection_date', 'DATE')
-        add_column('user', 'blood_type', 'VARCHAR(10)')
-        add_column('user', 'address_street', 'VARCHAR(100)')
-        add_column('user', 'address_number', 'VARCHAR(20)')
-        add_column('user', 'address_complement', 'VARCHAR(100)')
-        add_column('user', 'address_district', 'VARCHAR(100)')
-        add_column('user', 'address_city', 'VARCHAR(100)')
-        add_column('user', 'address_state', 'VARCHAR(50)')
-        add_column('user', 'address_zipcode', 'VARCHAR(20)')
-        add_column('user', 'health_notes', 'TEXT')
-        add_column('user', 'health_insurance', 'VARCHAR(100)')
-        add_column('user', 'health_insurance_number', 'VARCHAR(50)')
-        add_column('user', 'godfather_id', 'INTEGER')
+        add_column('users', 'nickname', 'VARCHAR(50)')
+        add_column('users', 'birth_date', 'DATE')
+        add_column('users', 'collection_date', 'DATE')
+        add_column('users', 'blood_type', 'VARCHAR(10)')
+        add_column('users', 'address_street', 'VARCHAR(100)')
+        add_column('users', 'address_number', 'VARCHAR(20)')
+        add_column('users', 'address_complement', 'VARCHAR(100)')
+        add_column('users', 'address_district', 'VARCHAR(100)')
+        add_column('users', 'address_city', 'VARCHAR(100)')
+        add_column('users', 'address_state', 'VARCHAR(50)')
+        add_column('users', 'address_zipcode', 'VARCHAR(20)')
+        add_column('users', 'health_notes', 'TEXT')
+        add_column('users', 'health_insurance', 'VARCHAR(100)')
+        add_column('users', 'health_insurance_number', 'VARCHAR(50)')
+        add_column('users', 'godfather_id', 'INTEGER')
+        
+        # Adiciona novas colunas de controle de privacidade
+        add_column('users', 'full_name_public', 'BOOLEAN DEFAULT 0')
+        add_column('users', 'birth_date_public', 'BOOLEAN DEFAULT 0')
+        add_column('users', 'collection_date_public', 'BOOLEAN DEFAULT 0')
+        add_column('users', 'blood_type_public', 'BOOLEAN DEFAULT 0')
+        add_column('users', 'address_public', 'BOOLEAN DEFAULT 0')
+        add_column('users', 'bio_public', 'BOOLEAN DEFAULT 0')
+        add_column('users', 'health_info_public', 'BOOLEAN DEFAULT 0')
         
         # Verifica se existe pelo menos um usuário administrador
         admin = User.query.filter_by(is_admin=True).first()

@@ -1,669 +1,381 @@
-{% extends "base_member.html" %}
+{% extends 'base_member.html' %}
 
-{% block title %}Minha Galeria - Tribo do Cerrado{% endblock %}
+{% block title %}Galeria - Tribo do Cerrado{% endblock %}
 
-{% block card_title %}Minha Galeria{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <div class="card border-danger mb-4">
+        <div class="card-header bg-danger text-white">
+            <h3 class="mb-0">
+                <i class="fas fa-images me-2"></i> GALERIA DE FOTOS
+            </h3>
+        </div>
+        <div class="card-body">
+            <!-- Galeria dinâmica com transição automática de imagens -->
+            <div class="dynamic-gallery-container mb-5">
+                <div class="dynamic-gallery">
+                    <div class="gallery-slider">
+                        <div class="gallery-slide active">
+                            <img src="{{ url_for('static', filename='images/gallery/ride1.jpg') }}" alt="Passeio em grupo" class="img-fluid">
+                            <div class="slide-caption">
+                                <h3>Passeio em Grupo</h3>
+                                <p>Aventura nas estradas do Cerrado</p>
+                            </div>
+                        </div>
+                        <div class="gallery-slide">
+                            <img src="{{ url_for('static', filename='images/gallery/ride2.jpg') }}" alt="Encontro de motociclistas" class="img-fluid">
+                            <div class="slide-caption">
+                                <h3>Encontro Anual</h3>
+                                <p>Confraternização da Tribo do Cerrado</p>
+                            </div>
+                        </div>
+                        <div class="gallery-slide">
+                            <img src="{{ url_for('static', filename='images/gallery/ride3.jpg') }}" alt="Trilha off-road" class="img-fluid">
+                            <div class="slide-caption">
+                                <h3>Trilhas Off-road</h3>
+                                <p>Desafiando os limites no Cerrado brasileiro</p>
+                            </div>
+                        </div>
+                        <div class="gallery-slide">
+                            <img src="{{ url_for('static', filename='images/gallery/ride4.jpg') }}" alt="Acampamento" class="img-fluid">
+                            <div class="slide-caption">
+                                <h3>Acampamento</h3>
+                                <p>Noites sob as estrelas do Cerrado</p>
+                            </div>
+                        </div>
+                        <div class="gallery-slide">
+                            <img src="{{ url_for('static', filename='images/gallery/ride5.jpg') }}" alt="Ação social" class="img-fluid">
+                            <div class="slide-caption">
+                                <h3>Ação Social</h3>
+                                <p>Tribo do Cerrado fazendo a diferença</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gallery-controls">
+                        <button class="gallery-prev"><i class="fas fa-chevron-left"></i></button>
+                        <div class="gallery-indicators">
+                            <span class="indicator active" data-slide="0"></span>
+                            <span class="indicator" data-slide="1"></span>
+                            <span class="indicator" data-slide="2"></span>
+                            <span class="indicator" data-slide="3"></span>
+                            <span class="indicator" data-slide="4"></span>
+                        </div>
+                        <button class="gallery-next"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
 
-{% block page_styles %}
-.gallery-container {
-    margin-top: 20px;
+            <!-- Categorias de Galeria -->
+            <h4 class="border-bottom pb-2 mb-4"><i class="fas fa-folder-open me-2"></i> Categorias</h4>
+            
+            <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+                <div class="col">
+                    <div class="card h-100">
+                        <img src="{{ url_for('static', filename='images/gallery/category-rides.jpg') }}" class="card-img-top" alt="Passeios">
+                        <div class="card-body">
+                            <h5 class="card-title">Passeios</h5>
+                            <p class="card-text">Nossas aventuras pelas estradas do Brasil.</p>
+                            <a href="#" class="btn btn-danger">Ver Galeria</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card h-100">
+                        <img src="{{ url_for('static', filename='images/gallery/category-events.jpg') }}" class="card-img-top" alt="Eventos">
+                        <div class="card-body">
+                            <h5 class="card-title">Eventos</h5>
+                            <p class="card-text">Encontros, confraternizações e celebrações.</p>
+                            <a href="#" class="btn btn-danger">Ver Galeria</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card h-100">
+                        <img src="{{ url_for('static', filename='images/gallery/category-bikes.jpg') }}" class="card-img-top" alt="Motos">
+                        <div class="card-body">
+                            <h5 class="card-title">Motos</h5>
+                            <p class="card-text">As máquinas que nos levam à liberdade.</p>
+                            <a href="#" class="btn btn-danger">Ver Galeria</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Fotos Recentes -->
+            <h4 class="border-bottom pb-2 mb-4"><i class="fas fa-clock me-2"></i> Fotos Recentes</h4>
+            
+            <div class="row g-3 mb-4">
+                {% for i in range(1, 9) %}
+                <div class="col-6 col-md-3">
+                    <div class="gallery-item">
+                        <img src="{{ url_for('static', filename='images/gallery/photo' + i|string + '.jpg') }}" class="img-fluid rounded" alt="Foto {{ i }}">
+                        <div class="gallery-overlay">
+                            <div class="gallery-actions">
+                                <a href="{{ url_for('static', filename='images/gallery/photo' + i|string + '.jpg') }}" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#photoModal{{ i }}">
+                                    <i class="fas fa-expand"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Modal para visualização da foto -->
+                    <div class="modal fade" id="photoModal{{ i }}" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Foto {{ i }}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body text-center">
+                                    <img src="{{ url_for('static', filename='images/gallery/photo' + i|string + '.jpg') }}" class="img-fluid" alt="Foto {{ i }}">
+                                </div>
+                                <div class="modal-footer">
+                                    <div class="text-start flex-grow-1">
+                                        <p class="mb-0"><strong>Data:</strong> {{ "2025-05-" + (i+10)|string }}</p>
+                                        <p class="mb-0"><strong>Local:</strong> Chapada dos Veadeiros, GO</p>
+                                    </div>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div class="text-center">
+                <a href="#" class="btn btn-danger">Ver Todas as Fotos</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Estilos para a galeria dinâmica */
+.dynamic-gallery-container {
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.dynamic-gallery {
+    position: relative;
+    width: 100%;
+}
+
+.gallery-slider {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    overflow: hidden;
+}
+
+.gallery-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    background-color: #000;
+}
+
+.gallery-slide.active {
+    opacity: 1;
+    z-index: 1;
+}
+
+.gallery-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.slide-caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0));
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+}
+
+.slide-caption h3 {
+    margin: 0;
+    font-size: 1.8rem;
+    font-family: 'Metal Mania', cursive;
+    color: #d35400;
 }
 
 .gallery-controls {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    z-index: 2;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    background-color: var(--light-gray);
-    padding: 15px;
-    border-radius: 5px;
-}
-
-.gallery-filter {
-    display: flex;
-    gap: 10px;
     align-items: center;
 }
 
-.filter-label {
-    font-weight: bold;
-    color: var(--dark-color);
-}
-
-.filter-select {
-    padding: 8px;
-    border: 1px solid var(--dark-gray);
-    border-radius: 3px;
-    background-color: white;
-    font-family: 'Roboto Mono', monospace;
-}
-
-.upload-button {
-    background-color: var(--primary-color);
+.gallery-prev, .gallery-next {
+    background-color: rgba(0,0,0,0.5);
     color: white;
-    padding: 8px 15px;
     border: none;
-    border-radius: 3px;
-    cursor: pointer;
-    font-family: 'Roboto Mono', monospace;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
     display: flex;
     align-items: center;
-    gap: 5px;
+    justify-content: center;
+    cursor: pointer;
     transition: background-color 0.3s;
 }
 
-.upload-button:hover {
-    background-color: #a01830;
+.gallery-prev:hover, .gallery-next:hover {
+    background-color: rgba(211, 84, 0, 0.8);
 }
 
-.gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 15px;
+.gallery-indicators {
+    display: flex;
+    margin: 0 10px;
 }
 
+.indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: rgba(255,255,255,0.5);
+    margin: 0 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.indicator.active {
+    background-color: #d35400;
+}
+
+/* Estilos para os itens da galeria */
 .gallery-item {
     position: relative;
-    border-radius: 5px;
     overflow: hidden;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-    background-color: white;
-    border: 1px solid var(--dark-gray);
-    transition: transform 0.3s;
+    border-radius: 8px;
+    margin-bottom: 1rem;
 }
 
-.gallery-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-}
-
-.gallery-image {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    display: block;
-    border-bottom: 1px solid var(--dark-gray);
-}
-
-.gallery-caption {
-    padding: 10px;
-    background-color: white;
-    font-size: 14px;
-}
-
-.gallery-date {
-    font-size: 12px;
-    color: var(--dark-gray);
-    margin-top: 5px;
+.gallery-item img {
+    transition: transform 0.3s ease;
 }
 
 .gallery-overlay {
     position: absolute;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.7);
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
     display: flex;
-    flex-direction: column;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     opacity: 0;
-    transition: opacity 0.3s;
+    transition: opacity 0.3s ease;
+}
+
+.gallery-item:hover img {
+    transform: scale(1.05);
 }
 
 .gallery-item:hover .gallery-overlay {
     opacity: 1;
 }
 
-.overlay-button {
-    background-color: rgba(255, 255, 255, 0.2);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+/* Fonte estilo rock para títulos */
+@import url('https://fonts.googleapis.com/css2?family=Metal+Mania&display=swap');
+
+.card-header h3 {
+    font-family: 'Metal Mania', cursive;
 }
+</style>
 
-.overlay-button:hover {
-    background-color: var(--primary-color);
-}
-
-.overlay-actions {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 10px;
-}
-
-.overlay-caption {
-    color: white;
-    text-align: center;
-    padding: 0 15px;
-    font-size: 14px;
-    max-width: 100%;
-}
-
-.gallery-modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.9);
-    z-index: 1000;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-}
-
-.modal-content {
-    position: relative;
-    max-width: 90%;
-    max-height: 90%;
-}
-
-.modal-image {
-    max-width: 100%;
-    max-height: 80vh;
-    display: block;
-    border: 5px solid white;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-}
-
-.modal-caption {
-    background-color: white;
-    padding: 15px;
-    margin-top: 10px;
-    border-radius: 5px;
-}
-
-.modal-close {
-    position: absolute;
-    top: -20px;
-    right: -20px;
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    font-size: 20px;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.modal-nav {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    font-size: 24px;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: background-color 0.3s;
-}
-
-.modal-nav:hover {
-    background-color: var(--primary-color);
-}
-
-.modal-prev {
-    left: -60px;
-}
-
-.modal-next {
-    right: -60px;
-}
-
-.empty-state {
-    text-align: center;
-    padding: 50px 20px;
-    background-color: white;
-    border-radius: 5px;
-    border: 1px solid var(--dark-gray);
-}
-
-.empty-icon {
-    font-size: 64px;
-    color: var(--dark-gray);
-    margin-bottom: 20px;
-}
-
-.empty-title {
-    font-family: 'Black Ops One', cursive;
-    font-size: 24px;
-    color: var(--primary-color);
-    margin-bottom: 10px;
-}
-
-.empty-text {
-    margin-bottom: 20px;
-    color: var(--dark-gray);
-}
-
-.upload-form-container {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.7);
-    z-index: 1000;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-}
-
-.upload-form {
-    background-color: white;
-    padding: 20px;
-    border-radius: 5px;
-    width: 100%;
-    max-width: 500px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    position: relative;
-}
-
-.upload-form-title {
-    font-family: 'Black Ops One', cursive;
-    color: var(--primary-color);
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 2px dashed var(--dark-gray);
-}
-
-.form-group {
-    margin-bottom: 15px;
-}
-
-.form-label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-}
-
-.form-control {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid var(--dark-gray);
-    border-radius: 3px;
-    font-family: 'Roboto Mono', monospace;
-}
-
-.form-control-file {
-    padding: 10px 0;
-}
-
-.form-buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-}
-
-.form-button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-    font-family: 'Roboto Mono', monospace;
-}
-
-.form-submit {
-    background-color: var(--primary-color);
-    color: white;
-}
-
-.form-cancel {
-    background-color: var(--dark-gray);
-    color: white;
-}
-
-.form-close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    color: var(--dark-gray);
-}
-
-.pagination {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-    gap: 5px;
-}
-
-.page-item {
-    display: inline-block;
-}
-
-.page-link {
-    padding: 8px 12px;
-    background-color: var(--light-gray);
-    color: var(--dark-color);
-    text-decoration: none;
-    border-radius: 3px;
-    transition: background-color 0.3s;
-}
-
-.page-link:hover {
-    background-color: var(--dark-gray);
-    color: white;
-}
-
-.page-item.active .page-link {
-    background-color: var(--primary-color);
-    color: white;
-}
-
-.page-item.disabled .page-link {
-    background-color: var(--light-gray);
-    color: var(--dark-gray);
-    cursor: not-allowed;
-    opacity: 0.5;
-}
-{% endblock %}
-
-{% block content %}
-<div class="card-section">
-    <h2 class="section-title">
-        <i class="fas fa-images"></i> Minha Galeria de Fotos
-    </h2>
-    
-    {% if photos %}
-    <div class="gallery-container">
-        <div class="gallery-controls">
-            <div class="gallery-filter">
-                <span class="filter-label">Filtrar por:</span>
-                <select class="filter-select" id="gallery-filter">
-                    <option value="all">Todas as fotos</option>
-                    <option value="event">Eventos</option>
-                    <option value="trip">Viagens</option>
-                    <option value="motorcycle">Motocicletas</option>
-                    <option value="other">Outros</option>
-                </select>
-            </div>
-            
-            <button class="upload-button" id="upload-button">
-                <i class="fas fa-upload"></i> Enviar Fotos
-            </button>
-        </div>
-        
-        <div class="gallery-grid">
-            {% for photo in photos %}
-            <div class="gallery-item" data-category="{{ photo.category }}">
-                <img src="{{ photo.image_url }}" alt="{{ photo.caption }}" class="gallery-image">
-                <div class="gallery-caption">
-                    {{ photo.caption }}
-                    <div class="gallery-date">{{ photo.created_at|date_format }}</div>
-                </div>
-                <div class="gallery-overlay">
-                    <div class="overlay-actions">
-                        <button class="overlay-button view-button" onclick="openModal({{ loop.index0 }})">
-                            <i class="fas fa-search-plus"></i>
-                        </button>
-                        <button class="overlay-button edit-button" onclick="editPhoto({{ photo.id }})">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="overlay-button delete-button" onclick="confirmDelete({{ photo.id }})">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                    <div class="overlay-caption">{{ photo.caption }}</div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-        
-        {% if pagination.pages > 1 %}
-        <div class="pagination">
-            <div class="page-item {% if pagination.current == 1 %}disabled{% endif %}">
-                <a class="page-link" href="?page={{ pagination.current - 1 }}" {% if pagination.current == 1 %}tabindex="-1"{% endif %}>
-                    <i class="fas fa-chevron-left"></i>
-                </a>
-            </div>
-            
-            {% for page in range(1, pagination.pages + 1) %}
-            <div class="page-item {% if pagination.current == page %}active{% endif %}">
-                <a class="page-link" href="?page={{ page }}">{{ page }}</a>
-            </div>
-            {% endfor %}
-            
-            <div class="page-item {% if pagination.current == pagination.pages %}disabled{% endif %}">
-                <a class="page-link" href="?page={{ pagination.current + 1 }}" {% if pagination.current == pagination.pages %}tabindex="-1"{% endif %}>
-                    <i class="fas fa-chevron-right"></i>
-                </a>
-            </div>
-        </div>
-        {% endif %}
-    </div>
-    {% else %}
-    <div class="empty-state">
-        <i class="fas fa-images empty-icon"></i>
-        <h3 class="empty-title">Nenhuma Foto Cadastrada</h3>
-        <p class="empty-text">Você ainda não enviou nenhuma foto para sua galeria. Compartilhe suas melhores lembranças agora!</p>
-        <button class="upload-button" id="upload-button">
-            <i class="fas fa-upload"></i> Enviar Fotos
-        </button>
-    </div>
-    {% endif %}
-</div>
-
-<!-- Modal de visualização de foto -->
-<div class="gallery-modal" id="photo-modal">
-    <div class="modal-content">
-        <button class="modal-close" id="modal-close">
-            <i class="fas fa-times"></i>
-        </button>
-        <img src="" alt="" class="modal-image" id="modal-image">
-        <div class="modal-caption" id="modal-caption"></div>
-        <button class="modal-nav modal-prev" id="modal-prev">
-            <i class="fas fa-chevron-left"></i>
-        </button>
-        <button class="modal-nav modal-next" id="modal-next">
-            <i class="fas fa-chevron-right"></i>
-        </button>
-    </div>
-</div>
-
-<!-- Formulário de upload de foto -->
-<div class="upload-form-container" id="upload-form-container">
-    <div class="upload-form">
-        <button class="form-close" id="form-close">
-            <i class="fas fa-times"></i>
-        </button>
-        <h3 class="upload-form-title">Enviar Nova Foto</h3>
-        <form action="/membro/galeria/upload" method="post" enctype="multipart/form-data" id="upload-form">
-            <div class="form-group">
-                <label for="photo" class="form-label">Selecione a Foto</label>
-                <input type="file" name="photo" id="photo" class="form-control form-control-file" accept="image/*" required>
-            </div>
-            <div class="form-group">
-                <label for="caption" class="form-label">Legenda (opcional)</label>
-                <input type="text" name="caption" id="caption" class="form-control" placeholder="Descreva sua foto">
-            </div>
-            <div class="form-group">
-                <label for="location" class="form-label">Local (opcional)</label>
-                <input type="text" name="location" id="location" class="form-control" placeholder="Onde a foto foi tirada">
-            </div>
-            <div class="form-group">
-                <label for="category" class="form-label">Categoria (opcional)</label>
-                <select name="category" id="category" class="form-control">
-                    <option value="event">Evento</option>
-                    <option value="trip">Viagem</option>
-                    <option value="motorcycle">Motocicleta</option>
-                    <option value="other">Outro</option>
-                </select>
-            </div>
-            <div class="form-buttons">
-                <button type="button" class="form-button form-cancel" id="form-cancel">Cancelar</button>
-                <button type="submit" class="form-button form-submit">Enviar</button>
-            </div>
-        </form>
-    </div>
-</div>
-{% endblock %}
-
-{% block scripts %}
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Variáveis para o modal de visualização
-        const modal = document.getElementById('photo-modal');
-        const modalImage = document.getElementById('modal-image');
-        const modalCaption = document.getElementById('modal-caption');
-        const modalClose = document.getElementById('modal-close');
-        const modalPrev = document.getElementById('modal-prev');
-        const modalNext = document.getElementById('modal-next');
+document.addEventListener('DOMContentLoaded', function() {
+    // Galeria dinâmica com transição automática
+    const slides = document.querySelectorAll('.gallery-slide');
+    const indicators = document.querySelectorAll('.indicator');
+    const prevBtn = document.querySelector('.gallery-prev');
+    const nextBtn = document.querySelector('.gallery-next');
+    let currentSlide = 0;
+    let slideInterval;
+    
+    // Função para mostrar um slide específico
+    function showSlide(index) {
+        // Remover classe active de todos os slides e indicadores
+        slides.forEach(slide => slide.classList.remove('active'));
+        indicators.forEach(indicator => indicator.classList.remove('active'));
         
-        // Variáveis para o formulário de upload
-        const uploadButton = document.getElementById('upload-button');
-        const uploadForm = document.getElementById('upload-form-container');
-        const formClose = document.getElementById('form-close');
-        const formCancel = document.getElementById('form-cancel');
+        // Adicionar classe active ao slide e indicador atual
+        slides[index].classList.add('active');
+        indicators[index].classList.add('active');
         
-        // Variáveis para filtro
-        const galleryFilter = document.getElementById('gallery-filter');
-        const galleryItems = document.querySelectorAll('.gallery-item');
-        
-        // Dados das fotos para o modal
-        const photos = [
-            {% for photo in photos %}
-            {
-                url: "{{ photo.image_url }}",
-                caption: "{{ photo.caption }}",
-                date: "{{ photo.created_at|date_format }}",
-                location: "{{ photo.location|default('') }}"
-            }{% if not loop.last %},{% endif %}
-            {% endfor %}
-        ];
-        
-        let currentPhotoIndex = 0;
-        
-        // Função para abrir o modal
-        window.openModal = function(index) {
-            currentPhotoIndex = index;
-            updateModalContent();
-            modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        };
-        
-        // Função para atualizar o conteúdo do modal
-        function updateModalContent() {
-            const photo = photos[currentPhotoIndex];
-            modalImage.src = photo.url;
-            modalImage.alt = photo.caption;
-            
-            let captionText = `<strong>${photo.caption}</strong>`;
-            if (photo.location) {
-                captionText += `<br><small>Local: ${photo.location}</small>`;
-            }
-            captionText += `<br><small>Data: ${photo.date}</small>`;
-            
-            modalCaption.innerHTML = captionText;
-        }
-        
-        // Fechar o modal
-        modalClose.addEventListener('click', function() {
-            modal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        });
-        
-        // Navegação no modal
-        modalPrev.addEventListener('click', function() {
-            currentPhotoIndex = (currentPhotoIndex - 1 + photos.length) % photos.length;
-            updateModalContent();
-        });
-        
-        modalNext.addEventListener('click', function() {
-            currentPhotoIndex = (currentPhotoIndex + 1) % photos.length;
-            updateModalContent();
-        });
-        
-        // Abrir formulário de upload
-        uploadButton.addEventListener('click', function() {
-            uploadForm.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        });
-        
-        // Fechar formulário de upload
-        formClose.addEventListener('click', function() {
-            uploadForm.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        });
-        
-        formCancel.addEventListener('click', function() {
-            uploadForm.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        });
-        
-        // Filtrar fotos por categoria
-        galleryFilter.addEventListener('change', function() {
-            const category = this.value;
-            
-            galleryItems.forEach(function(item) {
-                if (category === 'all' || item.dataset.category === category) {
-                    item.style.display = 'block';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-        });
-        
-        // Fechar modal ao clicar fora
-        modal.addEventListener('click', function(e) {
-            if (e.target === modal) {
-                modal.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            }
-        });
-        
-        // Navegação com teclado no modal
-        document.addEventListener('keydown', function(e) {
-            if (modal.style.display === 'flex') {
-                if (e.key === 'Escape') {
-                    modal.style.display = 'none';
-                    document.body.style.overflow = 'auto';
-                } else if (e.key === 'ArrowLeft') {
-                    currentPhotoIndex = (currentPhotoIndex - 1 + photos.length) % photos.length;
-                    updateModalContent();
-                } else if (e.key === 'ArrowRight') {
-                    currentPhotoIndex = (currentPhotoIndex + 1) % photos.length;
-                    updateModalContent();
-                }
-            }
+        // Atualizar índice do slide atual
+        currentSlide = index;
+    }
+    
+    // Função para avançar para o próximo slide
+    function nextSlide() {
+        let next = currentSlide + 1;
+        if (next >= slides.length) next = 0;
+        showSlide(next);
+    }
+    
+    // Função para voltar para o slide anterior
+    function prevSlide() {
+        let prev = currentSlide - 1;
+        if (prev < 0) prev = slides.length - 1;
+        showSlide(prev);
+    }
+    
+    // Iniciar transição automática
+    function startSlideShow() {
+        slideInterval = setInterval(nextSlide, 5000); // Trocar slide a cada 5 segundos
+    }
+    
+    // Parar transição automática
+    function stopSlideShow() {
+        clearInterval(slideInterval);
+    }
+    
+    // Adicionar eventos aos botões de navegação
+    prevBtn.addEventListener('click', function() {
+        prevSlide();
+        stopSlideShow();
+        startSlideShow(); // Reiniciar o temporizador
+    });
+    
+    nextBtn.addEventListener('click', function() {
+        nextSlide();
+        stopSlideShow();
+        startSlideShow(); // Reiniciar o temporizador
+    });
+    
+    // Adicionar eventos aos indicadores
+    indicators.forEach((indicator, index) => {
+        indicator.addEventListener('click', function() {
+            showSlide(index);
+            stopSlideShow();
+            startSlideShow(); // Reiniciar o temporizador
         });
     });
     
-    // Função para editar foto
-    function editPhoto(photoId) {
-        window.location.href = `/membro/galeria/${photoId}/editar`;
-    }
+    // Iniciar a apresentação de slides
+    startSlideShow();
     
-    // Função para confirmar exclusão
-    function confirmDelete(photoId) {
-        if (confirm('Tem certeza que deseja excluir esta foto?')) {
-            window.location.href = `/membro/galeria/${photoId}/excluir`;
-        }
-    }
+    // Pausar a apresentação quando o mouse estiver sobre a galeria
+    document.querySelector('.dynamic-gallery').addEventListener('mouseenter', stopSlideShow);
+    document.querySelector('.dynamic-gallery').addEventListener('mouseleave', startSlideShow);
+});
 </script>
 {% endblock %}

@@ -1,8 +1,9 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from src.models.db import db
+from flask_login import UserMixin
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     __tablename__ = 'users'
     
     id = db.Column(db.Integer, primary_key=True)
@@ -40,8 +41,30 @@ class User(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     last_login = db.Column(db.DateTime, nullable=True)
     
+    # Controle de privacidade (quais campos são visíveis publicamente)
+    full_name_public = db.Column(db.Boolean, default=False)
+    birth_date_public = db.Column(db.Boolean, default=False)
+    collection_date_public = db.Column(db.Boolean, default=False)
+    blood_type_public = db.Column(db.Boolean, default=False)
+    address_public = db.Column(db.Boolean, default=False)
+    bio_public = db.Column(db.Boolean, default=False)
+    health_info_public = db.Column(db.Boolean, default=False)
+    
     def __repr__(self):
         return f'<User {self.username}>'
+        
+    # Métodos necessários para Flask-Login
+    def is_authenticated(self):
+        return True
+        
+    def is_active(self):
+        return self.is_approved
+        
+    def is_anonymous(self):
+        return False
+        
+    def get_id(self):
+        return str(self.id)
 
 class EmergencyContact(db.Model):
     __tablename__ = 'emergency_contacts'
