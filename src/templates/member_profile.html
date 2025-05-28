@@ -1,415 +1,262 @@
-{% extends "base_member.html" %}
-
-{% block title %}Meu Perfil - Tribo do Cerrado{% endblock %}
-
-{% block card_title %}Ficha de Membro{% endblock %}
-
-{% block page_styles %}
-.profile-content {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 20px;
-}
-
-.profile-section {
-    grid-column: 1;
-    grid-row: 1 / span 2;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.profile-image {
-    width: 200px;
-    height: 200px;
-    object-fit: cover;
-    border: 5px solid var(--dark-color);
-    border-radius: 5px;
-    margin-bottom: 20px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    transform: rotate(-3deg);
-}
-
-.profile-nickname {
-    font-family: 'Black Ops One', cursive;
-    font-size: 32px;
-    color: var(--primary-color);
-    text-align: center;
-    margin-bottom: 10px;
-    text-transform: uppercase;
-    text-shadow: 1px 1px 0 var(--dark-color);
-}
-
-.profile-fullname {
-    font-size: 18px;
-    margin-bottom: 20px;
-    text-align: center;
-}
-
-.profile-info {
-    width: 100%;
-    margin-top: 20px;
-}
-
-.info-item {
-    display: flex;
-    margin-bottom: 10px;
-    border-bottom: 1px dotted var(--dark-gray);
-    padding-bottom: 5px;
-}
-
-.info-label {
-    font-weight: bold;
-    min-width: 120px;
-    color: var(--dark-gray);
-}
-
-.info-value {
-    flex: 1;
-}
-
-.blood-type {
-    display: inline-block;
-    background-color: var(--primary-color);
-    color: white;
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-weight: bold;
-    margin-top: 10px;
-}
-
-.blood-type i {
-    margin-right: 5px;
-}
-
-.godfather {
-    margin-top: 20px;
-    padding: 10px;
-    background-color: rgba(255, 215, 0, 0.2);
-    border-radius: 5px;
-    border: 1px dashed var(--secondary-color);
-}
-
-.godfather-title {
-    font-weight: bold;
-    color: var(--dark-color);
-    margin-bottom: 5px;
-}
-
-.address-section {
-    grid-column: 2;
-    grid-row: 1;
-}
-
-.address-form {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-}
-
-.form-group {
-    margin-bottom: 10px;
-}
-
-.form-label {
-    display: block;
-    font-size: 12px;
-    color: var(--dark-gray);
-    margin-bottom: 3px;
-}
-
-.form-control {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid var(--dark-gray);
-    border-radius: 3px;
-    font-family: 'Roboto Mono', monospace;
-    background-color: var(--light-gray);
-}
-
-.form-control:disabled {
-    background-color: #f0f0f0;
-    color: var(--dark-gray);
-    border-style: dashed;
-}
-
-.form-group.street {
-    grid-column: 1 / span 2;
-}
-
-.health-section {
-    grid-column: 2;
-    grid-row: 2;
-}
-
-.emergency-contacts {
-    margin-top: 20px;
-}
-
-.contact-item {
-    padding: 10px;
-    background-color: var(--light-gray);
-    border-radius: 5px;
-    margin-bottom: 10px;
-    border-left: 5px solid var(--primary-color);
-}
-
-.contact-name {
-    font-weight: bold;
-}
-
-.contact-phone {
-    color: var(--primary-color);
-}
-
-.contact-relation {
-    font-style: italic;
-    font-size: 14px;
-    color: var(--dark-gray);
-}
-
-.edit-profile-button {
-    display: inline-block;
-    background-color: var(--secondary-color);
-    color: var(--dark-color);
-    padding: 10px 20px;
-    border-radius: 5px;
-    text-decoration: none;
-    font-family: 'Black Ops One', cursive;
-    margin-top: 20px;
-    transition: background-color 0.3s;
-    text-align: center;
-}
-
-.edit-profile-button:hover {
-    background-color: #e6c200;
-}
-
-@media (max-width: 768px) {
-    .profile-content {
-        grid-template-columns: 1fr;
-    }
-    
-    .profile-section {
-        grid-column: 1;
-        grid-row: 1;
-    }
-    
-    .address-section {
-        grid-column: 1;
-        grid-row: 2;
-    }
-    
-    .health-section {
-        grid-column: 1;
-        grid-row: 3;
-    }
-}
-{% endblock %}
-
-{% block content %}
-<div class="card-section">
-    <h2 class="section-title">
-        <i class="fas fa-id-card"></i> Dados Pessoais
-    </h2>
-    
-    <div class="profile-content">
-        <div class="profile-section">
-            <img src="{{ user.profile_image|default('/static/images/profiles/default.jpg') }}" alt="{{ user.nickname }}" class="profile-image" onerror="this.src='/static/images/profiles/default.jpg'">
-            <h3 class="profile-nickname">{{ user.nickname }}</h3>
-            <p class="profile-fullname">{{ user.full_name }}</p>
-            
-            <div class="blood-type">
-                <i class="fas fa-tint"></i> {{ user.blood_type|default('Não informado') }}
-            </div>
-            
-            <div class="profile-info">
-                <div class="info-item">
-                    <span class="info-label">Data de Nasc:</span>
-                    <span class="info-value">{{ user.birth_date|date_format|default('Não informado') }}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Coletamento:</span>
-                    <span class="info-value">{{ user.collection_date|date_format|default('Não informado') }}</span>
-                </div>
-            </div>
-            
-            {% if godfather %}
-            <div class="godfather">
-                <div class="godfather-title">Padrinho:</div>
-                <div>{{ godfather.nickname }}</div>
-            </div>
-            {% endif %}
-            
-            <a href="/membro/editar-perfil" class="edit-profile-button">
-                <i class="fas fa-edit"></i> Editar Perfil
-            </a>
-        </div>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Perfil - Tribo do Cerrado Motoclube</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Metal+Mania&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a1a1a;
+            --secondary: #d35400;
+            --accent: #f39c12;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --rock-font: 'Metal Mania', cursive;
+        }
         
-        <div class="address-section">
-            <h3 class="section-title">
-                <i class="fas fa-map-marker-alt"></i> Endereço
-            </h3>
-            
-            <div class="address-form">
-                <div class="form-group street">
-                    <label class="form-label">Logradouro</label>
-                    <input type="text" class="form-control" value="{{ user.address_street|default('') }}" disabled>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Número</label>
-                    <input type="text" class="form-control" value="{{ user.address_number|default('') }}" disabled>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Complemento</label>
-                    <input type="text" class="form-control" value="{{ user.address_complement|default('') }}" disabled>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Bairro</label>
-                    <input type="text" class="form-control" value="{{ user.address_district|default('') }}" disabled>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Cidade</label>
-                    <input type="text" class="form-control" value="{{ user.address_city|default('') }}" disabled>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Estado</label>
-                    <input type="text" class="form-control" value="{{ user.address_state|default('') }}" disabled>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">CEP</label>
-                    <input type="text" class="form-control" value="{{ user.address_zipcode|default('') }}" disabled>
-                </div>
-            </div>
-        </div>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
         
-        <div class="health-section">
-            <h3 class="section-title">
-                <i class="fas fa-heartbeat"></i> Saúde e Emergência
-            </h3>
-            
-            <div class="form-group">
-                <label class="form-label">Plano de Saúde</label>
-                <input type="text" class="form-control" value="{{ user.health_insurance|default('') }}" disabled>
+        .navbar {
+            background-color: var(--primary);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--accent) !important;
+        }
+        
+        .nav-link {
+            color: var(--light) !important;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-link:hover {
+            color: var(--accent) !important;
+        }
+        
+        .btn-primary {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--accent);
+            transform: translateY(-2px);
+        }
+        
+        .profile-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid #ddd;
+        }
+        
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--secondary);
+            padding-bottom: 20px;
+        }
+        
+        .profile-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 30px;
+            border: 5px solid var(--secondary);
+        }
+        
+        .profile-info h2 {
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .profile-info p {
+            color: var(--secondary);
+            font-weight: 500;
+            margin-bottom: 0;
+        }
+        
+        .profile-section {
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            position: relative;
+            margin-bottom: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .info-label {
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .info-value {
+            color: #555;
+        }
+        
+        footer {
+            background-color: var(--primary);
+            color: var(--light);
+            padding: 20px 0;
+            margin-top: auto;
+        }
+        
+        .footer-text {
+            text-align: center;
+            margin: 0;
+        }
+        
+        /* Estilo para mensagem de cadastro com fonte rock */
+        .alert-success.registration-success {
+            font-family: var(--rock-font);
+            font-size: 1.5rem; /* Tamanho maior */
+            text-align: center;
+            border: 2px solid var(--accent);
+            background-color: var(--primary);
+            color: var(--accent);
+        }
+        
+        /* Estabilização do layout */
+        body.preload * {
+            transition: none !important;
+            animation: none !important;
+        }
+        .profile-card {
+            min-height: 600px; /* Altura mínima para evitar saltos */
+        }
+    </style>
+</head>
+<body class="preload">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">Tribo do Cerrado</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url_for('member.profile') }}">Meu Perfil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('member.my_motorcycles') }}">Minhas Motos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('member.my_family') }}">Minha Família</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('member.my_gallery') }}">Minha Galeria</a>
+                    </li>
+                </ul>
+                <a href="{{ url_for('auth.logout') }}" class="btn btn-primary">Sair</a>
             </div>
-            <div class="form-group">
-                <label class="form-label">Número do Plano</label>
-                <input type="text" class="form-control" value="{{ user.health_insurance_number|default('') }}" disabled>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Observações Médicas</label>
-                <textarea class="form-control" disabled>{{ user.health_notes|default('') }}</textarea>
-            </div>
-            
-            <h4 class="section-title" style="margin-top: 20px;">
-                <i class="fas fa-phone-alt"></i> Contatos de Emergência
-            </h4>
-            
-            {% if emergency_contacts %}
-            <div class="emergency-contacts">
-                {% for contact in emergency_contacts %}
-                <div class="contact-item">
-                    <div class="contact-name">{{ contact.name }}</div>
-                    <div class="contact-phone">{{ contact.phone }}</div>
-                    <div class="contact-relation">{{ contact.relationship }}</div>
-                </div>
-                {% endfor %}
-            </div>
-            {% else %}
-            <p>Nenhum contato de emergência cadastrado.</p>
-            {% endif %}
         </div>
-    </div>
-</div>
+    </nav>
 
-<div class="card-section">
-    <h2 class="section-title">
-        <i class="fas fa-users"></i> Família
-    </h2>
-    
-    {% if family_members %}
-    <div class="family-members">
-        {% for family_member in family_members %}
-        <div class="family-item {% if family_member.relationship_type == 'spouse' %}spouse{% else %}child{% endif %}">
-            <div class="family-type">
-                {% if family_member.relationship_type == 'spouse' %}
-                    Cônjuge
-                {% elif family_member.relationship_type == 'son' %}
-                    Filho
-                {% elif family_member.relationship_type == 'daughter' %}
-                    Filha
-                {% else %}
-                    {{ family_member.relationship_type }}
-                {% endif %}
-            </div>
-            <div class="family-name">{{ family_member.name }}</div>
-            {% if family_member.birth_date %}
-            <div class="family-birth">
-                <i class="fas fa-birthday-cake"></i> {{ family_member.birth_date|date_format }}
-            </div>
-            {% endif %}
-        </div>
-        {% endfor %}
-    </div>
-    {% else %}
-    <p>Nenhum familiar cadastrado. <a href="/membro/familia/adicionar">Adicionar familiar</a></p>
-    {% endif %}
-</div>
-
-<div class="card-section">
-    <h2 class="section-title">
-        <i class="fas fa-motorcycle"></i> Motocicletas
-    </h2>
-    
-    {% if motorcycles %}
-    <div class="motorcycle-list">
-        {% for motorcycle in motorcycles %}
-        <div class="motorcycle-item">
-            {% if motorcycle.ipva_due_date and motorcycle.ipva_due_date|days_until < 30 %}
-            <div class="ipva-alert">
-                <i class="fas fa-exclamation-triangle"></i> IPVA vence em {{ motorcycle.ipva_due_date|days_until }} dias
-            </div>
-            {% endif %}
-            
-            <div class="motorcycle-header">
-                <h3 class="motorcycle-title">{{ motorcycle.brand }} {{ motorcycle.model }}</h3>
-                <div class="motorcycle-year">{{ motorcycle.model_year }}</div>
-            </div>
-            
-            <div class="motorcycle-details">
-                <div class="motorcycle-detail">
-                    <span class="detail-label">Placa</span>
-                    <div class="detail-value">{{ motorcycle.license_plate }}</div>
-                </div>
-                <div class="motorcycle-detail">
-                    <span class="detail-label">Chassi</span>
-                    <div class="detail-value">{{ motorcycle.chassis }}</div>
-                </div>
-                <div class="motorcycle-detail">
-                    <span class="detail-label">Ano Fabricação</span>
-                    <div class="detail-value">{{ motorcycle.manufacturing_year }}</div>
-                </div>
-                <div class="motorcycle-detail">
-                    <span class="detail-label">Ano Modelo</span>
-                    <div class="detail-value">{{ motorcycle.model_year }}</div>
-                </div>
-            </div>
-            
-            {% if motorcycle.images %}
-            <div class="motorcycle-images">
-                {% for image in motorcycle.images %}
-                <div class="moto-image-container">
-                    <img src="{{ image.image_url }}" alt="Foto {{ loop.index }}" class="moto-image">
-                    <div class="moto-caption">{{ image.caption }}</div>
-                </div>
+    <!-- Main Content -->
+    <div class="container my-5">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    {# Adiciona classe especial para mensagem de sucesso de registro #}
+                    <div class="alert alert-{{ category }} {% if 'Cadastro realizado' in message %}registration-success{% endif %}">{{ message }}</div>
                 {% endfor %}
-            </div>
             {% endif %}
+        {% endwith %}
+        
+        <div class="profile-card">
+            <div class="profile-header">
+                <img src="{{ user.profile_photo if user.profile_photo else url_for('static', filename='images/profiles/default.jpg') }}" 
+                     alt="Foto de Perfil" 
+                     class="profile-photo" 
+                     onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/profiles/default.jpg') }}';">
+                <div class="profile-info">
+                    <h2>{{ user.full_name }}</h2>
+                    <p>@{{ user.nickname }}</p>
+                </div>
+                <a href="{{ url_for('member.edit_profile') }}" class="btn btn-primary ms-auto"><i class="fas fa-edit"></i> Editar Perfil</a>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 profile-section">
+                    <h4 class="section-title">Dados Pessoais</h4>
+                    <p><span class="info-label">Email:</span> <span class="info-value">{{ user.email }}</span></p>
+                    <p><span class="info-label">Data de Nascimento:</span> <span class="info-value">{{ user.birth_date if user.birth_date else 'Não informado' }}</span></p>
+                    <p><span class="info-label">Tipo Sanguíneo:</span> <span class="info-value">{{ user.blood_type if user.blood_type else 'Não informado' }}</span></p>
+                    {# Adicionar data de entrada se existir no modelo #}
+                    {% if hasattr(user, 'join_date') and user.join_date %}
+                    <p><span class="info-label">Membro desde:</span> <span class="info-value">{{ user.join_date }}</span></p>
+                    {% endif %}
+                </div>
+                
+                <div class="col-md-6 profile-section">
+                    <h4 class="section-title">Endereço</h4>
+                    <p><span class="info-label">Logradouro:</span> <span class="info-value">{{ user.address_street if user.address_street else 'Não informado' }}{% if user.address_number %}, {{ user.address_number }}{% endif %}</span></p>
+                    <p><span class="info-label">Complemento:</span> <span class="info-value">{{ user.address_complement if user.address_complement else 'N/A' }}</span></p>
+                    <p><span class="info-label">Bairro:</span> <span class="info-value">{{ user.address_district if user.address_district else 'Não informado' }}</span></p>
+                    <p><span class="info-label">Cidade/Estado:</span> <span class="info-value">{{ user.address_city if user.address_city else 'Goiânia' }}/{{ user.address_state if user.address_state else 'GO' }}</span></p>
+                    <p><span class="info-label">CEP:</span> <span class="info-value">{{ user.address_zipcode if user.address_zipcode else 'Não informado' }}</span></p>
+                </div>
+            </div>
+            
+            <div class="profile-section">
+                <h4 class="section-title">Saúde e Emergência</h4>
+                <p><span class="info-label">Observações de Saúde:</span> <span class="info-value">{{ user.health_notes if user.health_notes else 'Nenhuma observação' }}</span></p>
+                <p><span class="info-label">Plano de Saúde:</span> <span class="info-value">{{ user.health_insurance if user.health_insurance else 'Não informado' }}</span></p>
+                <p><span class="info-label">Número do Plano:</span> <span class="info-value">{{ user.health_insurance_number if user.health_insurance_number else 'Não informado' }}</span></p>
+            </div>
+            
+            <div class="text-end">
+                <a href="{{ url_for('member.change_password') }}" class="btn btn-secondary">Alterar Senha</a>
+            </div>
         </div>
-        {% endfor %}
     </div>
-    {% else %}
-    <p>Nenhuma motocicleta cadastrada. <a href="/membro/motos/adicionar">Adicionar motocicleta</a></p>
-    {% endif %}
-</div>
-{% endblock %}
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p class="footer-text">&copy; 2025 Tribo do Cerrado Motoclube - Goiânia, GO</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Remover classe preload após carregamento para reativar transições
+        window.addEventListener('load', function() {
+            document.body.classList.remove('preload');
+        });
+    </script>
+</body>
+</html>
