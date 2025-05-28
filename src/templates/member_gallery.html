@@ -1,0 +1,669 @@
+{% extends "base_member.html" %}
+
+{% block title %}Minha Galeria - Tribo do Cerrado{% endblock %}
+
+{% block card_title %}Minha Galeria{% endblock %}
+
+{% block page_styles %}
+.gallery-container {
+    margin-top: 20px;
+}
+
+.gallery-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    background-color: var(--light-gray);
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.gallery-filter {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.filter-label {
+    font-weight: bold;
+    color: var(--dark-color);
+}
+
+.filter-select {
+    padding: 8px;
+    border: 1px solid var(--dark-gray);
+    border-radius: 3px;
+    background-color: white;
+    font-family: 'Roboto Mono', monospace;
+}
+
+.upload-button {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-family: 'Roboto Mono', monospace;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: background-color 0.3s;
+}
+
+.upload-button:hover {
+    background-color: #a01830;
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
+}
+
+.gallery-item {
+    position: relative;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    border: 1px solid var(--dark-gray);
+    transition: transform 0.3s;
+}
+
+.gallery-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.gallery-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+    border-bottom: 1px solid var(--dark-gray);
+}
+
+.gallery-caption {
+    padding: 10px;
+    background-color: white;
+    font-size: 14px;
+}
+
+.gallery-date {
+    font-size: 12px;
+    color: var(--dark-gray);
+    margin-top: 5px;
+}
+
+.gallery-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.gallery-item:hover .gallery-overlay {
+    opacity: 1;
+}
+
+.overlay-button {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.overlay-button:hover {
+    background-color: var(--primary-color);
+}
+
+.overlay-actions {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.overlay-caption {
+    color: white;
+    text-align: center;
+    padding: 0 15px;
+    font-size: 14px;
+    max-width: 100%;
+}
+
+.gallery-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.modal-content {
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+}
+
+.modal-image {
+    max-width: 100%;
+    max-height: 80vh;
+    display: block;
+    border: 5px solid white;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.modal-caption {
+    background-color: white;
+    padding: 15px;
+    margin-top: 10px;
+    border-radius: 5px;
+}
+
+.modal-close {
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s;
+}
+
+.modal-nav:hover {
+    background-color: var(--primary-color);
+}
+
+.modal-prev {
+    left: -60px;
+}
+
+.modal-next {
+    right: -60px;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 50px 20px;
+    background-color: white;
+    border-radius: 5px;
+    border: 1px solid var(--dark-gray);
+}
+
+.empty-icon {
+    font-size: 64px;
+    color: var(--dark-gray);
+    margin-bottom: 20px;
+}
+
+.empty-title {
+    font-family: 'Black Ops One', cursive;
+    font-size: 24px;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.empty-text {
+    margin-bottom: 20px;
+    color: var(--dark-gray);
+}
+
+.upload-form-container {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.upload-form {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+.upload-form-title {
+    font-family: 'Black Ops One', cursive;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px dashed var(--dark-gray);
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--dark-gray);
+    border-radius: 3px;
+    font-family: 'Roboto Mono', monospace;
+}
+
+.form-control-file {
+    padding: 10px 0;
+}
+
+.form-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.form-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-family: 'Roboto Mono', monospace;
+}
+
+.form-submit {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.form-cancel {
+    background-color: var(--dark-gray);
+    color: white;
+}
+
+.form-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--dark-gray);
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 5px;
+}
+
+.page-item {
+    display: inline-block;
+}
+
+.page-link {
+    padding: 8px 12px;
+    background-color: var(--light-gray);
+    color: var(--dark-color);
+    text-decoration: none;
+    border-radius: 3px;
+    transition: background-color 0.3s;
+}
+
+.page-link:hover {
+    background-color: var(--dark-gray);
+    color: white;
+}
+
+.page-item.active .page-link {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.page-item.disabled .page-link {
+    background-color: var(--light-gray);
+    color: var(--dark-gray);
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+{% endblock %}
+
+{% block content %}
+<div class="card-section">
+    <h2 class="section-title">
+        <i class="fas fa-images"></i> Minha Galeria de Fotos
+    </h2>
+    
+    {% if photos %}
+    <div class="gallery-container">
+        <div class="gallery-controls">
+            <div class="gallery-filter">
+                <span class="filter-label">Filtrar por:</span>
+                <select class="filter-select" id="gallery-filter">
+                    <option value="all">Todas as fotos</option>
+                    <option value="event">Eventos</option>
+                    <option value="trip">Viagens</option>
+                    <option value="motorcycle">Motocicletas</option>
+                    <option value="other">Outros</option>
+                </select>
+            </div>
+            
+            <button class="upload-button" id="upload-button">
+                <i class="fas fa-upload"></i> Enviar Fotos
+            </button>
+        </div>
+        
+        <div class="gallery-grid">
+            {% for photo in photos %}
+            <div class="gallery-item" data-category="{{ photo.category }}">
+                <img src="{{ photo.image_url }}" alt="{{ photo.caption }}" class="gallery-image">
+                <div class="gallery-caption">
+                    {{ photo.caption }}
+                    <div class="gallery-date">{{ photo.created_at|date_format }}</div>
+                </div>
+                <div class="gallery-overlay">
+                    <div class="overlay-actions">
+                        <button class="overlay-button view-button" onclick="openModal({{ loop.index0 }})">
+                            <i class="fas fa-search-plus"></i>
+                        </button>
+                        <button class="overlay-button edit-button" onclick="editPhoto({{ photo.id }})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="overlay-button delete-button" onclick="confirmDelete({{ photo.id }})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                    <div class="overlay-caption">{{ photo.caption }}</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        {% if pagination.pages > 1 %}
+        <div class="pagination">
+            <div class="page-item {% if pagination.current == 1 %}disabled{% endif %}">
+                <a class="page-link" href="?page={{ pagination.current - 1 }}" {% if pagination.current == 1 %}tabindex="-1"{% endif %}>
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+            </div>
+            
+            {% for page in range(1, pagination.pages + 1) %}
+            <div class="page-item {% if pagination.current == page %}active{% endif %}">
+                <a class="page-link" href="?page={{ page }}">{{ page }}</a>
+            </div>
+            {% endfor %}
+            
+            <div class="page-item {% if pagination.current == pagination.pages %}disabled{% endif %}">
+                <a class="page-link" href="?page={{ pagination.current + 1 }}" {% if pagination.current == pagination.pages %}tabindex="-1"{% endif %}>
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <i class="fas fa-images empty-icon"></i>
+        <h3 class="empty-title">Nenhuma Foto Cadastrada</h3>
+        <p class="empty-text">Você ainda não enviou nenhuma foto para sua galeria. Compartilhe suas melhores lembranças agora!</p>
+        <button class="upload-button" id="upload-button">
+            <i class="fas fa-upload"></i> Enviar Fotos
+        </button>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Modal de visualização de foto -->
+<div class="gallery-modal" id="photo-modal">
+    <div class="modal-content">
+        <button class="modal-close" id="modal-close">
+            <i class="fas fa-times"></i>
+        </button>
+        <img src="" alt="" class="modal-image" id="modal-image">
+        <div class="modal-caption" id="modal-caption"></div>
+        <button class="modal-nav modal-prev" id="modal-prev">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <button class="modal-nav modal-next" id="modal-next">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+</div>
+
+<!-- Formulário de upload de foto -->
+<div class="upload-form-container" id="upload-form-container">
+    <div class="upload-form">
+        <button class="form-close" id="form-close">
+            <i class="fas fa-times"></i>
+        </button>
+        <h3 class="upload-form-title">Enviar Nova Foto</h3>
+        <form action="/membro/galeria/upload" method="post" enctype="multipart/form-data" id="upload-form">
+            <div class="form-group">
+                <label for="photo" class="form-label">Selecione a Foto</label>
+                <input type="file" name="photo" id="photo" class="form-control form-control-file" accept="image/*" required>
+            </div>
+            <div class="form-group">
+                <label for="caption" class="form-label">Legenda (opcional)</label>
+                <input type="text" name="caption" id="caption" class="form-control" placeholder="Descreva sua foto">
+            </div>
+            <div class="form-group">
+                <label for="location" class="form-label">Local (opcional)</label>
+                <input type="text" name="location" id="location" class="form-control" placeholder="Onde a foto foi tirada">
+            </div>
+            <div class="form-group">
+                <label for="category" class="form-label">Categoria (opcional)</label>
+                <select name="category" id="category" class="form-control">
+                    <option value="event">Evento</option>
+                    <option value="trip">Viagem</option>
+                    <option value="motorcycle">Motocicleta</option>
+                    <option value="other">Outro</option>
+                </select>
+            </div>
+            <div class="form-buttons">
+                <button type="button" class="form-button form-cancel" id="form-cancel">Cancelar</button>
+                <button type="submit" class="form-button form-submit">Enviar</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Variáveis para o modal de visualização
+        const modal = document.getElementById('photo-modal');
+        const modalImage = document.getElementById('modal-image');
+        const modalCaption = document.getElementById('modal-caption');
+        const modalClose = document.getElementById('modal-close');
+        const modalPrev = document.getElementById('modal-prev');
+        const modalNext = document.getElementById('modal-next');
+        
+        // Variáveis para o formulário de upload
+        const uploadButton = document.getElementById('upload-button');
+        const uploadForm = document.getElementById('upload-form-container');
+        const formClose = document.getElementById('form-close');
+        const formCancel = document.getElementById('form-cancel');
+        
+        // Variáveis para filtro
+        const galleryFilter = document.getElementById('gallery-filter');
+        const galleryItems = document.querySelectorAll('.gallery-item');
+        
+        // Dados das fotos para o modal
+        const photos = [
+            {% for photo in photos %}
+            {
+                url: "{{ photo.image_url }}",
+                caption: "{{ photo.caption }}",
+                date: "{{ photo.created_at|date_format }}",
+                location: "{{ photo.location|default('') }}"
+            }{% if not loop.last %},{% endif %}
+            {% endfor %}
+        ];
+        
+        let currentPhotoIndex = 0;
+        
+        // Função para abrir o modal
+        window.openModal = function(index) {
+            currentPhotoIndex = index;
+            updateModalContent();
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        };
+        
+        // Função para atualizar o conteúdo do modal
+        function updateModalContent() {
+            const photo = photos[currentPhotoIndex];
+            modalImage.src = photo.url;
+            modalImage.alt = photo.caption;
+            
+            let captionText = `<strong>${photo.caption}</strong>`;
+            if (photo.location) {
+                captionText += `<br><small>Local: ${photo.location}</small>`;
+            }
+            captionText += `<br><small>Data: ${photo.date}</small>`;
+            
+            modalCaption.innerHTML = captionText;
+        }
+        
+        // Fechar o modal
+        modalClose.addEventListener('click', function() {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+        
+        // Navegação no modal
+        modalPrev.addEventListener('click', function() {
+            currentPhotoIndex = (currentPhotoIndex - 1 + photos.length) % photos.length;
+            updateModalContent();
+        });
+        
+        modalNext.addEventListener('click', function() {
+            currentPhotoIndex = (currentPhotoIndex + 1) % photos.length;
+            updateModalContent();
+        });
+        
+        // Abrir formulário de upload
+        uploadButton.addEventListener('click', function() {
+            uploadForm.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        });
+        
+        // Fechar formulário de upload
+        formClose.addEventListener('click', function() {
+            uploadForm.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+        
+        formCancel.addEventListener('click', function() {
+            uploadForm.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+        
+        // Filtrar fotos por categoria
+        galleryFilter.addEventListener('change', function() {
+            const category = this.value;
+            
+            galleryItems.forEach(function(item) {
+                if (category === 'all' || item.dataset.category === category) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+        
+        // Fechar modal ao clicar fora
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
+        
+        // Navegação com teclado no modal
+        document.addEventListener('keydown', function(e) {
+            if (modal.style.display === 'flex') {
+                if (e.key === 'Escape') {
+                    modal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                } else if (e.key === 'ArrowLeft') {
+                    currentPhotoIndex = (currentPhotoIndex - 1 + photos.length) % photos.length;
+                    updateModalContent();
+                } else if (e.key === 'ArrowRight') {
+                    currentPhotoIndex = (currentPhotoIndex + 1) % photos.length;
+                    updateModalContent();
+                }
+            }
+        });
+    });
+    
+    // Função para editar foto
+    function editPhoto(photoId) {
+        window.location.href = `/membro/galeria/${photoId}/editar`;
+    }
+    
+    // Função para confirmar exclusão
+    function confirmDelete(photoId) {
+        if (confirm('Tem certeza que deseja excluir esta foto?')) {
+            window.location.href = `/membro/galeria/${photoId}/excluir`;
+        }
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,222 @@
+{% extends 'base_member.html' %}
+
+{% block title %}Configurações - Tribo do Cerrado{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card border-danger mb-4">
+        <div class="card-header bg-danger text-white">
+            <h3 class="mb-0">
+                <i class="fas fa-cogs me-2"></i> CONFIGURAÇÕES
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header bg-dark text-white">
+                            <h5 class="mb-0"><i class="fas fa-user-shield me-2"></i> Segurança</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="passwordForm">
+                                <div class="mb-3">
+                                    <label for="currentPassword" class="form-label">Senha Atual</label>
+                                    <input type="password" class="form-control" id="currentPassword" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="newPassword" class="form-label">Nova Senha</label>
+                                    <input type="password" class="form-control" id="newPassword" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="confirmPassword" class="form-label">Confirmar Nova Senha</label>
+                                    <input type="password" class="form-control" id="confirmPassword" required>
+                                </div>
+                                <button type="submit" class="btn btn-danger">Alterar Senha</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header bg-dark text-white">
+                            <h5 class="mb-0"><i class="fas fa-bell me-2"></i> Notificações</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="notificationForm">
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="emailNotifications" checked>
+                                    <label class="form-check-label" for="emailNotifications">
+                                        Receber notificações por e-mail
+                                    </label>
+                                </div>
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="eventNotifications" checked>
+                                    <label class="form-check-label" for="eventNotifications">
+                                        Notificações de eventos
+                                    </label>
+                                </div>
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="birthdayNotifications" checked>
+                                    <label class="form-check-label" for="birthdayNotifications">
+                                        Lembretes de aniversários
+                                    </label>
+                                </div>
+                                <button type="submit" class="btn btn-danger">Salvar Preferências</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header bg-dark text-white">
+                            <h5 class="mb-0"><i class="fas fa-palette me-2"></i> Aparência</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="appearanceForm">
+                                <div class="mb-3">
+                                    <label class="form-label">Tema</label>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="radio" name="theme" id="themeDefault" value="default" checked>
+                                        <label class="form-check-label" for="themeDefault">
+                                            Padrão (Vermelho)
+                                        </label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="radio" name="theme" id="themeDark" value="dark">
+                                        <label class="form-check-label" for="themeDark">
+                                            Escuro
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="theme" id="themeLight" value="light">
+                                        <label class="form-check-label" for="themeLight">
+                                            Claro
+                                        </label>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-danger">Aplicar Tema</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header bg-dark text-white">
+                            <h5 class="mb-0"><i class="fas fa-user-times me-2"></i> Conta</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted mb-4">Ações relacionadas à sua conta no Tribo do Cerrado Motoclube</p>
+                            <button type="button" class="btn btn-outline-danger mb-3 w-100" data-bs-toggle="modal" data-bs-target="#deactivateModal">
+                                <i class="fas fa-user-slash me-2"></i> Desativar Conta
+                            </button>
+                            <button type="button" class="btn btn-outline-danger w-100" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                <i class="fas fa-trash-alt me-2"></i> Excluir Conta
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Desativar Conta -->
+<div class="modal fade" id="deactivateModal" tabindex="-1" aria-labelledby="deactivateModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title" id="deactivateModalLabel">Desativar Conta</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja desativar sua conta? Você poderá reativá-la posteriormente.</p>
+                <p>Durante o período de desativação:</p>
+                <ul>
+                    <li>Seu perfil não será visível para outros membros</li>
+                    <li>Você não receberá notificações</li>
+                    <li>Não poderá participar de eventos</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-warning">Desativar Conta</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Excluir Conta -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteModalLabel">Excluir Conta</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle me-2"></i> Esta ação não pode ser desfeita!
+                </div>
+                <p>Ao excluir sua conta:</p>
+                <ul>
+                    <li>Todos os seus dados pessoais serão removidos</li>
+                    <li>Suas fotos e publicações serão excluídas</li>
+                    <li>Você perderá acesso a todos os recursos do clube</li>
+                </ul>
+                <div class="mb-3">
+                    <label for="deleteConfirmation" class="form-label">Digite "EXCLUIR" para confirmar:</label>
+                    <input type="text" class="form-control" id="deleteConfirmation" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" disabled id="confirmDeleteBtn">Excluir Permanentemente</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Validação para o botão de excluir conta
+    document.getElementById('deleteConfirmation').addEventListener('input', function() {
+        const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+        confirmDeleteBtn.disabled = this.value !== 'EXCLUIR';
+    });
+    
+    // Formulário de alteração de senha
+    document.getElementById('passwordForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        
+        if (newPassword !== confirmPassword) {
+            alert('As senhas não coincidem!');
+            return;
+        }
+        
+        // Aqui seria a chamada AJAX para alterar a senha
+        alert('Senha alterada com sucesso!');
+        this.reset();
+    });
+    
+    // Formulário de notificações
+    document.getElementById('notificationForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        // Aqui seria a chamada AJAX para salvar as preferências
+        alert('Preferências de notificação salvas!');
+    });
+    
+    // Formulário de aparência
+    document.getElementById('appearanceForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const selectedTheme = document.querySelector('input[name="theme"]:checked').value;
+        // Aqui seria a lógica para aplicar o tema
+        alert('Tema ' + selectedTheme + ' aplicado!');
+    });
+</script>
+{% endblock %}

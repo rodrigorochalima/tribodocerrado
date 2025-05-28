@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Área do Membro - Tribo do Cerrado{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Roboto+Mono:wght@400;700&family=Stencil+Std&display=swap');
+        
+        :root {
+            --primary-color: #C41E3A;
+            --secondary-color: #FFD700;
+            --dark-color: #000000;
+            --light-gray: #E5E5E5;
+            --dark-gray: #333333;
+            --paper-color: #F5F5F5;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto Mono', monospace;
+            background-color: var(--dark-gray);
+            color: var(--dark-color);
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .member-card {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: var(--paper-color);
+            border: 2px solid var(--dark-color);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card-watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            font-size: 150px;
+            color: rgba(196, 30, 58, 0.05);
+            z-index: 0;
+            font-family: 'Black Ops One', cursive;
+            white-space: nowrap;
+        }
+        
+        .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+            border-bottom: 5px solid var(--secondary-color);
+        }
+        
+        .card-logo {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+        }
+        
+        .card-title {
+            font-family: 'Black Ops One', cursive;
+            font-size: 36px;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 0 var(--dark-color);
+        }
+        
+        .card-id {
+            font-family: 'Stencil Std', sans-serif;
+            font-size: 24px;
+            background-color: var(--dark-color);
+            color: var(--secondary-color);
+            padding: 5px 15px;
+            border-radius: 5px;
+            position: relative;
+        }
+        
+        .card-id::before {
+            content: "ID";
+            position: absolute;
+            top: -15px;
+            left: 0;
+            font-size: 14px;
+            color: white;
+        }
+        
+        .card-date {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            transform: rotate(5deg);
+        }
+        
+        .card-date::before {
+            content: "CADASTRO";
+            display: block;
+            font-size: 10px;
+            color: var(--secondary-color);
+        }
+        
+        /* Barra de navegação principal */
+        .main-nav {
+            background-color: var(--dark-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+            border-bottom: 3px solid var(--secondary-color);
+        }
+        
+        .nav-tabs {
+            display: flex;
+        }
+        
+        .nav-tab {
+            padding: 15px 20px;
+            color: white;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            font-family: 'Black Ops One', cursive;
+            text-transform: uppercase;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .nav-tab:hover {
+            background-color: rgba(255, 215, 0, 0.1);
+        }
+        
+        .nav-tab.active {
+            border-bottom-color: var(--secondary-color);
+            background-color: rgba(255, 215, 0, 0.1);
+        }
+        
+        .nav-tab i {
+            font-size: 16px;
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-menu-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+            cursor: pointer;
+            padding: 15px 20px;
+            position: relative;
+        }
+        
+        .user-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--secondary-color);
+        }
+        
+        .user-name {
+            font-family: 'Black Ops One', cursive;
+            font-size: 14px;
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: var(--dark-color);
+            min-width: 200px;
+            border: 1px solid var(--secondary-color);
+            border-top: none;
+            display: none;
+            z-index: 101;
+        }
+        
+        .user-menu:hover .dropdown-menu {
+            display: block;
+        }
+        
+        .dropdown-item {
+            padding: 10px 20px;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background-color 0.3s;
+        }
+        
+        .dropdown-item:hover {
+            background-color: rgba(255, 215, 0, 0.1);
+        }
+        
+        .dropdown-divider {
+            height: 1px;
+            background-color: var(--secondary-color);
+            opacity: 0.3;
+            margin: 5px 0;
+        }
+        
+        .card-content {
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .card-section {
+            background-color: white;
+            border: 1px solid var(--dark-gray);
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+            position: relative;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background-color: var(--primary-color);
+            border-radius: 5px 5px 0 0;
+        }
+        
+        .section-title {
+            font-family: 'Black Ops One', cursive;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 2px dashed var(--dark-gray);
+            text-transform: uppercase;
+            padding-top: 5px;
+        }
+        
+        .card-footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 14px;
+            border-top: 5px solid var(--secondary-color);
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Navegação alternativa inferior */
+        .bottom-nav {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .bottom-nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            background-color: var(--dark-gray);
+            border-radius: 5px;
+            font-size: 14px;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .bottom-nav-link:hover {
+            background-color: var(--primary-color);
+        }
+        
+        .bottom-nav-link i {
+            font-size: 14px;
+        }
+        
+        /* Botão de voltar ao topo */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        
+        .back-to-top:hover {
+            background-color: #A01830;
+        }
+        
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .card-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+            
+            .card-title {
+                font-size: 28px;
+            }
+            
+            .main-nav {
+                flex-direction: column;
+                padding: 0;
+            }
+            
+            .nav-tabs {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .nav-tab {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+            
+            .user-menu {
+                width: 100%;
+                justify-content: center;
+                border-top: 1px solid var(--secondary-color);
+            }
+            
+            .dropdown-menu {
+                width: 100%;
+                position: static;
+                border: none;
+                border-top: 1px solid var(--secondary-color);
+            }
+            
+            .user-menu:hover .dropdown-menu {
+                display: none;
+            }
+            
+            .user-menu.active .dropdown-menu {
+                display: block;
+            }
+        }
+        
+        /* Estilos específicos para cada página */
+        {% block page_styles %}{% endblock %}
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <div class="member-card">
+        <div class="card-watermark">TRIBO DO CERRADO</div>
+        
+        <!-- Cabeçalho -->
+        <header class="card-header">
+            <img src="/static/images/logo.png" alt="Logo Tribo do Cerrado" class="card-logo">
+            <h1 class="card-title">{% block card_title %}Área do Membro{% endblock %}</h1>
+            <div class="card-id">{% block member_id %}0001{% endblock %}</div>
+            <div class="card-date">{% block register_date %}01/01/2023{% endblock %}</div>
+        </header>
+        
+        <!-- Navegação Principal -->
+        <nav class="main-nav">
+            <div class="nav-tabs">
+                <a href="/membro/perfil" class="nav-tab {% if active_tab == 'perfil' %}active{% endif %}">
+                    <i class="fas fa-id-card"></i> Meu Perfil
+                </a>
+                <a href="/membro/motos" class="nav-tab {% if active_tab == 'motos' %}active{% endif %}">
+                    <i class="fas fa-motorcycle"></i> Minhas Motos
+                </a>
+                <a href="/membro/familia" class="nav-tab {% if active_tab == 'familia' %}active{% endif %}">
+                    <i class="fas fa-users"></i> Minha Família
+                </a>
+                <a href="/membro/galeria" class="nav-tab {% if active_tab == 'galeria' %}active{% endif %}">
+                    <i class="fas fa-images"></i> Minha Galeria
+                </a>
+                <a href="/membro/configuracoes" class="nav-tab {% if active_tab == 'configuracoes' %}active{% endif %}">
+                    <i class="fas fa-cog"></i> Configurações
+                </a>
+            </div>
+            
+            <div class="user-menu">
+                <div class="user-menu-toggle">
+                    <img src="{{ user.profile_image|default('/static/images/profiles/default.jpg') }}" alt="Avatar" class="user-avatar">
+                    <span class="user-name">{{ user.nickname|default('Membro') }}</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="dropdown-menu">
+                    <a href="/membro/perfil" class="dropdown-item">
+                        <i class="fas fa-user"></i> Meu Perfil
+                    </a>
+                    <a href="/membro/editar-perfil" class="dropdown-item">
+                        <i class="fas fa-edit"></i> Editar Perfil
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a href="/membro/notificacoes" class="dropdown-item">
+                        <i class="fas fa-bell"></i> Notificações
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a href="/api/auth/logout" class="dropdown-item">
+                        <i class="fas fa-sign-out-alt"></i> Sair
+                    </a>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- Conteúdo Principal -->
+        <div class="card-content">
+            {% block content %}{% endblock %}
+        </div>
+        
+        <!-- Rodapé -->
+        <footer class="card-footer">
+            <div class="bottom-nav">
+                <a href="/membro/perfil" class="bottom-nav-link">
+                    <i class="fas fa-id-card"></i> Meu Perfil
+                </a>
+                <a href="/membro/motos" class="bottom-nav-link">
+                    <i class="fas fa-motorcycle"></i> Minhas Motos
+                </a>
+                <a href="/membro/familia" class="bottom-nav-link">
+                    <i class="fas fa-users"></i> Minha Família
+                </a>
+                <a href="/membro/galeria" class="bottom-nav-link">
+                    <i class="fas fa-images"></i> Minha Galeria
+                </a>
+                <a href="/membro/configuracoes" class="bottom-nav-link">
+                    <i class="fas fa-cog"></i> Configurações
+                </a>
+                <a href="/" class="bottom-nav-link">
+                    <i class="fas fa-home"></i> Página Inicial
+                </a>
+                <a href="/api/auth/logout" class="bottom-nav-link">
+                    <i class="fas fa-sign-out-alt"></i> Sair
+                </a>
+            </div>
+            <p>&copy; {{ current_year }} Tribo do Cerrado Motoclube - Todos os direitos reservados</p>
+        </footer>
+    </div>
+    
+    <!-- Botão de voltar ao topo -->
+    <a href="#" class="back-to-top" title="Voltar ao topo">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+    
+    <!-- Scripts -->
+    <script>
+        // Ativar menu mobile
+        document.addEventListener('DOMContentLoaded', function() {
+            const userMenuToggle = document.querySelector('.user-menu-toggle');
+            const userMenu = document.querySelector('.user-menu');
+            
+            if (userMenuToggle) {
+                userMenuToggle.addEventListener('click', function() {
+                    userMenu.classList.toggle('active');
+                });
+            }
+            
+            // Botão voltar ao topo
+            const backToTop = document.querySelector('.back-to-top');
+            
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    backToTop.style.display = 'flex';
+                } else {
+                    backToTop.style.display = 'none';
+                }
+            });
+            
+            backToTop.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

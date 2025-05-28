@@ -1,0 +1,331 @@
+{% extends 'base_member.html' %}
+
+{% block title %}Adicionar Moto - Tribo do Cerrado{% endblock %}
+
+{% block card_title %}Adicionar Moto{% endblock %}
+
+{% block page_styles %}
+.form-section {
+    background-color: white;
+    border: 1px solid var(--dark-gray);
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.form-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 10px;
+    background-color: var(--primary-color);
+    border-radius: 5px 5px 0 0;
+}
+
+.section-header {
+    font-family: 'Black Ops One', cursive;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px dashed var(--dark-gray);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.form-group {
+    flex: 1;
+    min-width: 200px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: var(--dark-color);
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--dark-gray);
+    border-radius: 3px;
+    font-family: 'Roboto Mono', monospace;
+}
+
+.form-select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--dark-gray);
+    border-radius: 3px;
+    font-family: 'Roboto Mono', monospace;
+    background-color: white;
+}
+
+.form-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-family: 'Roboto Mono', monospace;
+    text-transform: uppercase;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #a01830;
+}
+
+.btn-secondary {
+    background-color: var(--dark-gray);
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #222222;
+}
+
+.image-preview {
+    width: 100%;
+    max-width: 300px;
+    height: 200px;
+    object-fit: cover;
+    border: 2px solid var(--dark-gray);
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.image-upload {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+textarea.form-control {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.required-field::after {
+    content: "*";
+    color: var(--primary-color);
+    margin-left: 3px;
+}
+
+@media (max-width: 768px) {
+    .form-row {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .form-group {
+        width: 100%;
+    }
+}
+{% endblock %}
+
+{% block content %}
+<div class="card-section">
+    <h2 class="section-title">
+        <i class="fas fa-motorcycle"></i> Adicionar Nova Motocicleta
+    </h2>
+    
+    <form action="/membro/motos/adicionar" method="POST" enctype="multipart/form-data">
+        <div class="form-section">
+            <h3 class="section-header">
+                <i class="fas fa-camera"></i> Foto da Motocicleta
+            </h3>
+            
+            <div class="image-upload">
+                <img src="/static/images/motorcycle_default.jpg" alt="Prévia da Imagem" class="image-preview" id="imagePreview">
+                <input type="file" name="motorcycle_image" id="motorcycleImage" class="form-control" accept="image/*">
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h3 class="section-header">
+                <i class="fas fa-info-circle"></i> Informações Básicas
+            </h3>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="brand" class="form-label required-field">Marca</label>
+                    <select name="brand" id="brand" class="form-select" required>
+                        <option value="" selected disabled>Selecione a marca</option>
+                        <option value="honda">Honda</option>
+                        <option value="yamaha">Yamaha</option>
+                        <option value="suzuki">Suzuki</option>
+                        <option value="kawasaki">Kawasaki</option>
+                        <option value="harley-davidson">Harley-Davidson</option>
+                        <option value="bmw">BMW</option>
+                        <option value="ducati">Ducati</option>
+                        <option value="triumph">Triumph</option>
+                        <option value="ktm">KTM</option>
+                        <option value="royal-enfield">Royal Enfield</option>
+                        <option value="other">Outra</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="model" class="form-label required-field">Modelo</label>
+                    <input type="text" name="model" id="model" class="form-control" required>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="manufacturing_year" class="form-label required-field">Ano de Fabricação</label>
+                    <input type="number" name="manufacturing_year" id="manufacturing_year" class="form-control" min="1900" max="2099" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="model_year" class="form-label required-field">Ano do Modelo</label>
+                    <input type="number" name="model_year" id="model_year" class="form-control" min="1900" max="2099" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="color" class="form-label">Cor</label>
+                    <input type="text" name="color" id="color" class="form-control">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="license_plate" class="form-label">Placa</label>
+                    <input type="text" name="license_plate" id="license_plate" class="form-control">
+                </div>
+                
+                <div class="form-group">
+                    <label for="engine_capacity" class="form-label">Cilindrada</label>
+                    <input type="text" name="engine_capacity" id="engine_capacity" class="form-control" placeholder="Ex: 250cc">
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h3 class="section-header">
+                <i class="fas fa-calendar-alt"></i> Datas e Documentação
+            </h3>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="purchase_date" class="form-label">Data de Compra</label>
+                    <input type="date" name="purchase_date" id="purchase_date" class="form-control">
+                </div>
+                
+                <div class="form-group">
+                    <label for="ipva_due_date" class="form-label">Vencimento do IPVA</label>
+                    <input type="date" name="ipva_due_date" id="ipva_due_date" class="form-control">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="insurance_company" class="form-label">Seguradora</label>
+                    <input type="text" name="insurance_company" id="insurance_company" class="form-control">
+                </div>
+                
+                <div class="form-group">
+                    <label for="insurance_due_date" class="form-label">Vencimento do Seguro</label>
+                    <input type="date" name="insurance_due_date" id="insurance_due_date" class="form-control">
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h3 class="section-header">
+                <i class="fas fa-tools"></i> Manutenção
+            </h3>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="last_maintenance" class="form-label">Última Revisão</label>
+                    <input type="date" name="last_maintenance" id="last_maintenance" class="form-control">
+                </div>
+                
+                <div class="form-group">
+                    <label for="next_maintenance" class="form-label">Próxima Revisão</label>
+                    <input type="date" name="next_maintenance" id="next_maintenance" class="form-control">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="maintenance_notes" class="form-label">Observações de Manutenção</label>
+                <textarea name="maintenance_notes" id="maintenance_notes" class="form-control"></textarea>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h3 class="section-header">
+                <i class="fas fa-sticky-note"></i> Observações Gerais
+            </h3>
+            
+            <div class="form-group">
+                <label for="notes" class="form-label">Observações</label>
+                <textarea name="notes" id="notes" class="form-control"></textarea>
+            </div>
+        </div>
+        
+        <div class="form-buttons">
+            <a href="/membro/motos" class="btn btn-secondary">Cancelar</a>
+            <button type="submit" class="btn btn-primary">Salvar Motocicleta</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Prévia da imagem
+        const imageInput = document.getElementById('motorcycleImage');
+        const imagePreview = document.getElementById('imagePreview');
+        
+        imageInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                };
+                
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+        
+        // Preencher ano do modelo automaticamente
+        const manufacturingYearInput = document.getElementById('manufacturing_year');
+        const modelYearInput = document.getElementById('model_year');
+        
+        manufacturingYearInput.addEventListener('change', function() {
+            if (!modelYearInput.value) {
+                modelYearInput.value = this.value;
+            }
+        });
+    });
+</script>
+{% endblock %}
