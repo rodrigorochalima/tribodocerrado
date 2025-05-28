@@ -16,15 +16,45 @@
                     <!-- Coluna da Foto -->
                     <div class="col-md-3 text-center mb-4">
                         <div class="mb-3">
-                            <img src="{{ user.profile_image or url_for('static', filename='img/default-profile.png') }}" 
-                                 alt="{{ user.nickname }}" 
-                                 class="img-thumbnail rounded-circle profile-image mb-3" 
-                                 style="width: 200px; height: 200px; object-fit: cover;"
-                                 onerror="this.src='/static/img/default-profile.png'">
+                            <div class="profile-image-container">
+                                <img src="{{ user.profile_image or url_for('static', filename='images/profiles/default.jpg') }}" 
+                                     alt="{{ user.nickname }}" 
+                                     class="img-thumbnail rounded-circle profile-image mb-3" 
+                                     id="profilePreview"
+                                     style="width: 200px; height: 200px; object-fit: cover;"
+                                     onerror="this.src='/static/images/profiles/default.jpg'">
+                            </div>
                             
                             <div class="mb-3">
                                 <label for="profileImage" class="form-label">Alterar Foto</label>
                                 <input type="file" class="form-control" id="profileImage" name="profile_image" accept="image/*">
+                            </div>
+                            
+                            <!-- Controles de edição de imagem (aparecem após selecionar uma imagem) -->
+                            <div id="imageEditControls" style="display: none;" class="mt-3">
+                                <div class="mb-2">
+                                    <label for="zoomRange" class="form-label">Zoom:</label>
+                                    <input type="range" class="form-range" id="zoomRange" min="1" max="2" step="0.1" value="1">
+                                </div>
+                                <div class="mb-2">
+                                    <button type="button" class="btn btn-sm btn-secondary me-1" id="moveLeft">
+                                        <i class="fas fa-arrow-left"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-secondary me-1" id="moveUp">
+                                        <i class="fas fa-arrow-up"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-secondary me-1" id="moveDown">
+                                        <i class="fas fa-arrow-down"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-secondary me-1" id="moveRight">
+                                        <i class="fas fa-arrow-right"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-primary" id="resetImage">
+                                        <i class="fas fa-sync-alt"></i> Reset
+                                    </button>
+                                </div>
+                                <!-- Campo oculto para armazenar dados da imagem processada -->
+                                <input type="hidden" name="cropped_image_data" id="croppedImageData">
                             </div>
                         </div>
                     </div>
@@ -55,7 +85,7 @@
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label for="birthDate" class="form-label">Data de Nascimento</label>
-                                        <input type="date" class="form-control" id="birthDate" name="birth_date" value="{{ user.birth_date|date_format if user.birth_date else '' }}">
+                                        <input type="date" class="form-control" id="birthDate" name="birth_date" value="{{ user.birth_date or '' }}">
                                     </div>
                                 </div>
                                 
@@ -76,7 +106,7 @@
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label for="collectionDate" class="form-label">Data de Coletamento</label>
-                                        <input type="date" class="form-control" id="collectionDate" name="collection_date" value="{{ user.collection_date|date_format if user.collection_date else '' }}">
+                                        <input type="date" class="form-control" id="collectionDate" name="collection_date" value="{{ user.collection_date or '' }}">
                                     </div>
                                 </div>
                                 
@@ -117,11 +147,11 @@
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label for="city" class="form-label">Cidade</label>
-                                        <input type="text" class="form-control" id="city" name="address_city" value="{{ user.address_city or '' }}">
+                                        <input type="text" class="form-control" id="city" name="address_city" value="{{ user.address_city or 'Goiânia' }}">
                                     </div>
                                     <div class="col-md-3 mb-3">
                                         <label for="state" class="form-label">Estado</label>
-                                        <input type="text" class="form-control" id="state" name="address_state" value="{{ user.address_state or '' }}">
+                                        <input type="text" class="form-control" id="state" name="address_state" value="{{ user.address_state or 'GO' }}">
                                     </div>
                                     <div class="col-md-3 mb-3">
                                         <label for="zipcode" class="form-label">CEP</label>
@@ -164,4 +194,185 @@
         </div>
     </div>
 </div>
+
+<script>
+// Script para estabilizar a página e implementar edição de imagem
+document.addEventListener('DOMContentLoaded', function() {
+    // Pré-carrega a imagem padrão para evitar requisições repetidas
+    const defaultImg = new Image();
+    defaultImg.src = '/static/images/profiles/default.jpg';
+    
+    // Define altura fixa para o container da imagem
+    const imgContainer = document.querySelector('.col-md-3.text-center');
+    if (imgContainer) {
+        imgContainer.style.minHeight = '400px';
+    }
+    
+    // Desativa transições durante o carregamento
+    document.body.classList.add('no-transitions');
+    
+    // Reativa transições após o carregamento completo
+    window.addEventListener('load', function() {
+        document.body.classList.remove('no-transitions');
+    });
+    
+    // Variáveis para manipulação da imagem
+    let currentZoom = 1;
+    let positionX = 0;
+    let positionY = 0;
+    let originalImage = null;
+    
+    // Elementos DOM
+    const profileImage = document.getElementById('profilePreview');
+    const fileInput = document.getElementById('profileImage');
+    const editControls = document.getElementById('imageEditControls');
+    const zoomRange = document.getElementById('zoomRange');
+    const moveLeft = document.getElementById('moveLeft');
+    const moveRight = document.getElementById('moveRight');
+    const moveUp = document.getElementById('moveUp');
+    const moveDown = document.getElementById('moveDown');
+    const resetBtn = document.getElementById('resetImage');
+    const croppedDataInput = document.getElementById('croppedImageData');
+    
+    // Função para aplicar transformações na imagem
+    function applyTransform() {
+        profileImage.style.transform = `scale(${currentZoom}) translate(${positionX}px, ${positionY}px)`;
+        
+        // Capturar a imagem processada e armazenar como base64
+        setTimeout(() => {
+            try {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = 200;
+                canvas.height = 200;
+                
+                // Desenhar a imagem com as transformações aplicadas
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(100, 100, 100, 0, Math.PI * 2, true);
+                ctx.closePath();
+                ctx.clip();
+                
+                // Calcular posição e tamanho para o recorte
+                const imgWidth = profileImage.naturalWidth;
+                const imgHeight = profileImage.naturalHeight;
+                const scale = Math.max(200 / imgWidth, 200 / imgHeight) * currentZoom;
+                const scaledWidth = imgWidth * scale;
+                const scaledHeight = imgHeight * scale;
+                const offsetX = (200 - scaledWidth) / 2 - positionX * scale / currentZoom;
+                const offsetY = (200 - scaledHeight) / 2 - positionY * scale / currentZoom;
+                
+                ctx.drawImage(profileImage, offsetX, offsetY, scaledWidth, scaledHeight);
+                ctx.restore();
+                
+                // Converter para base64 e armazenar no campo oculto
+                croppedDataInput.value = canvas.toDataURL('image/jpeg', 0.9);
+            } catch (e) {
+                console.error('Erro ao processar imagem:', e);
+            }
+        }, 100);
+    }
+    
+    // Evento para quando uma nova imagem é selecionada
+    fileInput.addEventListener('change', function(e) {
+        if (this.files && this.files[0]) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                // Resetar transformações
+                currentZoom = 1;
+                positionX = 0;
+                positionY = 0;
+                zoomRange.value = 1;
+                
+                // Exibir a imagem selecionada
+                profileImage.src = e.target.result;
+                originalImage = e.target.result;
+                
+                // Mostrar controles de edição
+                editControls.style.display = 'block';
+                
+                // Aplicar transformação inicial
+                applyTransform();
+            };
+            
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+    
+    // Eventos para controles de zoom e posição
+    zoomRange.addEventListener('input', function() {
+        currentZoom = parseFloat(this.value);
+        applyTransform();
+    });
+    
+    moveLeft.addEventListener('click', function() {
+        positionX += 10 / currentZoom;
+        applyTransform();
+    });
+    
+    moveRight.addEventListener('click', function() {
+        positionX -= 10 / currentZoom;
+        applyTransform();
+    });
+    
+    moveUp.addEventListener('click', function() {
+        positionY += 10 / currentZoom;
+        applyTransform();
+    });
+    
+    moveDown.addEventListener('click', function() {
+        positionY -= 10 / currentZoom;
+        applyTransform();
+    });
+    
+    resetBtn.addEventListener('click', function() {
+        currentZoom = 1;
+        positionX = 0;
+        positionY = 0;
+        zoomRange.value = 1;
+        applyTransform();
+    });
+    
+    // Aplicar transformação inicial se já houver uma imagem
+    if (profileImage.src && !profileImage.src.includes('default.jpg')) {
+        originalImage = profileImage.src;
+        editControls.style.display = 'block';
+        applyTransform();
+    }
+});
+</script>
+
+<style>
+/* Estilos para a página de edição de perfil */
+.profile-image-container {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+    border-radius: 50%;
+    overflow: hidden;
+    position: relative;
+}
+
+.profile-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border: 3px solid #d35400;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    transition: transform 0.2s ease;
+}
+
+/* Desativar transições durante o carregamento */
+body.no-transitions * {
+    transition: none !important;
+}
+
+/* Fonte estilo rock para títulos */
+@import url('https://fonts.googleapis.com/css2?family=Metal+Mania&display=swap');
+
+.card-header h3 {
+    font-family: 'Metal Mania', cursive;
+}
+</style>
 {% endblock %}

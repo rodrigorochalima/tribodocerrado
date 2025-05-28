@@ -1,276 +1,159 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session, jsonify
-from src.models.db import db
-from src.models.user import User
-from src.utils.auth import login_required
-from werkzeug.security import check_password_hash, generate_password_hash
-from werkzeug.utils import secure_filename
+from flask import Blueprint, render_template, redirect, url_for, flash, request, current_app
+from flask_login import login_required, current_user
 import os
+from werkzeug.utils import secure_filename
 from datetime import datetime
+import uuid
 import logging
-from PIL import Image, ImageDraw, ImageFont
+import base64
+import re
+from PIL import Image
+from io import BytesIO
 
-member_bp = Blueprint('member', __name__)
-logger = logging.getLogger(__name__)
+member_bp = Blueprint('member', __name__, url_prefix='/membro')
 
-# Configuração para upload de arquivos
-UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'static', 'uploads')
-IMAGES_FOLDER = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'static', 'images')
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
-
-# Garantir que os diretórios de upload existam
-def ensure_upload_dirs():
-    # Diretórios de upload
-    dirs = [
-        os.path.join(UPLOAD_FOLDER, 'profile'),
-        os.path.join(UPLOAD_FOLDER, 'gallery'),
-        os.path.join(UPLOAD_FOLDER, 'motorcycles'),
-        os.path.join(UPLOAD_FOLDER, 'family')
-    ]
-    for dir_path in dirs:
-        os.makedirs(dir_path, exist_ok=True)
-    
-    # Diretório para imagens padrão
-    os.makedirs(os.path.join(IMAGES_FOLDER, 'profiles'), exist_ok=True)
-    
-    # Criar imagem de perfil padrão se não existir
-    default_profile = os.path.join(IMAGES_FOLDER, 'profiles', 'default.jpg')
-    if not os.path.exists(default_profile):
-        # Criar uma imagem de perfil padrão simples
-        try:
-            img = Image.new('RGB', (200, 200), color=(73, 109, 137))
-            d = ImageDraw.Draw(img)
-            d.ellipse((10, 10, 190, 190), fill=(255, 255, 255))
-            d.ellipse((50, 50, 150, 150), fill=(73, 109, 137))
-            img.save(default_profile)
-            logger.info(f"Imagem de perfil padrão criada em {default_profile}")
-        except Exception as e:
-            logger.error(f"Erro ao criar imagem de perfil padrão: {e}")
-
-# Chamar a função para garantir que os diretórios existam
-ensure_upload_dirs()
-
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-@member_bp.route('/membro/perfil')
+@member_bp.route('/perfil')
 @login_required
 def profile():
-    user_id = session.get('user_id')
-    user = User.query.get(user_id)
-    
-    if not user:
-        flash('Usuário não encontrado', 'error')
-        return redirect(url_for('auth.logout'))
-    
-    return render_template('member_profile.html', user=user)
+    return render_template('member_profile.html', user=current_user)
 
-@member_bp.route('/membro/editar-perfil', methods=['GET', 'POST'])
+@member_bp.route('/editar-perfil', methods=['GET', 'POST'])
 @login_required
 def edit_profile():
-    user_id = session.get('user_id')
-    user = User.query.get(user_id)
-    
-    if not user:
-        flash('Usuário não encontrado', 'error')
-        return redirect(url_for('auth.logout'))
-    
     if request.method == 'POST':
         try:
-            # Atualizar informações básicas
-            user.full_name = request.form.get('full_name', user.full_name)
-            user.nickname = request.form.get('nickname', user.nickname)
-            user.email = request.form.get('email', user.email)
+            # Obter dados do formulário
+            full_name = request.form.get('full_name')
+            nickname = request.form.get('nickname')
+            birth_date = request.form.get('birth_date')
+            blood_type = request.form.get('blood_type')
+            address_street = request.form.get('address_street')
+            address_number = request.form.get('address_number')
+            address_complement = request.form.get('address_complement')
+            address_district = request.form.get('address_district')
+            address_city = request.form.get('address_city', 'Goiânia')
+            address_state = request.form.get('address_state', 'GO')
+            address_zipcode = request.form.get('address_zipcode')
+            health_notes = request.form.get('health_notes')
+            health_insurance = request.form.get('health_insurance')
+            health_insurance_number = request.form.get('health_insurance_number')
             
-            # Tratar campos que podem não existir no modelo User
-            try:
-                # Verificar se o atributo existe antes de tentar acessá-lo
-                if hasattr(user, 'join_date'):
-                    user.join_date = request.form.get('join_date', user.join_date)
-                else:
-                    # Ignorar este campo se não existir no modelo
-                    logger.warning("Campo 'join_date' não existe no modelo User")
+            # Processar imagem recortada se disponível
+            cropped_image_data = request.form.get('cropped_image_data')
+            if cropped_image_data and cropped_image_data.startswith('data:image'):
+                # Criar diretórios se não existirem
+                upload_folder = os.path.join(current_app.static_folder, 'images', 'profiles')
+                os.makedirs(upload_folder, exist_ok=True)
                 
-                # Tratar outros campos que podem não existir
-                for field in ['birth_date', 'blood_type', 'address_street', 'address_number', 
-                             'address_complement', 'address_district', 'address_city', 
-                             'address_state', 'address_zipcode', 'health_notes', 
-                             'health_insurance', 'health_insurance_number']:
-                    if field in request.form and hasattr(user, field):
-                        setattr(user, field, request.form.get(field))
-            except Exception as e:
-                logger.error(f"Erro ao processar campos do formulário: {e}")
+                # Extrair dados da imagem base64
+                image_data = re.sub('^data:image/.+;base64,', '', cropped_image_data)
+                image = Image.open(BytesIO(base64.b64decode(image_data)))
+                
+                # Gerar nome de arquivo único
+                timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+                filename = f"{timestamp}_profile.jpg"
+                
+                # Salvar arquivo
+                file_path = os.path.join(upload_folder, filename)
+                image.save(file_path, 'JPEG')
+                
+                # Atualizar caminho da imagem no banco de dados
+                current_user.profile_image = f"/static/images/profiles/{filename}"
             
-            # Processar upload de foto de perfil
-            if 'profile_photo' in request.files:
-                file = request.files['profile_photo']
-                if file and file.filename and allowed_file(file.filename):
-                    try:
-                        # Garantir que o diretório existe
-                        ensure_upload_dirs()
-                        
-                        # Criar nome de arquivo seguro
-                        filename = secure_filename(file.filename)
-                        timestamp = int(datetime.now().timestamp())
-                        safe_filename = f"{user_id}_{timestamp}_{filename}"
-                        
-                        # Salvar o arquivo
-                        file_path = os.path.join(UPLOAD_FOLDER, 'profile', safe_filename)
-                        file.save(file_path)
-                        
-                        # Atualizar o caminho da foto no banco de dados
-                        # Usar o caminho que o template está esperando
-                        if hasattr(user, 'profile_photo'):
-                            user.profile_photo = f"/static/uploads/profile/{safe_filename}"
-                        else:
-                            logger.warning("Campo 'profile_photo' não existe no modelo User")
-                        
-                        logger.info(f"Foto de perfil salva: {file_path}")
-                    except Exception as e:
-                        logger.error(f"Erro ao salvar foto de perfil: {e}")
-                        flash('Erro ao salvar foto de perfil', 'error')
+            # Processar upload de imagem tradicional (fallback)
+            elif 'profile_image' in request.files and request.files['profile_image'].filename:
+                profile_image = request.files['profile_image']
+                
+                # Criar diretórios se não existirem
+                upload_folder = os.path.join(current_app.static_folder, 'images', 'profiles')
+                os.makedirs(upload_folder, exist_ok=True)
+                
+                # Gerar nome de arquivo único
+                filename = secure_filename(profile_image.filename)
+                timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+                unique_filename = f"{timestamp}_{filename}"
+                
+                # Salvar arquivo
+                file_path = os.path.join(upload_folder, unique_filename)
+                profile_image.save(file_path)
+                
+                # Atualizar caminho da imagem no banco de dados
+                current_user.profile_image = f"/static/images/profiles/{unique_filename}"
             
-            # Salvar alterações
+            # Atualizar dados do usuário
+            current_user.full_name = full_name
+            current_user.nickname = nickname
+            
+            # Tratar campos de data para evitar erros de formato
+            if birth_date:
+                try:
+                    current_user.birth_date = birth_date
+                except:
+                    current_user.birth_date = None
+            else:
+                current_user.birth_date = None
+                
+            current_user.blood_type = blood_type
+            current_user.address_street = address_street
+            current_user.address_number = address_number
+            current_user.address_complement = address_complement
+            current_user.address_district = address_district
+            current_user.address_city = address_city
+            current_user.address_state = address_state
+            current_user.address_zipcode = address_zipcode
+            current_user.health_notes = health_notes
+            current_user.health_insurance = health_insurance
+            current_user.health_insurance_number = health_insurance_number
+            
+            # Salvar alterações no banco de dados
+            from src.models import db
             db.session.commit()
+            
             flash('Perfil atualizado com sucesso!', 'success')
             return redirect(url_for('member.profile'))
             
         except Exception as e:
-            db.session.rollback()
-            logger.error(f"Erro ao atualizar perfil: {e}")
-            flash('Erro ao atualizar perfil', 'error')
+            logging.error(f"Erro ao atualizar perfil: {str(e)}")
+            flash(f'Erro ao atualizar perfil. Por favor, tente novamente.', 'danger')
     
-    return render_template('member_edit_profile.html', user=user)
+    # Garantir que a imagem padrão existe
+    default_image_path = os.path.join(current_app.static_folder, 'images', 'profiles', 'default.jpg')
+    if not os.path.exists(default_image_path):
+        os.makedirs(os.path.dirname(default_image_path), exist_ok=True)
+        try:
+            # Criar uma imagem padrão simples
+            from PIL import Image, ImageDraw
+            img = Image.new('RGB', (200, 200), color=(73, 109, 137))
+            d = ImageDraw.Draw(img)
+            d.text((20, 70), "Tribo do Cerrado", fill=(255, 255, 0))
+            d.text((20, 120), "Perfil", fill=(255, 255, 0))
+            img.save(default_image_path)
+        except Exception as e:
+            logging.error(f"Erro ao criar imagem padrão: {str(e)}")
+    
+    return render_template('member_edit_profile.html', user=current_user)
 
-@member_bp.route('/membro/alterar-senha', methods=['GET', 'POST'])
-@login_required
-def change_password():
-    user_id = session.get('user_id')
-    user = User.query.get(user_id)
-    
-    if not user:
-        flash('Usuário não encontrado', 'error')
-        return redirect(url_for('auth.logout'))
-    
-    if request.method == 'POST':
-        current_password = request.form.get('current_password')
-        new_password = request.form.get('new_password')
-        confirm_password = request.form.get('confirm_password')
-        
-        if not current_password or not new_password or not confirm_password:
-            flash('Por favor, preencha todos os campos', 'error')
-            return redirect(url_for('member.change_password'))
-        
-        if new_password != confirm_password:
-            flash('As senhas não coincidem', 'error')
-            return redirect(url_for('member.change_password'))
-        
-        if not check_password_hash(user.password, current_password):
-            flash('Senha atual incorreta', 'error')
-            return redirect(url_for('member.change_password'))
-        
-        user.password = generate_password_hash(new_password)
-        db.session.commit()
-        
-        flash('Senha alterada com sucesso!', 'success')
-        return redirect(url_for('member.profile'))
-    
-    return render_template('member_change_password.html')
-
-@member_bp.route('/membro/minhas-motos')
+@member_bp.route('/minhas-motos')
 @login_required
 def my_motorcycles():
-    user_id = session.get('user_id')
-    user = User.query.get(user_id)
-    
-    if not user:
-        flash('Usuário não encontrado', 'error')
-        return redirect(url_for('auth.logout'))
-    
-    # Aqui você buscaria as motos do usuário no banco de dados
-    # Por enquanto, vamos retornar uma lista vazia
-    motorcycles = []
-    
-    return render_template('member_motorcycles.html', motorcycles=motorcycles)
+    return render_template('member_motorcycles.html')
 
-@member_bp.route('/membro/adicionar-moto', methods=['GET', 'POST'])
-@login_required
-def add_motorcycle():
-    user_id = session.get('user_id')
-    user = User.query.get(user_id)
-    
-    if not user:
-        flash('Usuário não encontrado', 'error')
-        return redirect(url_for('auth.logout'))
-    
-    if request.method == 'POST':
-        # Aqui você processaria o formulário para adicionar uma nova moto
-        flash('Moto adicionada com sucesso!', 'success')
-        return redirect(url_for('member.my_motorcycles'))
-    
-    return render_template('member_add_motorcycle.html')
-
-@member_bp.route('/membro/minha-familia')
+@member_bp.route('/minha-familia')
 @login_required
 def my_family():
-    user_id = session.get('user_id')
-    user = User.query.get(user_id)
-    
-    if not user:
-        flash('Usuário não encontrado', 'error')
-        return redirect(url_for('auth.logout'))
-    
-    # Aqui você buscaria os familiares do usuário no banco de dados
-    # Por enquanto, vamos retornar uma lista vazia
-    family_members = []
-    
-    return render_template('member_family.html', family_members=family_members)
+    return render_template('member_family.html')
 
-@member_bp.route('/membro/adicionar-familiar', methods=['GET', 'POST'])
-@login_required
-def add_family_member():
-    user_id = session.get('user_id')
-    user = User.query.get(user_id)
-    
-    if not user:
-        flash('Usuário não encontrado', 'error')
-        return redirect(url_for('auth.logout'))
-    
-    if request.method == 'POST':
-        # Aqui você processaria o formulário para adicionar um novo familiar
-        flash('Familiar adicionado com sucesso!', 'success')
-        return redirect(url_for('member.my_family'))
-    
-    return render_template('member_add_family.html')
-
-@member_bp.route('/membro/minha-galeria')
+@member_bp.route('/minha-galeria')
 @login_required
 def my_gallery():
-    user_id = session.get('user_id')
-    user = User.query.get(user_id)
-    
-    if not user:
-        flash('Usuário não encontrado', 'error')
-        return redirect(url_for('auth.logout'))
-    
-    # Aqui você buscaria as fotos do usuário no banco de dados
-    # Por enquanto, vamos retornar uma lista vazia
-    photos = []
-    
-    return render_template('member_gallery.html', photos=photos)
+    return render_template('member_gallery.html')
 
-@member_bp.route('/membro/adicionar-foto', methods=['GET', 'POST'])
+@member_bp.route('/configuracoes')
 @login_required
-def add_photo():
-    user_id = session.get('user_id')
-    user = User.query.get(user_id)
-    
-    if not user:
-        flash('Usuário não encontrado', 'error')
-        return redirect(url_for('auth.logout'))
-    
-    if request.method == 'POST':
-        # Aqui você processaria o formulário para adicionar uma nova foto
-        flash('Foto adicionada com sucesso!', 'success')
-        return redirect(url_for('member.my_gallery'))
-    
-    return render_template('member_add_photo.html')
+def settings():
+    return render_template('member_settings.html')
+
+@member_bp.route('/alterar-senha')
+@login_required
+def change_password():
+    return render_template('member_change_password.html')
