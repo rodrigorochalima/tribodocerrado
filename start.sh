@@ -28,3 +28,11 @@ mkdir -p static/uploads/gallery
 mkdir -p static/uploads/motorcycles
 mkdir -p static/uploads/family
 chmod -R 777 static
+
+# Criar diretórios para uploads e imagens
+mkdir -p static/images/profiles
+mkdir -p static/uploads/profile
+mkdir -p static/uploads/gallery
+mkdir -p static/uploads/motorcycles
+mkdir -p static/uploads/family
+chmod -R 777 static
