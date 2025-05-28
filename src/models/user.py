@@ -41,15 +41,6 @@ class User(db.Model, UserMixin):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     last_login = db.Column(db.DateTime, nullable=True)
     
-    # Controle de privacidade (quais campos são visíveis publicamente)
-    full_name_public = db.Column(db.Boolean, default=False)
-    birth_date_public = db.Column(db.Boolean, default=False)
-    collection_date_public = db.Column(db.Boolean, default=False)
-    blood_type_public = db.Column(db.Boolean, default=False)
-    address_public = db.Column(db.Boolean, default=False)
-    bio_public = db.Column(db.Boolean, default=False)
-    health_info_public = db.Column(db.Boolean, default=False)
-    
     def __repr__(self):
         return f'<User {self.username}>'
         
