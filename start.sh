@@ -20,3 +20,11 @@ python src/db_migration.py
 # Iniciar o servidor Gunicorn
 echo "Iniciando o servidor Gunicorn..."
 gunicorn "src.main:create_app()" --bind 0.0.0.0:$PORT --log-level info
+
+# Criar diretórios para uploads
+mkdir -p static/img
+mkdir -p static/uploads/profile
+mkdir -p static/uploads/gallery
+mkdir -p static/uploads/motorcycles
+mkdir -p static/uploads/family
+chmod -R 777 static
