@@ -32,6 +32,9 @@ def create_app():
         return User.query.get(int(user_id))
     
     # Registrar blueprints
+    from .routes.home import home_bp
+    app.register_blueprint(home_bp)
+    
     from .routes.auth import auth_bp
     app.register_blueprint(auth_bp)
     
@@ -47,11 +50,6 @@ def create_app():
     from .routes.user import user_bp
     app.register_blueprint(user_bp, url_prefix='/usuario')
     
-    # Rota principal
-    @app.route('/')
-    def index():
-        return redirect(url_for('auth.login'))
-    
     # Inicializar o banco de dados
     from .models.db import db
     db.init_app(app)
@@ -64,4 +62,3 @@ def create_app():
 # Para execução direta
 if __name__ == '__main__':
     app = create_app()
-    app.run(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
