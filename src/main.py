@@ -4,6 +4,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # Importação da instância única do SQLAlchemy
 from src.models.db import db
 from src.config import DATABASE_URL, SECRET_KEY, PORT
+from flask_login import LoginManager
 
 def create_app():
     from flask import Flask, render_template
@@ -21,6 +22,17 @@ def create_app():
     
     # Inicialização do banco de dados com o app
     db.init_app(app)
+    
+    # Inicialização do Flask-Login
+    login_manager = LoginManager()
+    login_manager.init_app(app)
+    login_manager.login_view = 'auth.login'
+    
+    # Função para carregar usuário pelo ID
+    @login_manager.user_loader
+    def load_user(user_id):
+        from src.models.user import User
+        return User.query.get(int(user_id))
     
     # Registro de blueprints
     from src.routes.auth import auth_bp
@@ -83,10 +95,8 @@ def create_app():
         return 0
     
     return app
-
 # Importação aqui para evitar importação circular
 from datetime import datetime
-
 if __name__ == '__main__':
     app = create_app()
     app.run(host='0.0.0.0', port=PORT, debug=False)
