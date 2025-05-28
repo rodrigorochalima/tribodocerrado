@@ -7,16 +7,19 @@ from werkzeug.utils import secure_filename
 import os
 from datetime import datetime
 import logging
+from PIL import Image, ImageDraw, ImageFont
 
 member_bp = Blueprint('member', __name__)
 logger = logging.getLogger(__name__)
 
 # Configuração para upload de arquivos
 UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'static', 'uploads')
+IMAGES_FOLDER = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'static', 'images')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 # Garantir que os diretórios de upload existam
 def ensure_upload_dirs():
+    # Diretórios de upload
     dirs = [
         os.path.join(UPLOAD_FOLDER, 'profile'),
         os.path.join(UPLOAD_FOLDER, 'gallery'),
@@ -26,16 +29,14 @@ def ensure_upload_dirs():
     for dir_path in dirs:
         os.makedirs(dir_path, exist_ok=True)
     
-    # Criar diretório para imagens padrão
-    img_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'static', 'img')
-    os.makedirs(img_dir, exist_ok=True)
+    # Diretório para imagens padrão
+    os.makedirs(os.path.join(IMAGES_FOLDER, 'profiles'), exist_ok=True)
     
     # Criar imagem de perfil padrão se não existir
-    default_profile = os.path.join(img_dir, 'default-profile.png')
+    default_profile = os.path.join(IMAGES_FOLDER, 'profiles', 'default.jpg')
     if not os.path.exists(default_profile):
         # Criar uma imagem de perfil padrão simples
         try:
-            from PIL import Image, ImageDraw
             img = Image.new('RGB', (200, 200), color=(73, 109, 137))
             d = ImageDraw.Draw(img)
             d.ellipse((10, 10, 190, 190), fill=(255, 255, 255))
@@ -117,6 +118,7 @@ def edit_profile():
                         file.save(file_path)
                         
                         # Atualizar o caminho da foto no banco de dados
+                        # Usar o caminho que o template está esperando
                         if hasattr(user, 'profile_photo'):
                             user.profile_photo = f"/static/uploads/profile/{safe_filename}"
                         else:
@@ -272,4 +274,3 @@ def add_photo():
         return redirect(url_for('member.my_gallery'))
     
     return render_template('member_add_photo.html')
-
