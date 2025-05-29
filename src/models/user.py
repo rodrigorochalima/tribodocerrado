@@ -71,43 +71,6 @@ class EmergencyContact(db.Model):
     def __repr__(self):
         return f'<EmergencyContact {self.name}>'
 
-class Motorcycle(db.Model):
-    __tablename__ = 'motorcycles'
-    
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    brand = db.Column(db.String(50), nullable=False)
-    model = db.Column(db.String(50), nullable=False)
-    year = db.Column(db.Integer)
-    license_plate = db.Column(db.String(20))
-    color = db.Column(db.String(30))
-    chassis_number = db.Column(db.String(50))
-    engine_number = db.Column(db.String(50))
-    purchase_date = db.Column(db.Date)
-    insurance_company = db.Column(db.String(100))
-    insurance_policy = db.Column(db.String(50))
-    insurance_expiry = db.Column(db.Date)
-    ipva_due_date = db.Column(db.Date)
-    notes = db.Column(db.Text)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    
-    user = db.relationship('User', backref=db.backref('motorcycles', lazy=True))
-    
-    def __repr__(self):
-        return f'<Motorcycle {self.brand} {self.model}>'
-
-class MotorcycleImage(db.Model):
-    __tablename__ = 'motorcycle_images'
-    
-    id = db.Column(db.Integer, primary_key=True)
-    motorcycle_id = db.Column(db.Integer, db.ForeignKey('motorcycles.id'), nullable=False)
-    image_url = db.Column(db.String(255), nullable=False)
-    caption = db.Column(db.String(255))
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    
-    motorcycle = db.relationship('Motorcycle', backref=db.backref('images', lazy=True))
-    
-    def __repr__(self):
-        return f'<MotorcycleImage {self.id}>'
+# Classes Motorcycle e MotorcycleImage foram movidas para src/models/motorcycle.py
+# Importar de lá quando necessário:
+# from src.models.motorcycle import Motorcycle, MotorcycleImage
