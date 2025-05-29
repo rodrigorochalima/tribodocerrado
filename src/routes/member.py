@@ -54,6 +54,16 @@ def edit_profile():
             health_insurance = request.form.get('health_insurance')
             health_insurance_number = request.form.get('health_insurance_number')
             
+            # Obter configurações de privacidade
+            is_public_profile = 'is_public_profile' in request.form
+            is_public_full_name = 'is_public_full_name' in request.form
+            is_public_birth_date = 'is_public_birth_date' in request.form
+            is_public_blood_type = 'is_public_blood_type' in request.form
+            is_public_address = 'is_public_address' in request.form
+            is_public_health_info = 'is_public_health_info' in request.form
+            is_public_collection_date = 'is_public_collection_date' in request.form
+            is_public_join_date = 'is_public_join_date' in request.form
+            
             # Salvar o valor atual da imagem de perfil para preservá-lo caso não seja enviada uma nova imagem
             current_profile_image = current_user.profile_image
             
@@ -127,6 +137,16 @@ def edit_profile():
             current_user.health_notes = health_notes
             current_user.health_insurance = health_insurance
             current_user.health_insurance_number = health_insurance_number
+            
+            # Atualizar configurações de privacidade
+            current_user.is_public_profile = is_public_profile
+            current_user.is_public_full_name = is_public_full_name
+            current_user.is_public_birth_date = is_public_birth_date
+            current_user.is_public_blood_type = is_public_blood_type
+            current_user.is_public_address = is_public_address
+            current_user.is_public_health_info = is_public_health_info
+            current_user.is_public_collection_date = is_public_collection_date
+            current_user.is_public_join_date = is_public_join_date
             
             # Salvar alterações no banco de dados
             db.session.commit()

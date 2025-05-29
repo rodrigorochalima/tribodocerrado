@@ -1,7 +1,9 @@
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
-from src.models.db import db
 from flask_login import UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
+
+db = SQLAlchemy()
 
 class User(db.Model, UserMixin):
     __tablename__ = 'users'
@@ -10,80 +12,44 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
-    full_name = db.Column(db.String(100), nullable=True)
-    nickname = db.Column(db.String(50), nullable=True)
-    profile_image = db.Column(db.String(255), nullable=True)
-    bio = db.Column(db.Text, nullable=True)
-    birth_date = db.Column(db.Date, nullable=True)
-    collection_date = db.Column(db.Date, nullable=True)  # Data de coletamento (entrada no motoclube)
-    blood_type = db.Column(db.String(10), nullable=True)
-    
-    # Endereço
-    address_street = db.Column(db.String(255), nullable=True)
-    address_number = db.Column(db.String(20), nullable=True)
-    address_complement = db.Column(db.String(100), nullable=True)
-    address_district = db.Column(db.String(100), nullable=True)
-    address_city = db.Column(db.String(100), nullable=True)
-    address_state = db.Column(db.String(50), nullable=True)
-    address_zipcode = db.Column(db.String(20), nullable=True)
-    
-    # Informações de saúde
-    health_notes = db.Column(db.Text, nullable=True)
-    health_insurance = db.Column(db.String(100), nullable=True)
-    health_insurance_number = db.Column(db.String(50), nullable=True)
-    
-    # Relacionamentos
-    godfather_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
-    
-    # Controle de acesso
-    is_admin = db.Column(db.Boolean, default=False)
-    is_approved = db.Column(db.Boolean, default=False)
+    full_name = db.Column(db.String(120))
+    nickname = db.Column(db.String(80))
+    birth_date = db.Column(db.Date)
+    blood_type = db.Column(db.String(10))
+    profile_image = db.Column(db.String(255))
+    address_street = db.Column(db.String(255))
+    address_number = db.Column(db.String(20))
+    address_complement = db.Column(db.String(255))
+    address_district = db.Column(db.String(255))
+    address_city = db.Column(db.String(255))
+    address_state = db.Column(db.String(2))
+    address_zipcode = db.Column(db.String(20))
+    health_notes = db.Column(db.Text)
+    health_insurance = db.Column(db.String(255))
+    health_insurance_number = db.Column(db.String(255))
+    collection_date = db.Column(db.Date)
+    join_date = db.Column(db.Date)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    last_login = db.Column(db.DateTime, nullable=True)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    last_login = db.Column(db.DateTime)
+    is_admin = db.Column(db.Boolean, default=False)
+    is_active = db.Column(db.Boolean, default=True)
+    
+    # Campos de privacidade
+    is_public_profile = db.Column(db.Boolean, default=False)
+    is_public_full_name = db.Column(db.Boolean, default=False)
+    is_public_birth_date = db.Column(db.Boolean, default=False)
+    is_public_blood_type = db.Column(db.Boolean, default=False)
+    is_public_address = db.Column(db.Boolean, default=False)
+    is_public_health_info = db.Column(db.Boolean, default=False)
+    is_public_collection_date = db.Column(db.Boolean, default=False)
+    is_public_join_date = db.Column(db.Boolean, default=True)
+    
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
+    
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
     
     def __repr__(self):
         return f'<User {self.username}>'
-        
-    # Métodos necessários para Flask-Login
-    def is_authenticated(self):
-        return True
-        
-    def is_active(self):
-        return self.is_approved
-        
-    def is_anonymous(self):
-        return False
-        
-    def get_id(self):
-        return str(self.id)
-
-class EmergencyContact(db.Model):
-    __tablename__ = 'emergency_contacts'
-    
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    name = db.Column(db.String(100), nullable=False)
-    phone = db.Column(db.String(20), nullable=False)
-    relationship = db.Column(db.String(50), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    
-    # Relacionamentos
-    user = db.relationship('User', backref=db.backref('emergency_contacts', lazy=True))
-    
-    def __repr__(self):
-        return f'<EmergencyContact {self.name}>'
-
-class MotorcycleImage(db.Model):
-    __tablename__ = 'motorcycle_images'
-    
-    id = db.Column(db.Integer, primary_key=True)
-    motorcycle_id = db.Column(db.Integer, db.ForeignKey('motorcycles.id'), nullable=False)
-    image_url = db.Column(db.String(255), nullable=False)
-    caption = db.Column(db.String(255), nullable=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    
-    # Relacionamentos
-    motorcycle = db.relationship('Motorcycle', backref=db.backref('images', lazy=True))
-    
-    def __repr__(self):
-        return f'<MotorcycleImage {self.id}>'
