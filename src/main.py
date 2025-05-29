@@ -32,7 +32,9 @@ def create_app():
     @login_manager.user_loader
     def load_user(user_id):
         from src.models.user import User
-        return User.query.get(int(user_id))
+        from flask import current_app
+        with current_app.app_context():
+            return User.query.get(int(user_id))
     
     # Registro de blueprints
     from src.routes.auth import auth_bp
@@ -95,8 +97,13 @@ def create_app():
         return 0
     
     return app
+
+# Criar a aplicação para o Gunicorn encontrar
+app = create_app()
+
 # Importação aqui para evitar importação circular
 from datetime import datetime
+
 if __name__ == '__main__':
-    app = create_app()
+    # Não precisamos criar o app novamente aqui, pois já foi criado acima
     app.run(host='0.0.0.0', port=PORT, debug=False)
