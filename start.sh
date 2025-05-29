@@ -18,7 +18,7 @@ echo "Diretórios de upload criados com permissões adequadas"
 
 # Executar migração do banco de dados
 echo "Executando migração do banco de dados..."
-python src/db_migration.py
+python migration_script.py
 
 # Iniciar o servidor Gunicorn
 echo "Iniciando o servidor Gunicorn..."
