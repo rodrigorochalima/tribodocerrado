@@ -9,6 +9,7 @@ import base64
 import re
 from PIL import Image
 from io import BytesIO
+from src.models.db import db
 
 member_bp = Blueprint('member', __name__, url_prefix='/membro')
 
@@ -42,57 +43,58 @@ def edit_profile():
             cropped_image_data = request.form.get('cropped_image_data')
             if cropped_image_data and cropped_image_data.startswith('data:image'):
                 # Criar diretórios se não existirem
-                upload_folder = os.path.join(current_app.static_folder, 'images', 'profiles')
+                upload_folder = os.path.join(current_app.static_folder, 'uploads', 'profile')
                 os.makedirs(upload_folder, exist_ok=True)
                 
                 # Extrair dados da imagem base64
                 image_data = re.sub('^data:image/.+;base64,', '', cropped_image_data)
+                
+                # Importar Image aqui para garantir que está disponível no escopo correto
+                from PIL import Image
                 image = Image.open(BytesIO(base64.b64decode(image_data)))
                 
                 # Gerar nome de arquivo único
                 timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
-                filename = f"{timestamp}_profile.jpg"
+                filename = f"{current_user.id}_{int(datetime.now().timestamp())}_{timestamp}.jpg"
                 
                 # Salvar arquivo
                 file_path = os.path.join(upload_folder, filename)
                 image.save(file_path, 'JPEG')
                 
                 # Atualizar caminho da imagem no banco de dados
-                current_user.profile_image = f"/static/images/profiles/{filename}"
+                current_user.profile_image = f"/static/uploads/profile/{filename}"
             
             # Processar upload de imagem tradicional (fallback)
             elif 'profile_image' in request.files and request.files['profile_image'].filename:
                 profile_image = request.files['profile_image']
                 
                 # Criar diretórios se não existirem
-                upload_folder = os.path.join(current_app.static_folder, 'images', 'profiles')
+                upload_folder = os.path.join(current_app.static_folder, 'uploads', 'profile')
                 os.makedirs(upload_folder, exist_ok=True)
                 
                 # Gerar nome de arquivo único
                 filename = secure_filename(profile_image.filename)
                 timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
-                unique_filename = f"{timestamp}_{filename}"
+                filename = f"{current_user.id}_{int(datetime.now().timestamp())}_{filename}"
                 
                 # Salvar arquivo
-                file_path = os.path.join(upload_folder, unique_filename)
+                file_path = os.path.join(upload_folder, filename)
                 profile_image.save(file_path)
                 
                 # Atualizar caminho da imagem no banco de dados
-                current_user.profile_image = f"/static/images/profiles/{unique_filename}"
+                current_user.profile_image = f"/static/uploads/profile/{filename}"
             
             # Atualizar dados do usuário
             current_user.full_name = full_name
             current_user.nickname = nickname
             
-            # Tratar campos de data para evitar erros de formato
+            # Converter data de nascimento para objeto Date se não for vazio
             if birth_date:
                 try:
-                    current_user.birth_date = birth_date
-                except:
-                    current_user.birth_date = None
-            else:
-                current_user.birth_date = None
-                
+                    current_user.birth_date = datetime.strptime(birth_date, '%Y-%m-%d').date()
+                except ValueError:
+                    pass
+            
             current_user.blood_type = blood_type
             current_user.address_street = address_street
             current_user.address_number = address_number
@@ -106,7 +108,6 @@ def edit_profile():
             current_user.health_insurance_number = health_insurance_number
             
             # Salvar alterações no banco de dados
-            from src.models import db
             db.session.commit()
             
             flash('Perfil atualizado com sucesso!', 'success')
@@ -114,7 +115,7 @@ def edit_profile():
             
         except Exception as e:
             logging.error(f"Erro ao atualizar perfil: {str(e)}")
-            flash(f'Erro ao atualizar perfil. Por favor, tente novamente.', 'danger')
+            flash(f'Erro ao atualizar perfil: {str(e)}', 'danger')
     
     # Garantir que a imagem padrão existe
     default_image_path = os.path.join(current_app.static_folder, 'images', 'profiles', 'default.jpg')
