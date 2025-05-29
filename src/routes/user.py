@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify, current_app, session, render_template
-from src.models.user import User, EmergencyContact, MotorcycleImage
-from src.models.motorcycle import Motorcycle
+from src.models.user import User, EmergencyContact
+from src.models.motorcycle import Motorcycle, MotorcycleImage
 from src.models.family import FamilyMember
 from src.models.notification import Notification
 from src.models.db import db
