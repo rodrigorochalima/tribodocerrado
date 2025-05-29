@@ -9,6 +9,10 @@ auth_bp = Blueprint('auth', __name__)
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
+    # Se o usuário já está autenticado, redireciona para o perfil
+    if current_user.is_authenticated:
+        return redirect(url_for('member.profile'))
+        
     if request.method == 'GET':
         return render_template('login.html')
     

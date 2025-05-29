@@ -16,6 +16,21 @@ member_bp = Blueprint('member', __name__, url_prefix='/membro')
 @member_bp.route('/perfil')
 @login_required
 def profile():
+    # Garantir que a imagem padrão existe
+    default_image_path = os.path.join(current_app.static_folder, 'images', 'profiles', 'default.jpg')
+    if not os.path.exists(default_image_path):
+        os.makedirs(os.path.dirname(default_image_path), exist_ok=True)
+        try:
+            # Criar uma imagem padrão simples
+            from PIL import Image, ImageDraw
+            img = Image.new('RGB', (200, 200), color=(73, 109, 137))
+            d = ImageDraw.Draw(img)
+            d.text((20, 70), "Tribo do Cerrado", fill=(255, 255, 0))
+            d.text((20, 120), "Perfil", fill=(255, 255, 0))
+            img.save(default_image_path)
+        except Exception as e:
+            logging.error(f"Erro ao criar imagem padrão: {str(e)}")
+    
     return render_template('member_profile.html', user=current_user)
 
 @member_bp.route('/editar-perfil', methods=['GET', 'POST'])
@@ -38,6 +53,9 @@ def edit_profile():
             health_notes = request.form.get('health_notes')
             health_insurance = request.form.get('health_insurance')
             health_insurance_number = request.form.get('health_insurance_number')
+            
+            # Salvar o valor atual da imagem de perfil para preservá-lo caso não seja enviada uma nova imagem
+            current_profile_image = current_user.profile_image
             
             # Processar imagem recortada se disponível
             cropped_image_data = request.form.get('cropped_image_data')
@@ -83,6 +101,9 @@ def edit_profile():
                 
                 # Atualizar caminho da imagem no banco de dados
                 current_user.profile_image = f"/static/uploads/profile/{filename}"
+            else:
+                # Se nenhuma nova imagem foi enviada, preservar a imagem atual
+                current_user.profile_image = current_profile_image
             
             # Atualizar dados do usuário
             current_user.full_name = full_name
@@ -115,7 +136,7 @@ def edit_profile():
             
         except Exception as e:
             logging.error(f"Erro ao atualizar perfil: {str(e)}")
-            flash(f'Erro ao atualizar perfil: {str(e)}', 'danger')
+            flash(f'Erro ao atualizar perfil. Por favor, tente novamente.', 'danger')
     
     # Garantir que a imagem padrão existe
     default_image_path = os.path.join(current_app.static_folder, 'images', 'profiles', 'default.jpg')
