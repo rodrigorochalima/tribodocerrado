@@ -43,3 +43,18 @@ class Motorcycle(db.Model):
     
     def __repr__(self):
         return f'<Motorcycle {self.brand} {self.model} ({self.model_year})>'
+
+class MotorcycleImage(db.Model):
+    __tablename__ = 'motorcycle_images'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    motorcycle_id = db.Column(db.Integer, db.ForeignKey('motorcycles.id'), nullable=False)
+    image_url = db.Column(db.String(255), nullable=False)
+    caption = db.Column(db.String(255))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    motorcycle = db.relationship('Motorcycle', backref=db.backref('images', lazy=True))
+    
+    def __repr__(self):
+        return f'<MotorcycleImage {self.id}>'
