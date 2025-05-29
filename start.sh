@@ -16,9 +16,9 @@ chmod -R 777 static/uploads
 
 echo "Diretórios de upload criados com permissões adequadas"
 
-# Executar migração do banco de dados
-echo "Executando migração do banco de dados..."
-python migration_script.py
+# Executar migração do banco de dados com Alembic
+echo "Executando migração do banco de dados com Alembic..."
+python -m alembic upgrade head
 
 # Iniciar o servidor Gunicorn
 echo "Iniciando o servidor Gunicorn..."
