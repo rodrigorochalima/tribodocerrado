@@ -4,43 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Tribo do Cerrado</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --primary-color: #d35400;
-            --secondary-color: #e67e22;
-            --dark-color: #2c3e50;
-            --light-color: #ecf0f1;
+            --primary-color: #c00000;
+            --secondary-color: #ff4500;
+            --dark-color: #1a1a1a;
+            --light-color: #f8f9fa;
         }
         
         body {
-            background-color: #121212;
-            background-image: url('{{ url_for('static', filename='images/bg-dark.jpg') }}');
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--dark-color);
+            background-image: url("{{ url_for('static', filename='images/bg-login.jpg') }}");
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
-            font-family: 'Roboto', sans-serif;
-            color: var(--light-color);
+            color: white;
             margin: 0;
             padding: 0;
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
         }
         
         .login-container {
             width: 100%;
-            max-width: 400px;
+            max-width: 450px;
             padding: 20px;
         }
         
         .login-box {
             background-color: rgba(0, 0, 0, 0.8);
             border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.6);
+            padding: 40px;
+            backdrop-filter: blur(10px);
         }
         
         .login-header {
@@ -49,35 +50,34 @@
         }
         
         .login-header .logo {
-            max-width: 150px;
-            margin-bottom: 20px;
+            max-width: 120px;
+            margin-bottom: 15px;
         }
         
         .login-header h2 {
-            color: var(--primary-color);
-            font-size: 24px;
             margin: 0;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+            color: white;
+            font-weight: 600;
         }
         
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            position: relative;
         }
         
         .form-group label {
             display: block;
             margin-bottom: 8px;
-            font-weight: 500;
+            font-size: 14px;
+            color: #ccc;
         }
         
         .form-group input {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #333;
-            border-radius: 5px;
+            padding: 12px 40px 12px 15px;
             background-color: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 5px;
             color: white;
             font-size: 16px;
             transition: all 0.3s;
@@ -85,15 +85,25 @@
         
         .form-group input:focus {
             outline: none;
-            border-color: var(--primary-color);
             background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .form-group .toggle-password {
+            position: absolute;
+            right: 10px;
+            bottom: 12px;
+            background: none;
+            border: none;
+            color: #ccc;
+            cursor: pointer;
         }
         
         .form-options {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            font-size: 14px;
         }
         
         .remember-me {
@@ -102,17 +112,17 @@
         }
         
         .remember-me input {
-            margin-right: 5px;
+            margin-right: 8px;
         }
         
         .forgot-password {
-            color: var(--secondary-color);
+            color: #ccc;
             text-decoration: none;
             transition: color 0.3s;
         }
         
         .forgot-password:hover {
-            color: var(--primary-color);
+            color: var(--secondary-color);
         }
         
         .login-btn {
@@ -123,8 +133,7 @@
             border: none;
             border-radius: 5px;
             font-size: 16px;
-            font-weight: 700;
-            text-transform: uppercase;
+            font-weight: 600;
             cursor: pointer;
             transition: background-color 0.3s;
         }
@@ -224,7 +233,7 @@
             text-align: center;
         }
         
-        .alert-error {
+        .alert-danger {
             background-color: rgba(231, 76, 60, 0.3);
             border: 1px solid #e74c3c;
             color: #e74c3c;
@@ -234,6 +243,12 @@
             background-color: rgba(46, 204, 113, 0.3);
             border: 1px solid #2ecc71;
             color: #2ecc71;
+        }
+        
+        .alert-info {
+            background-color: rgba(52, 152, 219, 0.3);
+            border: 1px solid #3498db;
+            color: #3498db;
         }
     </style>
 </head>
@@ -260,7 +275,12 @@
                 </div>
                 <div class="form-group">
                     <label for="password">Senha</label>
-                    <input type="password" id="password" name="password" required>
+                    <div class="position-relative">
+                        <input type="password" id="password" name="password" required>
+                        <button type="button" class="toggle-password" onclick="togglePasswordVisibility()">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
                 </div>
                 <div class="form-options">
                     <div class="remember-me">
@@ -277,9 +297,12 @@
             <div class="social-login">
                 <p>Ou entre com</p>
                 <div class="social-icons">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-google"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#" title="Em breve"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" title="Em breve"><i class="fab fa-google"></i></a>
+                    <a href="#" title="Em breve"><i class="fab fa-instagram"></i></a>
+                </div>
+                <div class="text-center mt-2">
+                    <small class="text-muted">Em breve disponível</small>
                 </div>
             </div>
             <div class="back-to-site">
@@ -287,7 +310,22 @@
             </div>
         </div>
     </div>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('password');
+            const icon = document.querySelector('.toggle-password i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+    </script>
 </body>
 </html>
