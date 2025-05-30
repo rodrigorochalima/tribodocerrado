@@ -1,0 +1,364 @@
+{% extends "base_member.html" %}
+
+{% block title %}Minhas Motos - Tribo do Cerrado{% endblock %}
+
+{% block card_title %}Minhas Motos{% endblock %}
+
+{% block page_styles %}
+.motorcycle-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.motorcycle-card {
+    background-color: white;
+    border: 1px solid var(--dark-gray);
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.motorcycle-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 10px;
+    background-color: var(--primary-color);
+}
+
+.motorcycle-header {
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px dashed var(--dark-gray);
+}
+
+.motorcycle-title {
+    font-family: 'Black Ops One', cursive;
+    font-size: 24px;
+    color: var(--primary-color);
+}
+
+.motorcycle-year {
+    background-color: var(--dark-color);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 14px;
+}
+
+.motorcycle-image-main {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-bottom: 1px solid var(--dark-gray);
+}
+
+.motorcycle-details {
+    padding: 15px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.detail-item {
+    margin-bottom: 10px;
+}
+
+.detail-label {
+    font-size: 12px;
+    color: var(--dark-gray);
+    display: block;
+}
+
+.detail-value {
+    font-weight: bold;
+    background-color: var(--light-gray);
+    padding: 5px;
+    border-radius: 3px;
+    font-size: 14px;
+    border: 1px dashed var(--dark-gray);
+}
+
+.motorcycle-thumbnails {
+    padding: 0 15px 15px;
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+}
+
+.thumbnail-container {
+    position: relative;
+    width: 80px;
+    height: 60px;
+    flex-shrink: 0;
+}
+
+.thumbnail {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border: 2px solid var(--dark-color);
+    border-radius: 3px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.thumbnail:hover {
+    transform: scale(1.05);
+}
+
+.thumbnail-caption {
+    display: none;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 3px;
+    font-size: 10px;
+    text-align: center;
+}
+
+.thumbnail-container:hover .thumbnail-caption {
+    display: block;
+}
+
+.motorcycle-actions {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 15px;
+    background-color: var(--light-gray);
+    border-top: 1px solid var(--dark-gray);
+}
+
+.action-button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: background-color 0.3s;
+}
+
+.edit-button {
+    background-color: var(--secondary-color);
+    color: var(--dark-color);
+}
+
+.edit-button:hover {
+    background-color: #e6c200;
+}
+
+.delete-button {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.delete-button:hover {
+    background-color: #a01830;
+}
+
+.add-motorcycle {
+    background-color: var(--dark-color);
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    min-height: 300px;
+    border: 2px dashed var(--dark-gray);
+}
+
+.add-motorcycle:hover {
+    background-color: var(--primary-color);
+}
+
+.add-icon {
+    font-size: 48px;
+    margin-bottom: 15px;
+    color: var(--secondary-color);
+}
+
+.add-text {
+    font-family: 'Black Ops One', cursive;
+    font-size: 20px;
+}
+
+.ipva-alert {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 12px;
+    transform: rotate(5deg);
+    z-index: 2;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 50px 20px;
+    background-color: white;
+    border-radius: 5px;
+    border: 1px solid var(--dark-gray);
+}
+
+.empty-icon {
+    font-size: 64px;
+    color: var(--dark-gray);
+    margin-bottom: 20px;
+}
+
+.empty-title {
+    font-family: 'Black Ops One', cursive;
+    font-size: 24px;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.empty-text {
+    margin-bottom: 20px;
+    color: var(--dark-gray);
+}
+
+.add-first-button {
+    display: inline-block;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-family: 'Black Ops One', cursive;
+    transition: background-color 0.3s;
+}
+
+.add-first-button:hover {
+    background-color: #a01830;
+}
+{% endblock %}
+
+{% block content %}
+<div class="card-section">
+    <h2 class="section-title">
+        <i class="fas fa-motorcycle"></i> Minhas Motocicletas
+    </h2>
+    
+    {% if motorcycles %}
+    <div class="motorcycle-grid">
+        {% for motorcycle in motorcycles %}
+        <div class="motorcycle-card">
+            {% if motorcycle.ipva_due_date and motorcycle.ipva_due_date|days_until < 30 %}
+            <div class="ipva-alert">
+                <i class="fas fa-exclamation-triangle"></i> IPVA vence em {{ motorcycle.ipva_due_date|days_until }} dias
+            </div>
+            {% endif %}
+            
+            <div class="motorcycle-header">
+                <h3 class="motorcycle-title">{{ motorcycle.brand }} {{ motorcycle.model }}</h3>
+                <div class="motorcycle-year">{{ motorcycle.model_year }}</div>
+            </div>
+            
+            {% if motorcycle.images %}
+            <img src="{{ motorcycle.images[0].image_url }}" alt="{{ motorcycle.brand }} {{ motorcycle.model }}" class="motorcycle-image-main">
+            {% else %}
+            <img src="/static/images/motorcycle_default.jpg" alt="{{ motorcycle.brand }} {{ motorcycle.model }}" class="motorcycle-image-main">
+            {% endif %}
+            
+            <div class="motorcycle-details">
+                <div class="detail-item">
+                    <span class="detail-label">Marca</span>
+                    <div class="detail-value">{{ motorcycle.brand }}</div>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Modelo</span>
+                    <div class="detail-value">{{ motorcycle.model }}</div>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Ano Fabricação</span>
+                    <div class="detail-value">{{ motorcycle.manufacturing_year }}</div>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Ano Modelo</span>
+                    <div class="detail-value">{{ motorcycle.model_year }}</div>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Placa</span>
+                    <div class="detail-value">{{ motorcycle.license_plate }}</div>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Venc. IPVA</span>
+                    <div class="detail-value">{{ motorcycle.ipva_due_date|date_format }}</div>
+                </div>
+            </div>
+            
+            {% if motorcycle.images %}
+            <div class="motorcycle-thumbnails">
+                {% for image in motorcycle.images %}
+                <div class="thumbnail-container">
+                    <img src="{{ image.image_url }}" alt="Foto {{ loop.index }}" class="thumbnail">
+                    <div class="thumbnail-caption">{{ image.caption }}</div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <div class="motorcycle-actions">
+                <a href="/membro/motos/{{ motorcycle.id }}/editar" class="action-button edit-button">
+                    <i class="fas fa-edit"></i> Editar
+                </a>
+                <button class="action-button delete-button" onclick="confirmDelete({{ motorcycle.id }})">
+                    <i class="fas fa-trash"></i> Excluir
+                </button>
+            </div>
+        </div>
+        {% endfor %}
+        
+        {% if motorcycles|length < 5 %}
+        <a href="/membro/motos/adicionar" class="add-motorcycle">
+            <i class="fas fa-plus-circle add-icon"></i>
+            <span class="add-text">Adicionar Nova Moto</span>
+        </a>
+        {% endif %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <i class="fas fa-motorcycle empty-icon"></i>
+        <h3 class="empty-title">Nenhuma Motocicleta Cadastrada</h3>
+        <p class="empty-text">Você ainda não cadastrou nenhuma motocicleta. Adicione sua primeira moto agora!</p>
+        <a href="/membro/motos/adicionar" class="add-first-button">
+            <i class="fas fa-plus-circle"></i> Adicionar Moto
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function confirmDelete(motorcycleId) {
+        if (confirm('Tem certeza que deseja excluir esta motocicleta?')) {
+            window.location.href = `/membro/motos/${motorcycleId}/excluir`;
+        }
+    }
+</script>
+{% endblock %}

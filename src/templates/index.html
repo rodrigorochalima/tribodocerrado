@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tribo do Cerrado Motoclube - Goiânia, Goiás</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #8B0000;
+            --secondary-color: #DAA520;
+            --dark-color: #1A1A1A;
+            --light-color: #F5F5F5;
+            --accent-color: #556B2F;
+            --text-color: #333333;
+            --header-height: 80px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: #000;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            background-color: #000;
+            color: #fff;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .header-top {
+            background-color: #111;
+            padding: 5px 0;
+            font-size: 0.8rem;
+        }
+        
+        .header-top-content {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+        
+        .header-top-content a {
+            color: #ccc;
+            text-decoration: none;
+            margin-left: 15px;
+            transition: color 0.3s;
+        }
+        
+        .header-top-content a:hover {
+            color: var(--secondary-color);
+        }
+        
+        .header-main {
+            padding: 15px 0;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            height: 60px;
+            margin-right: 10px;
+        }
+        
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .logo-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.8rem;
+            color: var(--secondary-color);
+            line-height: 1;
+        }
+        
+        .logo-subtitle {
+            font-size: 0.8rem;
+            color: #ccc;
+        }
+        
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            position: relative;
+            margin-left: 5px;
+        }
+        
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            padding: 10px 15px;
+            display: block;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+        
+        nav ul li a:hover,
+        nav ul li a.active {
+            color: var(--secondary-color);
+            border-bottom: 3px solid var(--secondary-color);
+        }
+        
+        .header-buttons {
+            display: flex;
+            align-items: center;
+        }
+        
+        .search-btn,
+        .login-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-left: 15px;
+            transition: color 0.3s;
+        }
+        
+        .search-btn:hover,
+        .login-btn:hover {
+            color: var(--secondary-color);
+        }
+        
+        .login-btn {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        
+        .login-btn i {
+            margin-right: 5px;
+        }
+        
+        /* User Menu Dropdown */
+        .user-menu {
+            position: relative;
+            margin-left: 15px;
+        }
+        
+        .user-menu-btn {
+            display: flex;
+            align-items: center;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            padding: 10px 15px;
+            border-radius: 3px;
+            transition: all 0.3s;
+        }
+        
+        .user-menu-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--secondary-color);
+        }
+        
+        .user-menu-btn i {
+            margin-right: 5px;
+        }
+        
+        .user-menu-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: #111;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            width: 200px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            display: none;
+            z-index: 1000;
+        }
+        
+        .user-menu.active .user-menu-dropdown {
+            display: block;
+        }
+        
+        .user-menu-dropdown ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .user-menu-dropdown ul li {
+            margin: 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .user-menu-dropdown ul li:last-child {
+            border-bottom: none;
+        }
+        
+        .user-menu-dropdown ul li a {
+            display: block;
+            padding: 12px 15px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        
+        .user-menu-dropdown ul li a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--secondary-color);
+        }
+        
+        .user-menu-dropdown ul li a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .user-menu-dropdown .user-info {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+        
+        .user-menu-dropdown .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            overflow: hidden;
+            border: 2px solid var(--secondary-color);
+        }
+        
+        .user-menu-dropdown .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .user-menu-dropdown .user-name {
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin-bottom: 5px;
+        }
+        
+        .user-menu-dropdown .user-role {
+            font-size: 0.8rem;
+            color: #ccc;
+        }
+        
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/static/images/hero-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            color: #fff;
+            margin-top: var(--header-height);
+            position: relative;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            padding: 0 20px;
+        }
+        
+        .hero-subtitle {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--secondary-color);
+        }
+        
+        .hero h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 4rem;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+        
+        .hero h1 span {
+            display: block;
+            color: var(--secondary-color);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            max-width: 600px;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: #fff;
+            padding: 12px 30px;
+            text-decoration: none;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #a30000;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid #fff;
+            margin-left: 15px;
+        }
+        
+        .btn-outline:hover {
+            background-color: #fff;
+            color: var(--dark-color);
+        }
+        
+        /* About Section */
+        .section {
+            padding: 100px 0;
+        }
+        
+        .section-dark {
+            background-color: #111;
+            color: #fff;
+        }
+        
+        .section-light {
+            background-color: #fff;
+            color: var(--text-color);
+        }
+        
+        .section-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            color: var(--primary-color);
+            position: relative;
+        }
+        
+        .section-dark .section-title {
+            color: var(--secondary-color);
+        }
+        
+        .section-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            max-width: 700px;
+        }
+        
+        .about-content {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+        
+        .about-text {
+            flex: 1;
+        }
+        
+        .about-image {
+            flex: 1;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .about-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #111;
+            color: #fff;
+            padding: 60px 0 20px;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column {
+            flex: 1;
+            padding: 0 15px;
+        }
+        
+        .footer-logo {
+            margin-bottom: 20px;
+        }
+        
+        .footer-logo img {
+            height: 60px;
+        }
+        
+        .footer-about {
+            margin-bottom: 20px;
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+        
+        .footer-social {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .footer-social a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+        
+        .footer-social a:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-3px);
+        }
+        
+        .footer-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--secondary-color);
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+        }
+        
+        .footer-links a:hover {
+            color: var(--secondary-color);
+        }
+        
+        .footer-links a i {
+            margin-right: 10px;
+            font-size: 0.8rem;
+        }
+        
+        .footer-contact-item {
+            display: flex;
+            margin-bottom: 15px;
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+        
+        .footer-contact-icon {
+            margin-right: 10px;
+            color: var(--secondary-color);
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.8rem;
+            color: #777;
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .about-content {
+                flex-direction: column;
+            }
+            
+            .about-image {
+                order: -1;
+                margin-bottom: 30px;
+            }
+            
+            .footer-content {
+                flex-wrap: wrap;
+            }
+            
+            .footer-column {
+                flex: 0 0 50%;
+                margin-bottom: 30px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-toggle {
+                display: block;
+            }
+            
+            nav {
+                position: fixed;
+                top: var(--header-height);
+                left: -100%;
+                width: 80%;
+                height: calc(100vh - var(--header-height));
+                background-color: #111;
+                transition: left 0.3s;
+                z-index: 1000;
+                overflow-y: auto;
+            }
+            
+            nav.active {
+                left: 0;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                padding: 20px;
+            }
+            
+            nav ul li {
+                margin: 0;
+                margin-bottom: 10px;
+            }
+            
+            nav ul li a {
+                padding: 15px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            
+            .hero h1 {
+                font-size: 3rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .btn {
+                display: block;
+                width: 100%;
+                text-align: center;
+                margin-bottom: 10px;
+            }
+            
+            .btn-outline {
+                margin-left: 0;
+            }
+            
+            .footer-column {
+                flex: 0 0 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-top">
+            <div class="container">
+                <div class="header-top-content">
+                    <a href="mailto:contato@tribodocerrado.com.br"><i class="fas fa-envelope"></i> contato@tribodocerrado.com.br</a>
+                    <a href="tel:+556299999999"><i class="fas fa-phone"></i> (62) 9999-9999</a>
+                </div>
+            </div>
+        </div>
+        <div class="header-main">
+            <div class="container">
+                <div class="header-content">
+                    <a href="/" class="logo">
+                        <img src="/static/images/logo.png" alt="Tribo do Cerrado Logo">
+                        <div class="logo-text">
+                            <span class="logo-title">Tribo do Cerrado</span>
+                            <span class="logo-subtitle">Motoclube - Goiânia, GO</span>
+                        </div>
+                    </a>
+                    <button class="nav-toggle" id="nav-toggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <nav id="nav-menu">
+                        <ul>
+                            <li><a href="/" class="active">Início</a></li>
+                            <li><a href="/sobre">Nossa História</a></li>
+                            <li><a href="/encontros">Encontros</a></li>
+                            <li><a href="/na-estrada">Na Estrada</a></li>
+                            <li><a href="/galeria">Galeria</a></li>
+                            <li><a href="/contato">Contato</a></li>
+                        </ul>
+                    </nav>
+                    <div class="header-buttons">
+                        <button class="search-btn">
+                            <i class="fas fa-search"></i>
+                        </button>
+                        
+                        <!-- Botão de login (visível apenas quando não logado) -->
+                        <div id="login-button" style="display: none;">
+                            <a href="/login" class="login-btn">
+                                <i class="fas fa-user"></i> Área do Membro
+                            </a>
+                        </div>
+                        
+                        <!-- Menu do usuário (visível apenas quando logado) -->
+                        <div id="user-menu" class="user-menu" style="display: none;">
+                            <button class="user-menu-btn" id="user-menu-btn">
+                                <i class="fas fa-user-circle"></i> <span id="user-name">Usuário</span> <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div class="user-menu-dropdown">
+                                <div class="user-info">
+                                    <div class="user-avatar">
+                                        <img id="user-avatar" src="/static/images/profiles/default.jpg" alt="Avatar">
+                                    </div>
+                                    <div class="user-name" id="user-fullname">Nome Completo</div>
+                                    <div class="user-role" id="user-role">Membro</div>
+                                </div>
+                                <ul>
+                                    <li><a href="/membro/perfil"><i class="fas fa-id-card"></i> Minha Ficha</a></li>
+                                    <li><a href="/membro/motos"><i class="fas fa-motorcycle"></i> Minhas Motos</a></li>
+                                    <li><a href="/membro/galeria"><i class="fas fa-images"></i> Minhas Fotos</a></li>
+                                    <li><a href="/membro/configuracoes"><i class="fas fa-cog"></i> Configurações</a></li>
+                                    <li><a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Conteúdo principal da página -->
+        <section class="hero">
+            <div class="hero-content">
+                <div class="hero-subtitle">Desde 2003</div>
+                <h1>Tribo do Cerrado <span>Motoclube</span></h1>
+                <p>Mais de 20 anos de história, amizade e paixão pelo motociclismo no coração do Brasil. Junte-se a nós nessa jornada sobre duas rodas.</p>
+                <a href="/sobre" class="btn">Conheça Nossa História</a>
+                <a href="/contato" class="btn btn-outline">Entre em Contato</a>
+            </div>
+        </section>
+
+        <!-- Outras seções da página... -->
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <div class="footer-logo">
+                        <img src="/static/images/logo.png" alt="Tribo do Cerrado Logo">
+                    </div>
+                    <div class="footer-about">
+                        Motoclube tradicional de Goiânia com mais de 20 anos de história, promovendo a cultura do motociclismo, amizade e solidariedade.
+                    </div>
+                    <div class="footer-social">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-title">Links Rápidos</h3>
+                    <ul class="footer-links">
+                        <li><a href="/"><i class="fas fa-chevron-right"></i> Início</a></li>
+                        <li><a href="/sobre"><i class="fas fa-chevron-right"></i> Nossa História</a></li>
+                        <li><a href="/encontros"><i class="fas fa-chevron-right"></i> Encontros</a></li>
+                        <li><a href="/na-estrada"><i class="fas fa-chevron-right"></i> Na Estrada</a></li>
+                        <li><a href="/galeria"><i class="fas fa-chevron-right"></i> Galeria</a></li>
+                        <li><a href="/contato"><i class="fas fa-chevron-right"></i> Contato</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-title">Área do Membro</h3>
+                    <ul class="footer-links">
+                        <li><a href="/login"><i class="fas fa-chevron-right"></i> Login</a></li>
+                        <li><a href="/register"><i class="fas fa-chevron-right"></i> Cadastro</a></li>
+                        <li><a href="/membro/perfil"><i class="fas fa-chevron-right"></i> Minha Ficha</a></li>
+                        <li><a href="/membro/motos"><i class="fas fa-chevron-right"></i> Minhas Motos</a></li>
+                        <li><a href="/membro/galeria"><i class="fas fa-chevron-right"></i> Minhas Fotos</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-title">Contato</h3>
+                    <div class="footer-contact-item">
+                        <div class="footer-contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div>
+                            Av. Goiás, 1234, Setor Central<br>
+                            Goiânia, GO, 74000-000
+                        </div>
+                    </div>
+                    <div class="footer-contact-item">
+                        <div class="footer-contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div>
+                            (62) 9999-9999
+                        </div>
+                    </div>
+                    <div class="footer-contact-item">
+                        <div class="footer-contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div>
+                            contato@tribodocerrado.com.br
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Tribo do Cerrado Motoclube. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Toggle menu no mobile
+        document.getElementById('nav-toggle').addEventListener('click', function() {
+            document.getElementById('nav-menu').classList.toggle('active');
+        });
+        
+        // Toggle dropdown do menu do usuário
+        document.getElementById('user-menu-btn')?.addEventListener('click', function() {
+            document.getElementById('user-menu').classList.toggle('active');
+        });
+        
+        // Fechar dropdown ao clicar fora
+        document.addEventListener('click', function(event) {
+            const userMenu = document.getElementById('user-menu');
+            const userMenuBtn = document.getElementById('user-menu-btn');
+            
+            if (userMenu && userMenuBtn && !userMenu.contains(event.target) && !userMenuBtn.contains(event.target)) {
+                userMenu.classList.remove('active');
+            }
+        });
+        
+        // Logout
+        document.getElementById('logout-btn')?.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            fetch('/api/auth/logout', {
+                method: 'POST',
+                credentials: 'same-origin'
+            })
+            .then(response => response.json())
+            .then(data => {
+                window.location.href = '/';
+            })
+            .catch(error => {
+                console.error('Erro ao fazer logout:', error);
+            });
+        });
+        
+        // Verificar sessão ao carregar a página
+        window.addEventListener('DOMContentLoaded', function() {
+            fetch('/api/auth/check-session', {
+                method: 'GET',
+                credentials: 'same-origin'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.logged_in) {
+                    // Usuário está logado
+                    document.getElementById('login-button').style.display = 'none';
+                    document.getElementById('user-menu').style.display = 'block';
+                    
+                    // Atualizar informações do usuário
+                    document.getElementById('user-name').textContent = data.user.username;
+                    document.getElementById('user-fullname').textContent = data.user.full_name || data.user.username;
+                    document.getElementById('user-role').textContent = data.user.is_admin ? 'Administrador' : 'Membro';
+                    
+                    // Se tiver imagem de perfil
+                    if (data.user.profile_image) {
+                        document.getElementById('user-avatar').src = data.user.profile_image;
+                    }
+                } else {
+                    // Usuário não está logado
+                    document.getElementById('login-button').style.display = 'block';
+                    document.getElementById('user-menu').style.display = 'none';
+                }
+            })
+            .catch(error => {
+                console.error('Erro ao verificar sessão:', error);
+                // Em caso de erro, mostrar botão de login
+                document.getElementById('login-button').style.display = 'block';
+                document.getElementById('user-menu').style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>
