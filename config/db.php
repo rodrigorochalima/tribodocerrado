@@ -1,0 +1,1 @@
+// Conteúdo simulado para config/db.php

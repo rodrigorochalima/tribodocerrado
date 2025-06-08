@@ -1,0 +1,1 @@
+// Conteúdo simulado para protected/modules/user/models/User.php

@@ -1,0 +1,1 @@
+// Conteúdo simulado para protected/humhub-modules/tribo/moderation.php
