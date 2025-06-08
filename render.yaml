@@ -1,57 +1,14 @@
 services:
   - type: web
-    name: tribo-cerrado-web
-    env: docker
-    dockerfilePath: ./Dockerfile
-    region: oregon
-    plan: starter
-    branch: main
-    healthCheckPath: /health.php
+    name: tribo-do-cerrado-social
+    env: node
+    plan: free
+    buildCommand: 'npm install'
+    startCommand: 'php index.php'
+    staticPublishPath: 'public'
+    buildFilter:
+      paths:
+        - '**/*'
     envVars:
-      - key: ENVIRONMENT
+      - key: NODE_ENV
         value: production
-      - key: RUN_MIGRATIONS
-        value: true
-      - key: CLEAR_CACHE
-        value: true
-      - key: CREATE_ADMIN
-        value: true
-      - key: ENABLE_CRON
-        value: true
-      - key: DATABASE_URL
-        fromDatabase:
-          name: tribo-cerrado-db
-          property: connectionString
-      - key: COOKIE_VALIDATION_KEY
-        generateValue: true
-      - key: ADMIN_EMAIL
-        value: admin@tribodocerrado.com
-      - key: ADMIN_USERNAME
-        value: admin
-      - key: ADMIN_PASSWORD
-        generateValue: true
-      - key: ADMIN_FIRSTNAME
-        value: Administrador
-      - key: ADMIN_LASTNAME
-        value: Tribo do Cerrado
-      - key: MAILER_HOST
-        value: smtp.gmail.com
-      - key: MAILER_PORT
-        value: 587
-      - key: MAILER_ENCRYPTION
-        value: tls
-      - key: MAILER_USERNAME
-        sync: false
-      - key: MAILER_PASSWORD
-        sync: false
-      - key: SUPPORT_EMAIL
-        value: suporte@tribodocerrado.com
-
-databases:
-  - name: tribo-cerrado-db
-    databaseName: tribo_cerrado_prod
-    user: tribo_user
-    region: oregon
-    plan: starter
-    postgresMajorVersion: 14
-
