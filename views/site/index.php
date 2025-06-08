@@ -1,0 +1,1 @@
+<h1>Bem-vindo à Tribo do Cerrado 🏍️</h1><p>Rede social customizada para motociclistas!</p>
