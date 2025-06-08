@@ -1,74 +1,63 @@
-# Dockerfile para Tribo do Cerrado
+
 FROM php:8.1-apache
 
 # Instalar dependências do sistema
 RUN apt-get update && apt-get install -y \
+    libpq-dev \
+    libzip-dev \
+    libldap2-dev \
+    libjpeg-dev \
+    libpng-dev \
+    unzip \
     git \
     curl \
-    libpng-dev \
     libonig-dev \
-    libxml2-dev \
-    libzip-dev \
-    libpq-dev \
-    libldap2-dev \
-    libbz2-dev \
-    libfreetype6-dev \
-    libjpeg62-turbo-dev \
-    libmcrypt-dev \
-    libgd-dev \
-    unzip \
+    && docker-php-ext-configure gd \
+    --with-jpeg \
+    && docker-php-ext-install \
+    pdo_pgsql \
     zip \
-    nodejs \
-    npm \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) gd \
-    && docker-php-ext-install pdo pdo_pgsql pgsql \
-    && docker-php-ext-install mbstring xml zip bcmath intl \
-    && docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ \
-    && docker-php-ext-install ldap \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    gd \
+    exif \
+    intl \
+    bcmath \
+    ldap
 
 # Instalar Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Configurar Apache
+# Habilitar módulos do Apache
 RUN a2enmod rewrite
 RUN a2enmod headers
 RUN a2enmod ssl
 
-# Configurar PHP
+# Configurações PHP
 RUN echo "memory_limit = 512M" >> /usr/local/etc/php/conf.d/docker-php-memlimit.ini
 RUN echo "upload_max_filesize = 50M" >> /usr/local/etc/php/conf.d/docker-php-uploads.ini
 RUN echo "post_max_size = 50M" >> /usr/local/etc/php/conf.d/docker-php-uploads.ini
 RUN echo "max_execution_time = 300" >> /usr/local/etc/php/conf.d/docker-php-time.ini
 
-# Definir diretório de trabalho
+# Diretório de trabalho
 WORKDIR /var/www/html
 
-# Copiar arquivos do projeto
+# Copiar aplicação
 COPY . .
 
-# Instalar dependências PHP
+# Instalar dependências PHP via Composer
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-# Configurar permissões
-RUN chown -R www-data:www-data /var/www/html
-RUN chmod -R 755 /var/www/html
+# Permissões
 RUN chmod -R 777 /var/www/html/uploads
-RUN chmod -R 777 /var/www/html/protected/runtime
-RUN chmod -R 777 /var/www/html/assets
-
-# Configurar Apache Virtual Host
-COPY docker/apache-vhost.conf /etc/apache2/sites-available/000-default.conf
+RUN chown -R www-data:www-data /var/www/html
 
 # Script de inicialização
 COPY docker/start.sh /start.sh
 RUN chmod +x /start.sh
 
+# Configuração do Apache
+COPY docker/apache-vhost.conf /etc/apache2/sites-available/000-default.conf
+
 # Expor porta
 EXPOSE 80
 
-# Comando de inicialização
 CMD ["/start.sh"]
-
