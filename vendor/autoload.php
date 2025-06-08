@@ -1,0 +1,2 @@
+<?php
+// Simulated Composer autoloader
