@@ -1,0 +1,90 @@
+# Tribo do Cerrado - Rede Social
+
+# Logs
+protected/runtime/logs/
+protected/runtime/cache/
+protected/runtime/debug/
+protected/runtime/mail/
+
+# Assets gerados
+assets/*
+!assets/.gitkeep
+
+# Uploads
+uploads/*
+!uploads/.gitkeep
+!uploads/file/.gitkeep
+!uploads/profile_image/.gitkeep
+
+# Configurações locais
+protected/config/local.php
+protected/config/dynamic.php
+.env
+.env.local
+
+# Dependências
+vendor/
+node_modules/
+
+# Cache do Composer
+composer.lock
+
+# Arquivos temporários
+*.tmp
+*.temp
+*.log
+*.cache
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDEs
+.vscode/
+.idea/
+*.sublime-*
+
+# Backup files
+*.bak
+*.backup
+*.sql
+
+# Docker
+.docker/
+
+# Arquivos de desenvolvimento
+/database/backups/
+/tests/
+/docs/build/
+
+# Arquivos sensíveis
+private_key.pem
+public_key.pem
+*.key
+*.pem
+*.p12
+
+# Arquivos de configuração específicos do ambiente
+config/local/
+config/production/
+config/staging/
+
+# Arquivos de migração temporários
+migrations/temp/
+
+# Arquivos de teste
+phpunit.xml
+codeception.yml
+tests/_output/
+
+# Arquivos de profiling
+*.prof
+*.xhprof
+
+# Arquivos de monitoramento
+monitoring/
+metrics/
+

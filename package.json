@@ -1,0 +1,45 @@
+{
+  "name": "tribo-cerrado-social",
+  "version": "1.0.0",
+  "description": "Rede social personalizada para o motoclube Tribo do Cerrado",
+  "main": "index.php",
+  "scripts": {
+    "build": "npm run build:css && npm run build:js",
+    "build:css": "echo 'CSS build completed'",
+    "build:js": "echo 'JS build completed'",
+    "dev": "php -S localhost:8000",
+    "test": "echo 'Tests not configured yet'",
+    "deploy": "echo 'Deploy to Render.com'",
+    "health": "curl -f http://localhost/health.php || exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/usuario/tribo-cerrado-social.git"
+  },
+  "keywords": [
+    "social-network",
+    "motorcycle",
+    "humhub",
+    "php",
+    "postgresql",
+    "orkut-style"
+  ],
+  "author": "Tribo do Cerrado",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0",
+    "php": ">=8.1.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.0",
+    "postcss": "^8.4.0",
+    "postcss-cli": "^10.0.0"
+  },
+  "dependencies": {},
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
+
