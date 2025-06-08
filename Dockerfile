@@ -46,6 +46,9 @@ COPY . .
 # Instalar dependências PHP
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
+# Criar diretório de uploads se não existir
+RUN mkdir -p /var/www/html/uploads
+
 # Configurar permissões
 RUN chmod -R 777 /var/www/html/uploads
 RUN chown -R www-data:www-data /var/www/html
