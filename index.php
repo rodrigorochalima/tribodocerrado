@@ -1,1 +1,0 @@
-// Conteúdo simulado para index.php
