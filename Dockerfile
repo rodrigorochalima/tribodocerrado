@@ -1,10 +1,4 @@
-# Multi-stage build para otimização
-FROM composer:2 AS composer
-WORKDIR /app
-COPY composer.json composer.lock ./
-RUN composer install --no-dev --optimize-autoloader --no-scripts
-
-FROM php:8.1-apache AS production
+FROM php:8.1-apache
 
 # Instalar extensões PHP necessárias
 RUN apt-get update && apt-get install -y \
@@ -40,7 +34,9 @@ COPY docker/apache-vhost.conf /etc/apache2/sites-available/000-default.conf
 # Copiar aplicação
 WORKDIR /var/www/html
 COPY . .
-COPY --from=composer /app/vendor ./protected/vendor
+
+# Instalar dependências PHP
+RUN composer install --no-dev --optimize-autoloader --no-scripts --ignore-platform-reqs
 
 # Configurar permissões
 RUN chown -R www-data:www-data /var/www/html \
