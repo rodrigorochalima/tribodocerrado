@@ -1,5 +1,12 @@
-FROM php:8.1-apache
+# Multi-stage build para otimização
+FROM composer:2 AS composer
+WORKDIR /app
+COPY composer.json composer.lock ./
+RUN composer install --no-dev --optimize-autoloader --no-scripts
 
+FROM php:8.1-apache AS production
+
+# Instalar extensões PHP necessárias
 RUN apt-get update && apt-get install -y \
     unzip \
     git \
@@ -10,18 +17,39 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libpq-dev \
     libldap2-dev \
-    libicu-dev \  # <-- ESTA LINHA CORRIGE O ERRO
- && docker-php-ext-install \
-    pdo \
-    pdo_mysql \
-    zip \
-    gd \
-    intl \
-    bcmath \
-    ldap \
- && docker-php-ext-configure gd --with-jpeg
+    libicu-dev \
+    libfreetype6-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) \
+        pdo \
+        pdo_pgsql \
+        pgsql \
+        zip \
+        gd \
+        intl \
+        bcmath \
+        ldap \
+        mbstring \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-COPY . /var/www/html
+# Configurar Apache
+RUN a2enmod rewrite headers ssl
 COPY docker/apache-vhost.conf /etc/apache2/sites-available/000-default.conf
-RUN chmod +x /var/www/html/docker/start.sh
+
+# Copiar aplicação
+WORKDIR /var/www/html
+COPY . .
+COPY --from=composer /app/vendor ./protected/vendor
+
+# Configurar permissões
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html \
+    && chmod -R 777 /var/www/html/uploads \
+    && chmod -R 777 /var/www/html/protected/runtime \
+    && chmod -R 777 /var/www/html/assets \
+    && chmod +x /var/www/html/docker/start.sh
+
+EXPOSE 80
 CMD ["/var/www/html/docker/start.sh"]
+
