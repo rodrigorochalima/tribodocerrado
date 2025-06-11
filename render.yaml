@@ -4,11 +4,11 @@ services:
     runtime: docker
     plan: free
     repo: https://github.com/rodrigorochalima/tribodocerrado.git
-    branch: main
+    branch: master
     dockerfilePath: ./Dockerfile
     envVars:
       - key: DATABASE_URL
-        value: postgresql://tribocerrado_user:n5surZdmA5r0lDLD2i5rswrvUir9gsCU@dpg-d0qu903ipnbc73eoq6h0-a/tribocerrado
+        value: postgresql://triboadmin:8xFUEgRCb3cIU0Oz7GtZmmRPr3QXMWAJ@dpg-d14cdmh5pdvs73f1njd0-a/tribodocerrado
       - key: YII_ENV
         value: prod
       - key: YII_DEBUG
