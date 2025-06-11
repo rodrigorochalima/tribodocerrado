@@ -13,8 +13,11 @@ RUN apt-get update && apt-get install -y \
 # Instalar Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Configurar Apache
-RUN a2enmod rewrite headers
+# Configurar Apache e ServerName
+RUN a2enmod rewrite headers \
+    && echo "ServerName tribodocerrado.onrender.com" >> /etc/apache2/apache2.conf \
+    && echo "Listen 80" >> /etc/apache2/ports.conf
+
 COPY docker/apache-vhost.conf /etc/apache2/sites-available/000-default.conf
 
 # Copiar aplicação

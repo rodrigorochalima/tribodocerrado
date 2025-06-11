@@ -11,7 +11,8 @@ if [ ! -z "$DATABASE_URL" ]; then
             echo "✅ PostgreSQL conectado!"
             break
         fi
-        sleep 1
+        echo "Tentativa $i/30..."
+        sleep 2
     done
 fi
 
@@ -19,6 +20,10 @@ fi
 chown -R www-data:www-data /var/www/html
 chmod -R 777 protected/runtime uploads assets 2>/dev/null || true
 
-echo "🚀 Iniciando Apache..."
+# Garantir que Apache escute na porta correta
+echo "Listen 80" > /etc/apache2/ports.conf
+echo "ServerName tribodocerrado.onrender.com" >> /etc/apache2/apache2.conf
+
+echo "🚀 Iniciando Apache na porta 80..."
 exec apache2-foreground
 
