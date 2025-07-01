@@ -1,0 +1,44 @@
+name: Create/Delete Branch for Pull Request
+
+on:
+  pull_request:
+    types:
+      - opened
+      - closed
+
+jobs:
+  manage-neon-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create Neon Branch
+        if: github.event.action == 'opened'
+        uses: neondatabase/create-branch-action@v5
+        with:
+          project_id: ${{ secrets.NEON_PROJECT_ID }}
+          api_key: ${{ secrets.NEON_API_KEY }}
+          branch_name: preview/pr-${{ github.event.number }}
+          username: ${{ secrets.NEON_USERNAME }}
+          password: ${{ secrets.NEON_PASSWORD }}
+
+      - name: Delete Neon Branch
+        if: github.event.action == 'closed'
+        uses: neondatabase/delete-branch-action@v5
+        with:
+          project_id: ${{ secrets.NEON_PROJECT_ID }}
+          api_key: ${{ secrets.NEON_API_KEY }}
+          branch_name: preview/pr-${{ github.event.number }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.event.action == 'opened' || github.event_name == 'push'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
+          publish_branch: gh-pages
+
