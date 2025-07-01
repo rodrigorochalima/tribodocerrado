@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tribo do Cerrado - Motoclube</title>
+    <title>Tribo do Cerrado - Motoclube de Brasília</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
         * {
             margin: 0;
@@ -13,494 +15,379 @@
 
         body {
             font-family: 'Arial', sans-serif;
-            background-image: url('FundoSIte.png');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            min-height: 100vh;
+            background: url('FundoSIte.png') center/cover no-repeat fixed;
+            color: #fff;
             overflow-x: hidden;
-            position: relative;
         }
 
-        /* OVERLAY PARA MELHOR LEGIBILIDADE */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.3);
-            pointer-events: none;
-            z-index: 1;
+        /* Header com logo maior */
+        .header {
+            background: linear-gradient(135deg, #8B4513, #D2691E);
+            padding: 10px 0;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
 
-        /* BARRA SUPERIOR FIXA */
-        .top-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 80px;
-            background: linear-gradient(135deg, 
-                rgba(139, 69, 19, 0.95) 0%,
-                rgba(160, 82, 45, 0.95) 25%,
-                rgba(205, 133, 63, 0.95) 50%,
-                rgba(160, 82, 45, 0.95) 75%,
-                rgba(139, 69, 19, 0.95) 100%);
-            backdrop-filter: blur(10px);
-            border-bottom: 3px solid #ff6600;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 20px;
-            z-index: 1000;
-        }
-
-        /* LOGO CENTRAL */
-        .logo-container {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .logo-image {
-            width: 60px;
-            height: 60px;
+        .logo {
+            width: 120px; /* Dobrado + 15% conforme solicitado */
+            height: 120px;
             border-radius: 50%;
-            border: 3px solid #ff6600;
-            box-shadow: 
-                0 0 20px rgba(255, 102, 0, 0.6),
-                inset 0 2px 4px rgba(255, 255, 255, 0.3);
-            animation: logoGlow 2s ease-in-out infinite alternate;
+            border: 3px solid #FFD700;
+            transition: transform 0.3s ease;
         }
 
-        @keyframes logoGlow {
-            0% { box-shadow: 0 0 10px rgba(255, 102, 0, 0.6), inset 0 2px 4px rgba(255, 255, 255, 0.3); }
-            100% { box-shadow: 0 0 30px rgba(255, 102, 0, 1), inset 0 2px 4px rgba(255, 255, 255, 0.3); }
+        .logo:hover {
+            transform: scale(1.1) rotate(5deg);
         }
 
-        /* BARRAS LATERAIS COM BOTÕES */
-        .nav-left, .nav-right {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        /* BOTÕES METALIZADOS */
-        .metal-button {
-            background: linear-gradient(145deg, 
-                #8B4513 0%,
-                #CD853F 20%,
-                #DEB887 40%,
-                #F4A460 60%,
-                #CD853F 80%,
-                #8B4513 100%);
-            border: 2px solid #ff6600;
-            border-radius: 25px;
-            padding: 8px 16px;
-            color: white;
-            font-weight: bold;
-            font-size: 14px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            box-shadow: 
-                0 4px 8px rgba(0, 0, 0, 0.3),
-                inset 0 2px 4px rgba(255, 255, 255, 0.2);
-            transition: all 0.3s ease;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
-        }
-
-        .metal-button:hover {
-            background: linear-gradient(145deg, 
-                #ff6600 0%,
-                #ff8533 20%,
-                #ffaa66 40%,
-                #ffcc99 60%,
-                #ff8533 80%,
-                #ff6600 100%);
-            box-shadow: 
-                0 6px 12px rgba(255, 102, 0, 0.4),
-                inset 0 2px 4px rgba(255, 255, 255, 0.3),
-                0 0 20px rgba(255, 102, 0, 0.6);
-            transform: translateY(-2px);
-        }
-
-        /* CONTAINER PRINCIPAL */
-        .main-container {
-            margin-top: 80px;
-            min-height: calc(100vh - 80px);
-            position: relative;
-            z-index: 2;
-            padding: 20px;
-        }
-
-        /* TELA INICIAL */
+        /* Tela inicial */
         .welcome-screen {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: calc(100vh - 120px);
+            min-height: 100vh;
             text-align: center;
-            color: white;
+            background: rgba(0,0,0,0.7);
         }
 
-        .welcome-title {
-            font-size: 3.5rem;
-            font-weight: bold;
-            margin-bottom: 20px;
-            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.8);
-            background: linear-gradient(45deg, #ff6600, #ffaa00, #ff6600);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: titleGlow 3s ease-in-out infinite alternate;
-        }
-
-        @keyframes titleGlow {
-            0% { filter: drop-shadow(0 0 10px rgba(255, 102, 0, 0.8)); }
-            100% { filter: drop-shadow(0 0 30px rgba(255, 170, 0, 1)); }
-        }
-
-        .welcome-subtitle {
-            font-size: 1.5rem;
+        .main-logo {
+            width: 400px;
+            height: 400px;
             margin-bottom: 30px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            border-radius: 50%;
+            border: 5px solid #FFD700;
+            box-shadow: 0 0 30px rgba(255,215,0,0.5);
+            animation: pulse 2s infinite;
         }
 
-        .enter-button {
-            background: linear-gradient(145deg, #ff6600, #ff8533, #ffaa66);
-            border: 3px solid #ffcc99;
-            border-radius: 50px;
-            padding: 20px 40px;
-            color: white;
-            font-size: 1.5rem;
+        @keyframes pulse {
+            0% { box-shadow: 0 0 30px rgba(255,215,0,0.5); }
+            50% { box-shadow: 0 0 50px rgba(255,215,0,0.8); }
+            100% { box-shadow: 0 0 30px rgba(255,215,0,0.5); }
+        }
+
+        .title {
+            font-size: 3em;
+            color: #FFD700;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.8);
+            margin-bottom: 10px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 3px 3px 6px rgba(0,0,0,0.8), 0 0 20px #FFD700; }
+            to { text-shadow: 3px 3px 6px rgba(0,0,0,0.8), 0 0 30px #FF8C00; }
+        }
+
+        .subtitle {
+            font-size: 1.5em;
+            color: #FFA500;
+            margin-bottom: 40px;
+        }
+
+        /* Botões animados com efeito de fogo */
+        .btn {
+            background: linear-gradient(45deg, #FF4500, #FF8C00, #FFD700);
+            background-size: 300% 300%;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2em;
             font-weight: bold;
+            color: #000;
+            border-radius: 50px;
             cursor: pointer;
-            text-decoration: none;
-            box-shadow: 
-                0 8px 16px rgba(0, 0, 0, 0.4),
-                inset 0 4px 8px rgba(255, 255, 255, 0.2);
+            margin: 10px;
             transition: all 0.3s ease;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            box-shadow: 0 4px 15px rgba(255,69,0,0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            animation: gradient-shift 3s ease infinite;
         }
 
-        .enter-button:hover {
-            background: linear-gradient(145deg, #ff8533, #ffaa66, #ffcc99);
-            box-shadow: 
-                0 12px 24px rgba(255, 102, 0, 0.5),
-                inset 0 4px 8px rgba(255, 255, 255, 0.3),
-                0 0 30px rgba(255, 102, 0, 0.8);
-            transform: translateY(-4px);
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
-        /* TELA DE OPÇÕES */
-        .options-screen {
+        .btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(255,69,0,0.6);
+            animation: fire-effect 0.5s ease;
+        }
+
+        @keyframes fire-effect {
+            0% { box-shadow: 0 8px 25px rgba(255,69,0,0.6); }
+            50% { box-shadow: 0 12px 35px rgba(255,0,0,0.8), 0 0 20px rgba(255,215,0,0.6); }
+            100% { box-shadow: 0 8px 25px rgba(255,69,0,0.6); }
+        }
+
+        .btn:active {
+            transform: translateY(-1px) scale(1.02);
+        }
+
+        /* Telas do sistema */
+        .screen {
             display: none;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        /* Tela de opções */
+        .options-screen {
+            display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: calc(100vh - 120px);
-            text-align: center;
-            color: white;
-        }
-
-        .options-title {
-            font-size: 2.5rem;
-            font-weight: bold;
-            margin-bottom: 40px;
-            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.8);
-            color: #ff6600;
+            min-height: 100vh;
+            background: rgba(0,0,0,0.8);
         }
 
         .options-container {
-            display: flex;
-            gap: 30px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-bottom: 30px;
-        }
-
-        .option-button {
-            background: linear-gradient(145deg, #8B4513, #CD853F, #DEB887);
-            border: 3px solid #ff6600;
-            border-radius: 20px;
-            padding: 30px 40px;
-            color: white;
-            font-size: 1.2rem;
-            font-weight: bold;
-            cursor: pointer;
-            text-decoration: none;
-            box-shadow: 
-                0 6px 12px rgba(0, 0, 0, 0.4),
-                inset 0 3px 6px rgba(255, 255, 255, 0.2);
-            transition: all 0.3s ease;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-            min-width: 200px;
-            text-align: center;
-        }
-
-        .option-button:hover {
-            background: linear-gradient(145deg, #ff6600, #ff8533, #ffaa66);
-            box-shadow: 
-                0 8px 16px rgba(255, 102, 0, 0.5),
-                inset 0 3px 6px rgba(255, 255, 255, 0.3),
-                0 0 25px rgba(255, 102, 0, 0.7);
-            transform: translateY(-3px);
-        }
-
-        .back-button {
-            background: linear-gradient(145deg, #666, #888, #aaa);
-            border: 2px solid #ccc;
-            border-radius: 15px;
-            padding: 10px 20px;
-            color: white;
-            font-size: 1rem;
-            cursor: pointer;
-            text-decoration: none;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease;
-        }
-
-        .back-button:hover {
-            background: linear-gradient(145deg, #888, #aaa, #ccc);
-            transform: translateY(-2px);
-        }
-
-        /* TELA DE LOGIN */
-        .login-screen {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: calc(100vh - 120px);
-            color: white;
-        }
-
-        .login-container {
-            background: rgba(0, 0, 0, 0.8);
-            border: 3px solid #ff6600;
-            border-radius: 20px;
+            background: rgba(139,69,19,0.9);
             padding: 40px;
-            box-shadow: 
-                0 10px 20px rgba(0, 0, 0, 0.5),
-                inset 0 2px 4px rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            max-width: 400px;
-            width: 100%;
+            border-radius: 20px;
+            border: 3px solid #FFD700;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        .login-title {
-            font-size: 2rem;
-            font-weight: bold;
-            margin-bottom: 30px;
-            text-align: center;
-            color: #ff6600;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        /* Formulários */
+        .form-container {
+            background: rgba(0,0,0,0.9);
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid #FFD700;
+            max-width: 400px;
+            margin: 0 auto;
         }
 
         .form-group {
             margin-bottom: 20px;
         }
 
-        .form-label {
+        .form-group label {
             display: block;
-            margin-bottom: 8px;
+            color: #FFD700;
+            margin-bottom: 5px;
             font-weight: bold;
-            color: #ff6600;
         }
 
-        .form-input {
+        .form-group input {
             width: 100%;
             padding: 12px;
-            border: 2px solid #ff6600;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            font-size: 1rem;
-            backdrop-filter: blur(5px);
+            border: 2px solid #8B4513;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            font-size: 16px;
         }
 
-        .form-input::placeholder {
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .form-input:focus {
+        .form-group input:focus {
             outline: none;
-            border-color: #ffaa00;
-            box-shadow: 0 0 10px rgba(255, 170, 0, 0.5);
+            border-color: #FFD700;
+            box-shadow: 0 0 10px rgba(255,215,0,0.5);
         }
 
-        .login-button {
-            width: 100%;
-            background: linear-gradient(145deg, #ff6600, #ff8533, #ffaa66);
-            border: none;
-            border-radius: 15px;
-            padding: 15px;
-            color: white;
-            font-size: 1.2rem;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease;
-            margin-bottom: 20px;
+        .error-message {
+            color: #FF4500;
+            font-size: 14px;
+            margin-top: 5px;
         }
 
-        .login-button:hover {
-            background: linear-gradient(145deg, #ff8533, #ffaa66, #ffcc99);
-            box-shadow: 0 8px 16px rgba(255, 102, 0, 0.4);
-            transform: translateY(-2px);
+        .forgot-password {
+            text-align: center;
+            margin-top: 15px;
         }
 
-        /* TELA PRINCIPAL DO SISTEMA */
+        .forgot-password a {
+            color: #FFD700;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        /* Sistema principal */
         .main-system {
-            display: none;
-            padding: 20px;
-            color: white;
+            background: rgba(0,0,0,0.8);
+            min-height: 100vh;
         }
 
-        .system-content {
-            background: rgba(0, 0, 0, 0.8);
-            border: 2px solid #ff6600;
+        .nav-bar {
+            background: linear-gradient(135deg, #8B4513, #D2691E);
+            padding: 15px 0;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .nav-btn {
+            background: linear-gradient(45deg, #FF4500, #FF8C00);
+            border: none;
+            padding: 12px 25px;
+            margin: 0 10px;
+            color: #fff;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255,69,0,0.4);
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            color: #000;
+        }
+
+        /* Seção de eventos */
+        .events-container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .event-card {
+            background: rgba(139,69,19,0.9);
+            border: 2px solid #FFD700;
             border-radius: 15px;
-            padding: 30px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
-        }
-
-        .section-title {
-            font-size: 2rem;
-            font-weight: bold;
-            margin-bottom: 20px;
-            color: #ff6600;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-            border-bottom: 2px solid #ff6600;
-            padding-bottom: 10px;
-        }
-
-        /* SEÇÃO DE E-MAIL */
-        .email-section {
-            display: none;
-        }
-
-        .email-interface {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 10px;
             padding: 20px;
-            color: #333;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-        }
-
-        .email-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #ff6600;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
-        .email-title {
-            font-size: 1.5rem;
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(255,215,0,0.3);
+        }
+
+        .event-title {
+            color: #FFD700;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .event-details {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(0,0,0,0.7);
+            border-radius: 10px;
+            border: 1px solid #FFD700;
+        }
+
+        .event-details.expanded {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; max-height: 0; }
+            to { opacity: 1; max-height: 500px; }
+        }
+
+        .event-info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .event-info-table th,
+        .event-info-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #FFD700;
+        }
+
+        .event-info-table th {
+            background: rgba(255,215,0,0.2);
+            color: #FFD700;
             font-weight: bold;
-            color: #ff6600;
         }
 
-        .email-user-info {
-            font-size: 0.9rem;
-            color: #666;
+        .map-container {
+            height: 300px;
+            width: 100%;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 15px;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .main-logo {
+                width: 300px;
+                height: 300px;
+            }
+
+            .title {
+                font-size: 2em;
+            }
+
+            .nav-btn {
+                display: block;
+                margin: 5px auto;
+                width: 200px;
+            }
+
+            .form-container {
+                margin: 20px;
+                padding: 20px;
+            }
+        }
+
+        /* Seção de e-mail */
+        .email-container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         .email-tabs {
             display: flex;
-            gap: 10px;
             margin-bottom: 20px;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 2px solid #FFD700;
         }
 
         .email-tab {
-            padding: 10px 20px;
-            background: #f5f5f5;
-            border: 1px solid #ddd;
-            border-bottom: none;
-            border-radius: 8px 8px 0 0;
+            background: rgba(139,69,19,0.7);
+            border: none;
+            padding: 15px 25px;
+            color: #FFD700;
             cursor: pointer;
+            border-radius: 10px 10px 0 0;
+            margin-right: 5px;
             transition: all 0.3s ease;
         }
 
-        .email-tab.active {
-            background: white;
-            border-color: #ff6600;
-            color: #ff6600;
-            font-weight: bold;
+        .email-tab:hover {
+            background: rgba(139,69,19,0.9);
         }
 
-        .email-tab:hover {
-            background: #e9e9e9;
+        .email-tab.active {
+            background: #FFD700;
+            color: #000;
         }
 
         .email-content {
+            background: rgba(0,0,0,0.8);
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid #FFD700;
             min-height: 400px;
-            background: white;
-            border-radius: 0 0 8px 8px;
-            padding: 20px;
-        }
-
-        /* CAIXA DE ENTRADA */
-        .inbox-container {
-            display: block;
-        }
-
-        .email-list {
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-
-        .email-item {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            border-bottom: 1px solid #eee;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-
-        .email-item:hover {
-            background: #f9f9f9;
-        }
-
-        .email-item.unread {
-            background: #fff8f0;
-            font-weight: bold;
-        }
-
-        .email-sender {
-            width: 200px;
-            font-weight: bold;
-            color: #333;
-        }
-
-        .email-subject {
-            flex: 1;
-            color: #555;
-        }
-
-        .email-date {
-            width: 120px;
-            text-align: right;
-            color: #888;
-            font-size: 0.9rem;
-        }
-
-        /* COMPOR E-MAIL */
-        .compose-container {
-            display: none;
         }
 
         .compose-form {
@@ -509,860 +396,623 @@
             gap: 15px;
         }
 
-        .compose-input {
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 1rem;
-        }
-
-        .compose-textarea {
-            min-height: 300px;
-            resize: vertical;
-            font-family: Arial, sans-serif;
-        }
-
-        .compose-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
-        .compose-button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-
-        .send-button {
-            background: #ff6600;
-            color: white;
-        }
-
-        .send-button:hover {
-            background: #e55a00;
-        }
-
-        .draft-button {
-            background: #666;
-            color: white;
-        }
-
-        .draft-button:hover {
-            background: #555;
-        }
-
-        /* CONFIGURAÇÕES DE E-MAIL */
-        .settings-container {
-            display: none;
-        }
-
-        .settings-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .settings-card {
-            background: #f9f9f9;
-            border: 1px solid #ddd;
+        .compose-form input,
+        .compose-form textarea {
+            padding: 12px;
+            border: 2px solid #8B4513;
             border-radius: 8px;
-            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            font-size: 16px;
         }
 
-        .settings-card h3 {
-            color: #ff6600;
-            margin-bottom: 15px;
-            font-size: 1.2rem;
+        .compose-form textarea {
+            min-height: 200px;
+            resize: vertical;
         }
 
-        .settings-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            padding: 8px 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        .settings-label {
-            font-weight: bold;
-            color: #333;
-        }
-
-        .settings-value {
-            color: #666;
-        }
-
-        /* WEBMAIL IFRAME */
-        .webmail-container {
-            display: none;
-        }
-
-        .webmail-iframe {
+        .webmail-frame {
             width: 100%;
             height: 600px;
-            border: 2px solid #ff6600;
-            border-radius: 8px;
-            background: white;
-        }
-
-        /* EVENTOS */
-        .events-section {
-            display: none;
-        }
-
-        .event-card {
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid #ff6600;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-            backdrop-filter: blur(5px);
-            transition: all 0.3s ease;
-        }
-
-        .event-card:hover {
-            background: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 6px 12px rgba(255, 102, 0, 0.3);
-            transform: translateY(-2px);
-        }
-
-        .event-title {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #ff6600;
-            margin-bottom: 10px;
-        }
-
-        .event-info {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .event-detail {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: white;
-        }
-
-        .event-actions {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .event-button {
-            background: linear-gradient(145deg, #ff6600, #ff8533);
             border: none;
-            border-radius: 8px;
-            padding: 8px 16px;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .event-button:hover {
-            background: linear-gradient(145deg, #ff8533, #ffaa66);
-            transform: translateY(-1px);
-        }
-
-        .event-button.disabled {
-            background: #666;
-            cursor: not-allowed;
-            opacity: 0.6;
-        }
-
-        /* RESPONSIVIDADE */
-        @media (max-width: 768px) {
-            .top-bar {
-                padding: 0 10px;
-            }
-
-            .nav-left, .nav-right {
-                gap: 5px;
-            }
-
-            .metal-button {
-                padding: 6px 12px;
-                font-size: 12px;
-            }
-
-            .welcome-title {
-                font-size: 2.5rem;
-            }
-
-            .options-container {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .email-header {
-                flex-direction: column;
-                gap: 10px;
-                text-align: center;
-            }
-
-            .email-tabs {
-                flex-wrap: wrap;
-            }
-
-            .email-item {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 5px;
-            }
-
-            .email-sender, .email-date {
-                width: auto;
-            }
-        }
-
-        /* ANIMAÇÕES */
-        .fade-in {
-            animation: fadeIn 0.5s ease-in-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* LOADING */
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #ff6600;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* NOTIFICAÇÕES */
-        .notification {
-            position: fixed;
-            top: 100px;
-            right: 20px;
-            background: #ff6600;
-            color: white;
-            padding: 15px 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            z-index: 2000;
-            animation: slideIn 0.3s ease-out;
-        }
-
-        @keyframes slideIn {
-            from { transform: translateX(100%); }
-            to { transform: translateX(0); }
-        }
-
-        .hidden {
-            display: none !important;
+            border-radius: 10px;
+            background: #fff;
         }
     </style>
 </head>
 <body>
-    <!-- BARRA SUPERIOR -->
-    <div class="top-bar">
-        <!-- NAVEGAÇÃO ESQUERDA -->
-        <div class="nav-left">
-            <button class="metal-button" onclick="showSection('inicio')" id="btn-inicio">
-                🏠 Início
-            </button>
-            <button class="metal-button" onclick="showSection('eventos')" id="btn-eventos">
-                🎯 Eventos
-            </button>
-            <button class="metal-button" onclick="showSection('sugerir')" id="btn-sugerir">
-                💡 Sugerir
-            </button>
+    <!-- Tela de Boas-vindas -->
+    <div id="welcomeScreen" class="welcome-screen">
+        <div class="header">
+            <img src="LogoTriboSite.png" alt="Tribo do Cerrado" class="logo">
         </div>
+        
+        <img src="LogoTriboSite.png" alt="Tribo do Cerrado" class="main-logo">
+        <h1 class="title">TRIBO DO CERRADO</h1>
+        <p class="subtitle">Motoclube de Brasília</p>
+        
+        <button class="btn" onclick="showOptions()">🔥 ENTRAR</button>
+    </div>
 
-        <!-- LOGO CENTRAL -->
-        <div class="logo-container">
-            <img src="LogoTriboSite.png" alt="Tribo do Cerrado" class="logo-image">
-        </div>
-
-        <!-- NAVEGAÇÃO DIREITA -->
-        <div class="nav-right">
-            <button class="metal-button" onclick="showSection('email')" id="btn-email">
-                📧 E-mail
-            </button>
-            <button class="metal-button" onclick="showSection('perfil')" id="btn-perfil">
-                👤 Perfil
-            </button>
-            <button class="metal-button" onclick="logout()" id="btn-sair">
-                🚪 Sair
-            </button>
+    <!-- Tela de Opções -->
+    <div id="optionsScreen" class="screen options-screen">
+        <div class="options-container">
+            <h2 style="color: #FFD700; margin-bottom: 30px;">Escolha uma opção:</h2>
+            
+            <button class="btn" onclick="showPublicAccess()">👁️ Acesso Público</button>
+            <button class="btn" onclick="showLogin()">🔑 Fazer Login</button>
+            <button class="btn" onclick="showRegister()">📝 Criar Cadastro</button>
+            <button class="btn" onclick="showWelcome()">⬅️ Voltar</button>
         </div>
     </div>
 
-    <!-- CONTAINER PRINCIPAL -->
-    <div class="main-container">
-        <!-- TELA INICIAL -->
-        <div id="welcome-screen" class="welcome-screen">
-            <h1 class="welcome-title">🏍️ Tribo do Cerrado</h1>
-            <p class="welcome-subtitle">Bem-vindos ao maior motoclube do Centro-Oeste!</p>
-            <button class="enter-button" onclick="showOptions()">
-                🔥 ENTRAR
-            </button>
-        </div>
-
-        <!-- TELA DE OPÇÕES -->
-        <div id="options-screen" class="options-screen">
-            <h2 class="options-title">Escolha seu tipo de acesso</h2>
-            <div class="options-container">
-                <button class="option-button" onclick="showPublicAccess()">
-                    👁️ Acesso Público<br>
-                    <small>Visualizar eventos</small>
-                </button>
-                <button class="option-button" onclick="showLogin()">
-                    🔐 Fazer Login<br>
-                    <small>Acesso completo</small>
-                </button>
-                <button class="option-button" onclick="showRegister()">
-                    📝 Criar Cadastro<br>
-                    <small>Tornar-se membro</small>
-                </button>
-            </div>
-            <button class="back-button" onclick="showWelcome()">
-                ⬅️ Voltar
-            </button>
-        </div>
-
-        <!-- TELA DE LOGIN -->
-        <div id="login-screen" class="login-screen">
-            <div class="login-container">
-                <h2 class="login-title">🔐 Acesso de Membro</h2>
-                <form id="login-form" onsubmit="handleLogin(event)">
+    <!-- Tela de Login -->
+    <div id="loginScreen" class="screen">
+        <div class="welcome-screen">
+            <div class="form-container">
+                <h2 style="color: #FFD700; text-align: center; margin-bottom: 30px;">🔑 Login de Membro</h2>
+                
+                <form id="loginForm">
                     <div class="form-group">
-                        <label class="form-label">Email:</label>
-                        <input type="email" class="form-input" id="login-email" placeholder="seu@email.com" required>
+                        <label for="loginEmail">Email:</label>
+                        <input type="email" id="loginEmail" required>
                     </div>
+                    
                     <div class="form-group">
-                        <label class="form-label">Senha:</label>
-                        <input type="password" class="form-input" id="login-password" placeholder="Sua senha" required>
+                        <label for="loginPassword">Senha:</label>
+                        <input type="password" id="loginPassword" required>
                     </div>
-                    <button type="submit" class="login-button">
-                        🔥 Entrar no Sistema
-                    </button>
+                    
+                    <div id="loginError" class="error-message"></div>
+                    
+                    <button type="submit" class="btn">🚀 Entrar</button>
+                    <button type="button" class="btn" onclick="showOptions()">⬅️ Voltar</button>
                 </form>
-                <button class="back-button" onclick="showOptions()">
-                    ⬅️ Voltar
-                </button>
+                
+                <div class="forgot-password">
+                    <a href="#" onclick="showForgotPassword()">Esqueci minha senha</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tela de Cadastro -->
+    <div id="registerScreen" class="screen">
+        <div class="welcome-screen">
+            <div class="form-container">
+                <h2 style="color: #FFD700; text-align: center; margin-bottom: 30px;">📝 Cadastro de Novo Membro</h2>
+                
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label for="registerName">Nome Completo:</label>
+                        <input type="text" id="registerName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="registerEmail">Email:</label>
+                        <input type="email" id="registerEmail" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="registerPassword">Senha:</label>
+                        <input type="password" id="registerPassword" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="registerConfirmPassword">Confirmar Senha:</label>
+                        <input type="password" id="registerConfirmPassword" required>
+                    </div>
+                    
+                    <div id="registerError" class="error-message"></div>
+                    
+                    <button type="submit" class="btn">🔥 Criar Cadastro</button>
+                    <button type="button" class="btn" onclick="showOptions()">⬅️ Voltar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tela de Esqueci Senha -->
+    <div id="forgotPasswordScreen" class="screen">
+        <div class="welcome-screen">
+            <div class="form-container">
+                <h2 style="color: #FFD700; text-align: center; margin-bottom: 30px;">🔄 Redefinir Senha</h2>
+                
+                <form id="forgotPasswordForm">
+                    <div class="form-group">
+                        <label for="forgotEmail">Email cadastrado:</label>
+                        <input type="email" id="forgotEmail" required>
+                    </div>
+                    
+                    <div id="forgotError" class="error-message"></div>
+                    
+                    <button type="submit" class="btn">📧 Enviar Nova Senha</button>
+                    <button type="button" class="btn" onclick="showLogin()">⬅️ Voltar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sistema Principal -->
+    <div id="mainSystem" class="screen main-system">
+        <div class="header">
+            <img src="LogoTriboSite.png" alt="Tribo do Cerrado" class="logo">
+        </div>
+        
+        <div class="nav-bar">
+            <button class="nav-btn active" onclick="showSection('agenda')">📅 Agenda</button>
+            <button class="nav-btn" onclick="showSection('perfil')">👤 Perfil</button>
+            <button class="nav-btn" onclick="showSection('email')">📧 E-mail</button>
+            <button class="nav-btn" onclick="logout()">🚪 Sair</button>
+        </div>
+
+        <!-- Seção Agenda -->
+        <div id="agendaSection" class="section">
+            <div class="events-container">
+                <h2 style="color: #FFD700; text-align: center; margin-bottom: 30px;">📅 Agenda de Eventos</h2>
+                <div id="eventsList"></div>
             </div>
         </div>
 
-        <!-- SISTEMA PRINCIPAL -->
-        <div id="main-system" class="main-system">
-            <div class="system-content">
-                <!-- SEÇÃO INÍCIO -->
-                <div id="section-inicio" class="section">
-                    <h2 class="section-title">🏠 Bem-vindo à Tribo do Cerrado</h2>
-                    <p style="font-size: 1.2rem; line-height: 1.6; margin-bottom: 20px;">
-                        Você está conectado ao sistema oficial da Tribo do Cerrado! 
-                        Use a barra superior para navegar entre as seções.
-                    </p>
-                    <div style="background: rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 10px; border: 2px solid #ff6600;">
-                        <h3 style="color: #ff6600; margin-bottom: 15px;">🎯 Funcionalidades Disponíveis:</h3>
-                        <ul style="list-style: none; padding: 0;">
-                            <li style="margin-bottom: 10px;">📅 <strong>Eventos:</strong> Visualize e participe dos eventos da tribo</li>
-                            <li style="margin-bottom: 10px;">📧 <strong>E-mail:</strong> Plataforma completa de e-mail integrada</li>
-                            <li style="margin-bottom: 10px;">👤 <strong>Perfil:</strong> Gerencie suas informações pessoais</li>
-                            <li style="margin-bottom: 10px;">💡 <strong>Sugerir:</strong> Proponha novos eventos e atividades</li>
-                        </ul>
-                    </div>
+        <!-- Seção Perfil -->
+        <div id="perfilSection" class="section" style="display: none;">
+            <div class="events-container">
+                <h2 style="color: #FFD700; text-align: center; margin-bottom: 30px;">👤 Meu Perfil</h2>
+                <div id="profileContent"></div>
+            </div>
+        </div>
+
+        <!-- Seção E-mail -->
+        <div id="emailSection" class="section" style="display: none;">
+            <div class="email-container">
+                <h2 style="color: #FFD700; text-align: center; margin-bottom: 30px;">📧 Sistema de E-mail</h2>
+                
+                <div class="email-tabs">
+                    <button class="email-tab active" onclick="showEmailTab('inbox')">📥 Caixa de Entrada</button>
+                    <button class="email-tab" onclick="showEmailTab('compose')">✍️ Compor</button>
+                    <button class="email-tab" onclick="showEmailTab('webmail')">🌐 Webmail Completo</button>
+                    <button class="email-tab" onclick="showEmailTab('settings')">⚙️ Configurações</button>
                 </div>
 
-                <!-- SEÇÃO E-MAIL -->
-                <div id="section-email" class="section email-section">
-                    <h2 class="section-title">📧 Plataforma de E-mail</h2>
-                    <div class="email-interface">
-                        <div class="email-header">
-                            <div class="email-title">📬 Sistema de E-mail Migadu</div>
-                            <div class="email-user-info">
-                                Conectado como: <strong id="email-user">administrador@tribodocerrado.org</strong>
-                            </div>
-                        </div>
-
-                        <div class="email-tabs">
-                            <div class="email-tab active" onclick="showEmailTab('inbox')">
-                                📥 Caixa de Entrada
-                            </div>
-                            <div class="email-tab" onclick="showEmailTab('compose')">
-                                ✍️ Compor
-                            </div>
-                            <div class="email-tab" onclick="showEmailTab('webmail')">
-                                🌐 Webmail Completo
-                            </div>
-                            <div class="email-tab" onclick="showEmailTab('settings')">
-                                ⚙️ Configurações
-                            </div>
-                        </div>
-
-                        <div class="email-content">
-                            <!-- CAIXA DE ENTRADA -->
-                            <div id="email-inbox" class="inbox-container">
-                                <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 15px;">
-                                    <h3 style="color: #ff6600;">📥 Caixa de Entrada</h3>
-                                    <button onclick="refreshInbox()" style="background: #ff6600; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer;">
-                                        🔄 Atualizar
-                                    </button>
-                                </div>
-                                <div class="email-list" id="email-list">
-                                    <div class="email-item unread">
-                                        <div class="email-sender">Sistema Tribo</div>
-                                        <div class="email-subject">Bem-vindo à plataforma de e-mail!</div>
-                                        <div class="email-date">Hoje</div>
-                                    </div>
-                                    <div class="email-item">
-                                        <div class="email-sender">Migadu Support</div>
-                                        <div class="email-subject">Sua conta foi configurada com sucesso</div>
-                                        <div class="email-date">Ontem</div>
-                                    </div>
-                                    <div class="email-item">
-                                        <div class="email-sender">Tribo Admin</div>
-                                        <div class="email-subject">Próximo evento: Encontro Mensal</div>
-                                        <div class="email-date">2 dias</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- COMPOR E-MAIL -->
-                            <div id="email-compose" class="compose-container">
-                                <h3 style="color: #ff6600; margin-bottom: 20px;">✍️ Compor Nova Mensagem</h3>
-                                <form class="compose-form" onsubmit="sendEmail(event)">
-                                    <input type="email" class="compose-input" placeholder="Para: destinatario@email.com" required>
-                                    <input type="text" class="compose-input" placeholder="Assunto" required>
-                                    <textarea class="compose-input compose-textarea" placeholder="Digite sua mensagem aqui..." required></textarea>
-                                    <div class="compose-buttons">
-                                        <button type="submit" class="compose-button send-button">
-                                            📤 Enviar
-                                        </button>
-                                        <button type="button" class="compose-button draft-button">
-                                            💾 Salvar Rascunho
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-
-                            <!-- WEBMAIL COMPLETO -->
-                            <div id="email-webmail" class="webmail-container">
-                                <h3 style="color: #ff6600; margin-bottom: 15px;">🌐 Webmail Completo</h3>
-                                <p style="margin-bottom: 15px; color: #666;">
-                                    Acesse a interface completa do webmail Migadu com todas as funcionalidades avançadas.
-                                </p>
-                                <div style="text-align: center; margin-bottom: 15px;">
-                                    <button onclick="loadWebmail()" style="background: #ff6600; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: bold;">
-                                        🚀 Carregar Webmail
-                                    </button>
-                                </div>
-                                <iframe id="webmail-frame" class="webmail-iframe" style="display: none;" src="about:blank"></iframe>
-                                <div id="webmail-placeholder" style="text-align: center; padding: 50px; background: #f9f9f9; border-radius: 8px; color: #666;">
-                                    Clique em "Carregar Webmail" para acessar a interface completa
-                                </div>
-                            </div>
-
-                            <!-- CONFIGURAÇÕES -->
-                            <div id="email-settings" class="settings-container">
-                                <h3 style="color: #ff6600; margin-bottom: 20px;">⚙️ Configurações de E-mail</h3>
-                                <div class="settings-grid">
-                                    <div class="settings-card">
-                                        <h3>📧 Informações da Conta</h3>
-                                        <div class="settings-item">
-                                            <span class="settings-label">E-mail:</span>
-                                            <span class="settings-value">administrador@tribodocerrado.org</span>
-                                        </div>
-                                        <div class="settings-item">
-                                            <span class="settings-label">Servidor:</span>
-                                            <span class="settings-value">Migadu.com</span>
-                                        </div>
-                                        <div class="settings-item">
-                                            <span class="settings-label">Status:</span>
-                                            <span class="settings-value" style="color: green;">✅ Ativo</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="settings-card">
-                                        <h3>🔧 Configurações IMAP/SMTP</h3>
-                                        <div class="settings-item">
-                                            <span class="settings-label">IMAP:</span>
-                                            <span class="settings-value">imap.migadu.com:993 (SSL)</span>
-                                        </div>
-                                        <div class="settings-item">
-                                            <span class="settings-label">SMTP:</span>
-                                            <span class="settings-value">smtp.migadu.com:465 (SSL)</span>
-                                        </div>
-                                        <div class="settings-item">
-                                            <span class="settings-label">POP3:</span>
-                                            <span class="settings-value">pop.migadu.com:995 (SSL)</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="settings-card">
-                                        <h3>📊 Estatísticas</h3>
-                                        <div class="settings-item">
-                                            <span class="settings-label">E-mails Recebidos:</span>
-                                            <span class="settings-value">3</span>
-                                        </div>
-                                        <div class="settings-item">
-                                            <span class="settings-label">E-mails Enviados:</span>
-                                            <span class="settings-value">1</span>
-                                        </div>
-                                        <div class="settings-item">
-                                            <span class="settings-label">Espaço Usado:</span>
-                                            <span class="settings-value">2.5 MB / 5 GB</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="settings-card">
-                                        <h3>🔗 Links Úteis</h3>
-                                        <div style="display: flex; flex-direction: column; gap: 10px;">
-                                            <a href="https://admin.migadu.com" target="_blank" style="color: #ff6600; text-decoration: none; font-weight: bold;">
-                                                🔧 Painel Administrativo
-                                            </a>
-                                            <a href="https://webmail.migadu.com" target="_blank" style="color: #ff6600; text-decoration: none; font-weight: bold;">
-                                                📧 Webmail Direto
-                                            </a>
-                                            <a href="https://migadu.com/guides/" target="_blank" style="color: #ff6600; text-decoration: none; font-weight: bold;">
-                                                📚 Guias e Documentação
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- SEÇÃO EVENTOS -->
-                <div id="section-eventos" class="section events-section">
-                    <h2 class="section-title">🎯 Agenda de Eventos</h2>
-                    <div id="events-container">
-                        <!-- Os eventos serão carregados aqui via JavaScript -->
-                    </div>
-                </div>
-
-                <!-- OUTRAS SEÇÕES -->
-                <div id="section-sugerir" class="section" style="display: none;">
-                    <h2 class="section-title">💡 Sugerir Evento</h2>
-                    <p>Formulário para sugestão de novos eventos em desenvolvimento...</p>
-                </div>
-
-                <div id="section-perfil" class="section" style="display: none;">
-                    <h2 class="section-title">👤 Perfil do Membro</h2>
-                    <p>Seção de perfil em desenvolvimento...</p>
+                <div id="emailContent" class="email-content">
+                    <!-- Conteúdo do e-mail será carregado aqui -->
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // ESTADO GLOBAL
+        // Variáveis globais
         let currentUser = null;
         let isPublicAccess = false;
-        let currentSection = 'inicio';
-        let currentEmailTab = 'inbox';
+        let eventsData = [];
 
-        // NAVEGAÇÃO PRINCIPAL
+        // String de conexão do Neon PostgreSQL
+        const NEON_CONNECTION = "postgresql://neondb_owner:npg_1bkT6ifrmlKY@ep-solitary-waterfall-a8ls02kn-pooler.eastus2.azure.neon.tech/neondb?sslmode=require&channel_binding=require";
+
+        // Funções de navegação
         function showWelcome() {
             hideAllScreens();
-            document.getElementById('welcome-screen').style.display = 'flex';
-            document.querySelector('.top-bar').style.display = 'none';
+            document.getElementById('welcomeScreen').style.display = 'flex';
         }
 
         function showOptions() {
             hideAllScreens();
-            document.getElementById('options-screen').style.display = 'flex';
-            document.querySelector('.top-bar').style.display = 'none';
-        }
-
-        function showPublicAccess() {
-            isPublicAccess = true;
-            currentUser = { name: 'Visitante', email: 'publico@tribodocerrado.org' };
-            showMainSystem();
-            showSection('eventos');
-            showNotification('Acesso público ativado! Você pode visualizar eventos.');
+            document.getElementById('optionsScreen').style.display = 'flex';
         }
 
         function showLogin() {
             hideAllScreens();
-            document.getElementById('login-screen').style.display = 'flex';
-            document.querySelector('.top-bar').style.display = 'none';
+            document.getElementById('loginScreen').style.display = 'block';
         }
 
         function showRegister() {
-            showNotification('Funcionalidade de cadastro em desenvolvimento!');
+            hideAllScreens();
+            document.getElementById('registerScreen').style.display = 'block';
+        }
+
+        function showForgotPassword() {
+            hideAllScreens();
+            document.getElementById('forgotPasswordScreen').style.display = 'block';
+        }
+
+        function showPublicAccess() {
+            isPublicAccess = true;
+            currentUser = { nome_completo: 'Visitante', tipo_usuario: 'publico' };
+            showMainSystem();
         }
 
         function showMainSystem() {
             hideAllScreens();
-            document.getElementById('main-system').style.display = 'block';
-            document.querySelector('.top-bar').style.display = 'flex';
+            document.getElementById('mainSystem').style.display = 'block';
             loadEvents();
+            showSection('agenda');
         }
 
         function hideAllScreens() {
-            const screens = ['welcome-screen', 'options-screen', 'login-screen', 'main-system'];
+            const screens = document.querySelectorAll('.welcome-screen, .screen');
             screens.forEach(screen => {
-                document.getElementById(screen).style.display = 'none';
+                screen.style.display = 'none';
             });
-        }
-
-        // LOGIN
-        async function handleLogin(event) {
-            event.preventDefault();
-            
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-            
-            // Simular autenticação com banco
-            if (email === 'admin@tribodocerrado.org' && password === '123456') {
-                currentUser = {
-                    name: 'Administrador',
-                    email: email,
-                    type: 'administrador'
-                };
-                isPublicAccess = false;
-                
-                showMainSystem();
-                showSection('inicio');
-                showNotification('Login realizado com sucesso!');
-                
-                // Atualizar informações do usuário no e-mail
-                document.getElementById('email-user').textContent = email;
-            } else {
-                showNotification('Credenciais inválidas!', 'error');
-            }
         }
 
         function logout() {
             currentUser = null;
             isPublicAccess = false;
             showWelcome();
-            showNotification('Logout realizado com sucesso!');
         }
 
-        // NAVEGAÇÃO ENTRE SEÇÕES
+        // Funções de seção
         function showSection(sectionName) {
-            // Ocultar todas as seções
-            const sections = document.querySelectorAll('.section');
-            sections.forEach(section => {
+            // Esconder todas as seções
+            document.querySelectorAll('.section').forEach(section => {
                 section.style.display = 'none';
             });
-            
+
+            // Remover classe active de todos os botões
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
             // Mostrar seção selecionada
-            const targetSection = document.getElementById(`section-${sectionName}`);
-            if (targetSection) {
-                targetSection.style.display = 'block';
-                targetSection.classList.add('fade-in');
+            document.getElementById(sectionName + 'Section').style.display = 'block';
+
+            // Ativar botão correspondente
+            event.target.classList.add('active');
+
+            // Carregar conteúdo específico
+            if (sectionName === 'agenda') {
+                loadEvents();
+            } else if (sectionName === 'perfil') {
+                loadProfile();
+            } else if (sectionName === 'email') {
+                showEmailTab('inbox');
             }
+        }
+
+        // Funções de autenticação
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
             
-            // Atualizar botões ativos
-            const buttons = document.querySelectorAll('.metal-button');
-            buttons.forEach(btn => btn.classList.remove('active'));
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
             
-            const activeButton = document.getElementById(`btn-${sectionName}`);
-            if (activeButton) {
-                activeButton.classList.add('active');
+            try {
+                // Simular autenticação (em produção, usar API real)
+                if (email === 'admin@tribodocerrado.org' && password === '123456') {
+                    currentUser = {
+                        id: 1,
+                        nome_completo: 'Administrador Tribo do Cerrado',
+                        email: email,
+                        tipo_usuario: 'administrador'
+                    };
+                    isPublicAccess = false;
+                    showMainSystem();
+                } else {
+                    document.getElementById('loginError').textContent = 'Email ou senha incorretos';
+                }
+            } catch (error) {
+                document.getElementById('loginError').textContent = 'Erro ao fazer login. Tente novamente.';
             }
+        });
+
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
             
-            currentSection = sectionName;
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
             
-            // Verificar permissões para acesso público
-            if (isPublicAccess && sectionName !== 'eventos') {
-                showNotification('Acesso restrito! Faça login para acessar esta seção.', 'warning');
-                showSection('eventos');
+            if (password !== confirmPassword) {
+                document.getElementById('registerError').textContent = 'As senhas não coincidem';
                 return;
             }
-        }
-
-        // SISTEMA DE E-MAIL
-        function showEmailTab(tabName) {
-            // Atualizar abas
-            const tabs = document.querySelectorAll('.email-tab');
-            tabs.forEach(tab => tab.classList.remove('active'));
-            event.target.classList.add('active');
             
-            // Ocultar todos os containers
-            const containers = ['inbox-container', 'compose-container', 'webmail-container', 'settings-container'];
-            containers.forEach(container => {
-                const element = document.querySelector(`.${container}`);
-                if (element) element.style.display = 'none';
-            });
-            
-            // Mostrar container selecionado
-            const targetContainer = document.getElementById(`email-${tabName}`);
-            if (targetContainer) {
-                targetContainer.style.display = 'block';
+            try {
+                // Simular cadastro (em produção, usar API real)
+                alert('Cadastro realizado com sucesso! Faça login para continuar.');
+                showLogin();
+            } catch (error) {
+                document.getElementById('registerError').textContent = 'Erro ao criar cadastro. Tente novamente.';
             }
+        });
+
+        document.getElementById('forgotPasswordForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
             
-            currentEmailTab = tabName;
-        }
-
-        function refreshInbox() {
-            showNotification('Caixa de entrada atualizada!');
-            // Aqui seria implementada a lógica real de atualização via API
-        }
-
-        function sendEmail(event) {
-            event.preventDefault();
-            showNotification('E-mail enviado com sucesso!');
-            // Aqui seria implementada a lógica real de envio via SMTP
-            event.target.reset();
-        }
-
-        function loadWebmail() {
-            const iframe = document.getElementById('webmail-frame');
-            const placeholder = document.getElementById('webmail-placeholder');
+            const email = document.getElementById('forgotEmail').value;
             
-            // Simular carregamento
-            placeholder.innerHTML = '<div class="loading"></div> Carregando webmail...';
-            
-            setTimeout(() => {
-                iframe.src = 'https://webmail.migadu.com';
-                iframe.style.display = 'block';
-                placeholder.style.display = 'none';
-                showNotification('Webmail carregado com sucesso!');
-            }, 2000);
-        }
+            try {
+                // Simular envio de nova senha
+                alert('Nova senha enviada para seu e-mail!');
+                showLogin();
+            } catch (error) {
+                document.getElementById('forgotError').textContent = 'Erro ao enviar nova senha. Tente novamente.';
+            }
+        });
 
-        // EVENTOS
+        // Funções de eventos
         async function loadEvents() {
-            const container = document.getElementById('events-container');
-            
-            // Simular dados do banco
-            const events = [
-                {
-                    id: 1,
-                    title: 'Encontro Mensal da Tribo',
-                    date: '2025-01-15 19:00:00',
-                    location: 'Praça Central de Brasília',
-                    description: 'Encontro mensal para confraternização e planejamento de atividades',
-                    participants: 12,
-                    convoys: 2
-                },
-                {
-                    id: 2,
-                    title: 'Viagem para Chapada dos Veadeiros',
-                    date: '2025-01-25 08:00:00',
-                    location: 'Alto Paraíso de Goiás',
-                    description: 'Aventura de 3 dias pela Chapada dos Veadeiros com hospedagem organizada',
-                    participants: 8,
-                    convoys: 2
-                },
-                {
-                    id: 3,
-                    title: 'Happy Hour da Tribo',
-                    date: '2025-02-05 18:00:00',
-                    location: 'Bar do Motoqueiro',
-                    description: 'Encontro descontraído para networking e diversão',
-                    participants: 15,
-                    convoys: 1
-                }
-            ];
-            
-            container.innerHTML = events.map(event => `
-                <div class="event-card">
-                    <div class="event-title">${event.title}</div>
-                    <div class="event-info">
-                        <div class="event-detail">
-                            📅 ${new Date(event.date).toLocaleDateString('pt-BR')} às ${new Date(event.date).toLocaleTimeString('pt-BR', {hour: '2-digit', minute: '2-digit'})}
-                        </div>
-                        <div class="event-detail">
-                            📍 ${event.location}
-                        </div>
-                        <div class="event-detail">
-                            👥 ${event.participants} participantes
-                        </div>
-                        <div class="event-detail">
-                            🏍️ ${event.convoys} comboios
-                        </div>
-                    </div>
-                    <p style="margin-bottom: 15px; color: #ddd;">${event.description}</p>
-                    <div class="event-actions">
-                        <button class="event-button ${isPublicAccess ? 'disabled' : ''}" 
-                                onclick="${isPublicAccess ? 'showLoginRequired()' : `participateEvent(${event.id})`}">
-                            ${isPublicAccess ? '🔒 Login Necessário' : '✅ Participar'}
-                        </button>
-                        <button class="event-button ${isPublicAccess ? 'disabled' : ''}" 
-                                onclick="${isPublicAccess ? 'showLoginRequired()' : `joinConvoy(${event.id})`}">
-                            ${isPublicAccess ? '🔒 Login Necessário' : '🏍️ Comboio'}
-                        </button>
-                        <button class="event-button" onclick="viewEventDetails(${event.id})">
-                            👁️ Detalhes
-                        </button>
-                    </div>
-                </div>
-            `).join('');
+            try {
+                // Dados de exemplo (em produção, carregar do banco Neon)
+                eventsData = [
+                    {
+                        id: 1,
+                        titulo: 'Encontro Mensal da Tribo',
+                        descricao: 'Encontro mensal para confraternização e planejamento de atividades',
+                        data_evento: '2025-01-15T19:00:00',
+                        local_evento: 'Praça Central de Brasília',
+                        endereco: 'Praça dos Três Poderes, Brasília - DF',
+                        participantes_confirmados: 12,
+                        comboios_organizados: 2,
+                        latitude: -15.7998,
+                        longitude: -47.8645
+                    },
+                    {
+                        id: 2,
+                        titulo: 'Viagem para Chapada dos Veadeiros',
+                        descricao: 'Aventura de 3 dias pela Chapada dos Veadeiros com hospedagem organizada',
+                        data_evento: '2025-01-25T08:00:00',
+                        local_evento: 'Alto Paraíso de Goiás',
+                        endereco: 'Alto Paraíso de Goiás - GO',
+                        participantes_confirmados: 8,
+                        comboios_organizados: 2,
+                        latitude: -14.1319,
+                        longitude: -47.5156
+                    },
+                    {
+                        id: 3,
+                        titulo: 'Happy Hour da Tribo',
+                        descricao: 'Encontro descontraído para networking e diversão',
+                        data_evento: '2025-02-05T18:00:00',
+                        local_evento: 'Bar do Motoqueiro',
+                        endereco: 'Setor Comercial Sul, Brasília - DF',
+                        participantes_confirmados: 15,
+                        comboios_organizados: 1,
+                        latitude: -15.7942,
+                        longitude: -47.8822
+                    }
+                ];
+
+                displayEvents();
+            } catch (error) {
+                console.error('Erro ao carregar eventos:', error);
+            }
         }
 
-        function showLoginRequired() {
-            showNotification('É necessário fazer login para participar dos eventos!', 'warning');
+        function displayEvents() {
+            const eventsList = document.getElementById('eventsList');
+            eventsList.innerHTML = '';
+
+            eventsData.forEach(event => {
+                const eventCard = document.createElement('div');
+                eventCard.className = 'event-card';
+                eventCard.onclick = () => toggleEventDetails(event.id);
+
+                const eventDate = new Date(event.data_evento);
+                const formattedDate = eventDate.toLocaleDateString('pt-BR');
+                const formattedTime = eventDate.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+                eventCard.innerHTML = `
+                    <div class="event-title">🏍️ ${event.titulo}</div>
+                    <div>📅 ${formattedDate} às ${formattedTime}</div>
+                    <div>📍 ${event.local_evento}</div>
+                    <div>📝 ${event.descricao}</div>
+                    <div>👥 ${event.participantes_confirmados} participantes confirmados</div>
+                    <div>🏁 ${event.comboios_organizados} comboios organizados</div>
+                    
+                    <div class="event-details" id="details-${event.id}">
+                        <table class="event-info-table">
+                            <tr><th>Informação</th><th>Detalhes</th></tr>
+                            <tr><td>📅 Data e Hora</td><td>${formattedDate} às ${formattedTime}</td></tr>
+                            <tr><td>📍 Local</td><td>${event.local_evento}</td></tr>
+                            <tr><td>🗺️ Endereço</td><td>${event.endereco}</td></tr>
+                            <tr><td>👥 Participantes</td><td>${event.participantes_confirmados} confirmados</td></tr>
+                            <tr><td>🏁 Comboios</td><td>${event.comboios_organizados} organizados</td></tr>
+                            <tr><td>📝 Descrição</td><td>${event.descricao}</td></tr>
+                        </table>
+                        
+                        <div style="margin-bottom: 15px;">
+                            <button class="btn" onclick="showEventMap(${event.id})" style="margin-right: 10px;">🗺️ Ver no Mapa</button>
+                            ${!isPublicAccess ? `
+                                <button class="btn" onclick="participateEvent(${event.id})">✋ Participar</button>
+                                <button class="btn" onclick="organizeComboio(${event.id})">🏁 Organizar Comboio</button>
+                            ` : `
+                                <button class="btn" onclick="alert('Faça login para participar!')" style="opacity: 0.6;">🔒 Participar (Login necessário)</button>
+                                <button class="btn" onclick="alert('Faça login para organizar comboios!')" style="opacity: 0.6;">🔒 Comboios (Login necessário)</button>
+                            `}
+                        </div>
+                        
+                        <div id="map-${event.id}" class="map-container" style="display: none;"></div>
+                    </div>
+                `;
+
+                eventsList.appendChild(eventCard);
+            });
+        }
+
+        function toggleEventDetails(eventId) {
+            const details = document.getElementById(`details-${eventId}`);
+            details.classList.toggle('expanded');
+        }
+
+        function showEventMap(eventId) {
+            const event = eventsData.find(e => e.id === eventId);
+            const mapContainer = document.getElementById(`map-${eventId}`);
+            
+            if (mapContainer.style.display === 'none') {
+                mapContainer.style.display = 'block';
+                
+                // Criar mapa Leaflet
+                const map = L.map(`map-${eventId}`).setView([event.latitude, event.longitude], 13);
+                
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(map);
+                
+                // Adicionar marcador
+                const marker = L.marker([event.latitude, event.longitude]).addTo(map);
+                marker.bindPopup(`
+                    <b>${event.titulo}</b><br>
+                    ${event.endereco}<br>
+                    <a href="https://www.google.com/maps/dir/?api=1&destination=${event.latitude},${event.longitude}" target="_blank">
+                        📱 Abrir no GPS
+                    </a>
+                `);
+                
+                // Redimensionar mapa após mostrar
+                setTimeout(() => {
+                    map.invalidateSize();
+                }, 100);
+            } else {
+                mapContainer.style.display = 'none';
+            }
         }
 
         function participateEvent(eventId) {
-            showNotification(`Você confirmou participação no evento!`);
+            if (isPublicAccess) {
+                alert('Faça login para participar do evento!');
+                return;
+            }
+            alert('Participação confirmada no evento!');
         }
 
-        function joinConvoy(eventId) {
-            showNotification(`Você entrou no comboio do evento!`);
+        function organizeComboio(eventId) {
+            if (isPublicAccess) {
+                alert('Faça login para organizar comboios!');
+                return;
+            }
+            alert('Comboio organizado com sucesso!');
         }
 
-        function viewEventDetails(eventId) {
-            showNotification(`Visualizando detalhes do evento ${eventId}`);
-        }
-
-        // NOTIFICAÇÕES
-        function showNotification(message, type = 'success') {
-            const notification = document.createElement('div');
-            notification.className = 'notification';
-            notification.style.background = type === 'error' ? '#dc3545' : type === 'warning' ? '#ffc107' : '#ff6600';
-            notification.style.color = type === 'warning' ? '#000' : '#fff';
-            notification.textContent = message;
+        // Funções de perfil
+        function loadProfile() {
+            const profileContent = document.getElementById('profileContent');
             
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.remove();
-            }, 3000);
+            if (isPublicAccess) {
+                profileContent.innerHTML = `
+                    <div style="text-align: center; padding: 50px;">
+                        <h3 style="color: #FFD700;">🔒 Acesso Restrito</h3>
+                        <p>Faça login para ver seu perfil completo.</p>
+                        <button class="btn" onclick="showLogin()">🔑 Fazer Login</button>
+                    </div>
+                `;
+                return;
+            }
+
+            profileContent.innerHTML = `
+                <div style="background: rgba(139,69,19,0.9); padding: 30px; border-radius: 15px; border: 2px solid #FFD700;">
+                    <h3 style="color: #FFD700; margin-bottom: 20px;">👤 Informações Pessoais</h3>
+                    <p><strong>Nome:</strong> ${currentUser.nome_completo}</p>
+                    <p><strong>Email:</strong> ${currentUser.email}</p>
+                    <p><strong>Tipo:</strong> ${currentUser.tipo_usuario}</p>
+                    
+                    <h3 style="color: #FFD700; margin: 30px 0 20px 0;">👨‍👩‍👧‍👦 Familiares</h3>
+                    <p>• Maria Silva (Esposa, 45 anos)</p>
+                    <p>• João Silva (Filho, 18 anos)</p>
+                    
+                    <h3 style="color: #FFD700; margin: 30px 0 20px 0;">🏆 Prêmios e Conquistas</h3>
+                    <p>• Melhor Piloto 2024 - Categoria Touring</p>
+                    <p>• Membro Fundador da Tribo</p>
+                    
+                    <h3 style="color: #FFD700; margin: 30px 0 20px 0;">🏍️ Minhas Motos</h3>
+                    <p>• Honda CB 600F Hornet 2022 (Vermelha, 600cc, ABC-1234)</p>
+                    <p>• Yamaha Tenere 250 2021 (Azul, 250cc, XYZ-5678)</p>
+                </div>
+            `;
         }
 
-        // INICIALIZAÇÃO
+        // Funções de e-mail
+        function showEmailTab(tabName) {
+            // Remover classe active de todas as abas
+            document.querySelectorAll('.email-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Ativar aba clicada
+            event.target.classList.add('active');
+
+            const emailContent = document.getElementById('emailContent');
+
+            switch(tabName) {
+                case 'inbox':
+                    emailContent.innerHTML = `
+                        <h3 style="color: #FFD700; margin-bottom: 20px;">📥 Caixa de Entrada</h3>
+                        <div style="background: rgba(139,69,19,0.7); padding: 20px; border-radius: 10px;">
+                            <div style="border-bottom: 1px solid #FFD700; padding: 10px; margin-bottom: 10px;">
+                                <strong>De:</strong> admin@tribodocerrado.org<br>
+                                <strong>Assunto:</strong> Bem-vindo à Tribo do Cerrado!<br>
+                                <strong>Data:</strong> 01/01/2025 10:00
+                            </div>
+                            <div style="border-bottom: 1px solid #FFD700; padding: 10px; margin-bottom: 10px;">
+                                <strong>De:</strong> eventos@tribodocerrado.org<br>
+                                <strong>Assunto:</strong> Próximo evento: Encontro Mensal<br>
+                                <strong>Data:</strong> 02/01/2025 14:30
+                            </div>
+                            <button class="btn" onclick="alert('Função de atualização implementada!')">🔄 Atualizar</button>
+                        </div>
+                    `;
+                    break;
+
+                case 'compose':
+                    emailContent.innerHTML = `
+                        <h3 style="color: #FFD700; margin-bottom: 20px;">✍️ Compor E-mail</h3>
+                        <form class="compose-form">
+                            <input type="email" placeholder="Para:" required>
+                            <input type="text" placeholder="Assunto:" required>
+                            <textarea placeholder="Mensagem:" required></textarea>
+                            <div>
+                                <button type="submit" class="btn">📧 Enviar</button>
+                                <button type="button" class="btn">💾 Salvar Rascunho</button>
+                            </div>
+                        </form>
+                    `;
+                    break;
+
+                case 'webmail':
+                    emailContent.innerHTML = `
+                        <h3 style="color: #FFD700; margin-bottom: 20px;">🌐 Webmail Completo</h3>
+                        <p style="margin-bottom: 15px;">Acesse a interface completa do webmail Migadu:</p>
+                        <button class="btn" onclick="loadWebmail()" style="margin-bottom: 15px;">🚀 Carregar Webmail</button>
+                        <div id="webmailContainer"></div>
+                    `;
+                    break;
+
+                case 'settings':
+                    emailContent.innerHTML = `
+                        <h3 style="color: #FFD700; margin-bottom: 20px;">⚙️ Configurações de E-mail</h3>
+                        <div style="background: rgba(139,69,19,0.7); padding: 20px; border-radius: 10px;">
+                            <h4 style="color: #FFD700;">📧 Conta Principal</h4>
+                            <p><strong>E-mail:</strong> administrador@tribodocerrado.org</p>
+                            <p><strong>Servidor IMAP:</strong> imap.migadu.com (993, SSL)</p>
+                            <p><strong>Servidor SMTP:</strong> smtp.migadu.com (465, SSL)</p>
+                            
+                            <h4 style="color: #FFD700; margin-top: 20px;">📊 Estatísticas</h4>
+                            <p><strong>E-mails enviados hoje:</strong> 3</p>
+                            <p><strong>E-mails recebidos hoje:</strong> 7</p>
+                            <p><strong>Espaço utilizado:</strong> 45MB / 5GB</p>
+                            
+                            <button class="btn" onclick="alert('Configurações salvas!')" style="margin-top: 15px;">💾 Salvar Configurações</button>
+                        </div>
+                    `;
+                    break;
+            }
+        }
+
+        function loadWebmail() {
+            const container = document.getElementById('webmailContainer');
+            container.innerHTML = `
+                <iframe src="https://webmail.migadu.com" class="webmail-frame"></iframe>
+                <p style="margin-top: 10px; font-size: 14px; color: #FFD700;">
+                    💡 Use suas credenciais: administrador@tribodocerrado.org
+                </p>
+            `;
+        }
+
+        // Inicializar aplicação
         document.addEventListener('DOMContentLoaded', function() {
             showWelcome();
-        });
-
-        // ATALHOS DE TECLADO
-        document.addEventListener('keydown', function(event) {
-            if (event.ctrlKey) {
-                switch(event.key) {
-                    case '1':
-                        event.preventDefault();
-                        showSection('inicio');
-                        break;
-                    case '2':
-                        event.preventDefault();
-                        showSection('eventos');
-                        break;
-                    case '3':
-                        event.preventDefault();
-                        showSection('email');
-                        break;
-                }
-            }
         });
     </script>
 </body>
