@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tribo do Cerrado - Motoclube de Goiânia</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
         * {
             margin: 0;
@@ -16,1124 +14,239 @@
         body {
             font-family: 'Arial', sans-serif;
             background: url('FundoSIte.png') center/cover no-repeat fixed;
-            color: #fff;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             overflow-x: hidden;
+            color: #fff;
+            min-height: 100vh;
         }
 
-        /* Header com logo maior */
-        .header {
-            background: linear-gradient(135deg, #8B4513, #D2691E);
-            padding: 10px 0;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        /* Overlay escuro para melhor legibilidade */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 1;
         }
 
-        .logo {
-            width: 120px; /* Dobrado + 15% conforme solicitado */
-            height: 120px;
-            border-radius: 50%;
-            border: 3px solid #FFD700;
-            transition: transform 0.3s ease;
-        }
-
-        .logo:hover {
-            transform: scale(1.1) rotate(5deg);
-        }
-
-        /* Tela inicial */
-        .welcome-screen {
+        /* Container principal */
+        .container {
+            position: relative;
+            z-index: 2;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
-            text-align: center;
-            background: rgba(0,0,0,0.7);
+            padding: 20px;
         }
 
-        .main-logo {
-            width: 400px;
-            height: 400px;
+        /* Logo ÚNICA - Tamanho dobrado + 15% conforme solicitado */
+        .logo {
+            width: 320px;
+            height: 320px;
+            object-fit: contain;
             margin-bottom: 30px;
-            border-radius: 50%;
-            border: 5px solid #FFD700;
-            box-shadow: 0 0 30px rgba(255,215,0,0.5);
-            animation: pulse 2s infinite;
+            filter: drop-shadow(0 0 20px rgba(255, 140, 66, 0.8));
+            animation: logoGlow 3s ease-in-out infinite alternate;
         }
 
-        @keyframes pulse {
-            0% { box-shadow: 0 0 30px rgba(255,215,0,0.5); }
-            50% { box-shadow: 0 0 50px rgba(255,215,0,0.8); }
-            100% { box-shadow: 0 0 30px rgba(255,215,0,0.5); }
+        @keyframes logoGlow {
+            0% {
+                filter: drop-shadow(0 0 20px rgba(255, 140, 66, 0.8));
+            }
+            100% {
+                filter: drop-shadow(0 0 30px rgba(255, 107, 53, 1));
+            }
         }
 
+        /* Título principal */
         .title {
-            font-size: 3em;
+            font-size: 4rem;
+            font-weight: bold;
             color: #FFD700;
-            text-shadow: 3px 3px 6px rgba(0,0,0,0.8);
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.8);
             margin-bottom: 10px;
-            animation: glow 2s ease-in-out infinite alternate;
+            text-align: center;
+            animation: titleGlow 2s ease-in-out infinite alternate;
         }
 
-        @keyframes glow {
-            from { text-shadow: 3px 3px 6px rgba(0,0,0,0.8), 0 0 20px #FFD700; }
-            to { text-shadow: 3px 3px 6px rgba(0,0,0,0.8), 0 0 30px #FF8C00; }
+        @keyframes titleGlow {
+            0% {
+                text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.8), 0 0 20px #FFD700;
+            }
+            100% {
+                text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.8), 0 0 30px #FF8C42;
+            }
         }
 
+        /* Subtítulo */
         .subtitle {
-            font-size: 1.5em;
+            font-size: 1.8rem;
             color: #FFA500;
             margin-bottom: 40px;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
         }
 
-        /* Botões animados com efeito de fogo */
-        .btn {
-            background: linear-gradient(45deg, #FF4500, #FF8C00, #FFD700);
-            background-size: 300% 300%;
-            border: none;
-            padding: 15px 40px;
-            font-size: 1.2em;
-            font-weight: bold;
-            color: #000;
-            border-radius: 50px;
-            cursor: pointer;
-            margin: 10px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(255,69,0,0.4);
-            text-transform: uppercase;
-            letter-spacing: 1px;
+        /* Botão com efeito de fogo específico do CodePen */
+        .btn-fire-effect {
             position: relative;
-            overflow: hidden;
-            animation: gradient-shift 3s ease infinite;
-        }
-
-        @keyframes gradient-shift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .btn:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 8px 25px rgba(255,69,0,0.6);
-            animation: fire-effect 0.5s ease;
-        }
-
-        @keyframes fire-effect {
-            0% { box-shadow: 0 8px 25px rgba(255,69,0,0.6); }
-            50% { box-shadow: 0 12px 35px rgba(255,0,0,0.8), 0 0 20px rgba(255,215,0,0.6); }
-            100% { box-shadow: 0 8px 25px rgba(255,69,0,0.6); }
-        }
-
-        .btn:active {
-            transform: translateY(-1px) scale(1.02);
-        }
-
-        /* Telas do sistema */
-        .screen {
-            display: none;
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .screen.active {
-            display: block;
-        }
-
-        /* Tela de opções */
-        .options-screen {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            background: rgba(0,0,0,0.8);
-        }
-
-        .options-container {
-            background: rgba(139,69,19,0.9);
-            padding: 40px;
-            border-radius: 20px;
-            border: 3px solid #FFD700;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        /* Formulários */
-        .form-container {
-            background: rgba(0,0,0,0.9);
-            padding: 30px;
-            border-radius: 15px;
-            border: 2px solid #FFD700;
-            max-width: 400px;
-            margin: 0 auto;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            color: #FFD700;
-            margin-bottom: 5px;
+            display: inline-block;
+            padding: 20px 40px;
+            font-size: 1.5rem;
             font-weight: bold;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #8B4513;
-            border-radius: 8px;
-            background: rgba(255,255,255,0.1);
-            color: #fff;
-            font-size: 16px;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: #FFD700;
-            box-shadow: 0 0 10px rgba(255,215,0,0.5);
-        }
-
-        .error-message {
-            color: #FF4500;
-            font-size: 14px;
-            margin-top: 5px;
-        }
-
-        .forgot-password {
-            text-align: center;
-            margin-top: 15px;
-        }
-
-        .forgot-password a {
-            color: #FFD700;
             text-decoration: none;
-            font-size: 14px;
-        }
-
-        .forgot-password a:hover {
-            text-decoration: underline;
-        }
-
-        /* Sistema principal */
-        .main-system {
-            background: rgba(0,0,0,0.8);
-            min-height: 100vh;
-        }
-
-        .nav-bar {
-            background: linear-gradient(135deg, #8B4513, #D2691E);
-            padding: 15px 0;
-            text-align: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
-        }
-
-        .nav-btn {
-            background: linear-gradient(45deg, #FF4500, #FF8C00);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: white;
+            background: linear-gradient(45deg, #ff6b35, #ff8c42, #ff6b35);
+            background-size: 400% 400%;
             border: none;
-            padding: 12px 25px;
-            margin: 0 10px;
-            color: #fff;
-            border-radius: 25px;
-            cursor: pointer;
-            font-weight: bold;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
             transition: all 0.3s ease;
-        }
-
-        .nav-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255,69,0,0.4);
-        }
-
-        .nav-btn.active {
-            background: linear-gradient(45deg, #FFD700, #FFA500);
-            color: #000;
-        }
-
-        /* Seção de eventos */
-        .events-container {
-            padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .event-card {
-            background: rgba(139,69,19,0.9);
-            border: 2px solid #FFD700;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
             cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .event-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(255,215,0,0.3);
-        }
-
-        .event-title {
-            color: #FFD700;
-            font-size: 1.5em;
-            margin-bottom: 10px;
-        }
-
-        .event-details {
-            display: none;
-            margin-top: 20px;
-            padding: 20px;
-            background: rgba(0,0,0,0.7);
-            border-radius: 10px;
-            border: 1px solid #FFD700;
-        }
-
-        .event-details.expanded {
-            display: block;
-            animation: slideDown 0.3s ease;
-        }
-
-        @keyframes slideDown {
-            from { opacity: 0; max-height: 0; }
-            to { opacity: 1; max-height: 500px; }
-        }
-
-        .event-info-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-
-        .event-info-table th,
-        .event-info-table td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid #FFD700;
-        }
-
-        .event-info-table th {
-            background: rgba(255,215,0,0.2);
-            color: #FFD700;
-            font-weight: bold;
-        }
-
-        .map-container {
-            height: 300px;
-            width: 100%;
-            border-radius: 10px;
             overflow: hidden;
-            margin-top: 15px;
         }
 
-        /* Seção do Estatuto */
-        .estatuto-container {
-            padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .estatuto-content {
-            background: rgba(0,0,0,0.9);
-            padding: 30px;
-            border-radius: 15px;
-            border: 2px solid #FFD700;
-            line-height: 1.6;
-            max-height: 70vh;
-            overflow-y: auto;
-        }
-
-        .estatuto-content h2 {
-            color: #FFD700;
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 2em;
-        }
-
-        .estatuto-content h3 {
-            color: #FFA500;
-            margin: 20px 0 10px 0;
-            font-size: 1.3em;
-        }
-
-        .estatuto-content p {
-            margin-bottom: 15px;
-            text-align: justify;
-        }
-
-        .pdf-viewer {
+        .btn-fire-effect::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
             width: 100%;
-            height: 70vh;
-            border: none;
-            border-radius: 10px;
-            background: #fff;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-fire-effect:hover {
+            animation: fire-glow 1.5s ease-in-out infinite alternate;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.6);
+        }
+
+        .btn-fire-effect:hover::before {
+            left: 100%;
+        }
+
+        .btn-fire-effect:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+        }
+
+        @keyframes fire-glow {
+            0% {
+                background-position: 0% 50%;
+                box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+            }
+            50% {
+                background-position: 100% 50%;
+                box-shadow: 0 8px 25px rgba(255, 140, 66, 0.6);
+            }
+            100% {
+                background-position: 0% 50%;
+                box-shadow: 0 12px 35px rgba(255, 107, 53, 0.8);
+            }
         }
 
         /* Responsividade */
         @media (max-width: 768px) {
-            .main-logo {
-                width: 300px;
-                height: 300px;
+            .logo {
+                width: 250px;
+                height: 250px;
             }
-
+            
             .title {
-                font-size: 2em;
+                font-size: 2.5rem;
             }
+            
+            .subtitle {
+                font-size: 1.3rem;
+            }
+            
+            .btn-fire-effect {
+                padding: 15px 30px;
+                font-size: 1.2rem;
+            }
+        }
 
-            .nav-btn {
-                display: block;
-                margin: 5px auto;
+        @media (max-width: 480px) {
+            .logo {
                 width: 200px;
+                height: 200px;
             }
-
-            .form-container {
-                margin: 20px;
-                padding: 20px;
+            
+            .title {
+                font-size: 2rem;
             }
-
-            .estatuto-content {
-                padding: 15px;
-                max-height: 60vh;
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .btn-fire-effect {
+                padding: 12px 25px;
+                font-size: 1rem;
             }
         }
 
-        /* Seção de e-mail */
-        .email-container {
-            padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .email-tabs {
-            display: flex;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #FFD700;
-        }
-
-        .email-tab {
-            background: rgba(139,69,19,0.7);
-            border: none;
-            padding: 15px 25px;
-            color: #FFD700;
-            cursor: pointer;
-            border-radius: 10px 10px 0 0;
-            margin-right: 5px;
-            transition: all 0.3s ease;
-        }
-
-        .email-tab:hover {
-            background: rgba(139,69,19,0.9);
-        }
-
-        .email-tab.active {
-            background: #FFD700;
-            color: #000;
-        }
-
-        .email-content {
-            background: rgba(0,0,0,0.8);
-            padding: 30px;
-            border-radius: 15px;
-            border: 2px solid #FFD700;
-            min-height: 400px;
-        }
-
-        .compose-form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .compose-form input,
-        .compose-form textarea {
-            padding: 12px;
-            border: 2px solid #8B4513;
-            border-radius: 8px;
-            background: rgba(255,255,255,0.1);
-            color: #fff;
-            font-size: 16px;
-        }
-
-        .compose-form textarea {
-            min-height: 200px;
-            resize: vertical;
-        }
-
-        .webmail-frame {
-            width: 100%;
-            height: 600px;
-            border: none;
-            border-radius: 10px;
-            background: #fff;
+        /* Rodapé */
+        .footer {
+            position: fixed;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            z-index: 2;
         }
     </style>
 </head>
 <body>
-    <!-- Tela de Boas-vindas -->
-    <div id="welcomeScreen" class="welcome-screen">
-        <div class="header">
-            <img src="LogoTriboSite.png" alt="Tribo do Cerrado" class="logo">
-        </div>
+    <!-- Overlay escuro -->
+    <div class="overlay"></div>
+
+    <!-- Container principal -->
+    <div class="container">
+        <!-- Logo ÚNICA - Sem círculo amarelo, tamanho dobrado + 15% -->
+        <img src="LogoTriboSite.png" alt="Tribo do Cerrado" class="logo">
         
-        <img src="LogoTriboSite.png" alt="Tribo do Cerrado" class="main-logo">
+        <!-- Título principal -->
         <h1 class="title">TRIBO DO CERRADO</h1>
+        
+        <!-- Subtítulo corrigido - Goiânia -->
         <p class="subtitle">Motoclube de Goiânia</p>
         
-        <button class="btn" onclick="showOptions()">🔥 ENTRAR</button>
+        <!-- Botão com efeito de fogo do CodePen -->
+        <button class="btn-fire-effect" onclick="window.location.href='login.html'">
+            🔥 ENTRAR
+        </button>
     </div>
 
-    <!-- Tela de Opções -->
-    <div id="optionsScreen" class="screen options-screen">
-        <div class="options-container">
-            <h2 style="color: #FFD700; margin-bottom: 30px;">Escolha uma opção:</h2>
-            
-            <button class="btn" onclick="showPublicAccess()">👁️ Acesso Público</button>
-            <button class="btn" onclick="showLogin()">🔑 Fazer Login</button>
-            <button class="btn" onclick="showRegister()">📝 Criar Cadastro</button>
-            <button class="btn" onclick="showWelcome()">⬅️ Voltar</button>
-        </div>
-    </div>
-
-    <!-- Tela de Login -->
-    <div id="loginScreen" class="screen">
-        <div class="welcome-screen">
-            <div class="form-container">
-                <h2 style="color: #FFD700; text-align: center; margin-bottom: 30px;">🔑 Login de Membro</h2>
-                
-                <form id="loginForm">
-                    <div class="form-group">
-                        <label for="loginEmail">Email:</label>
-                        <input type="email" id="loginEmail" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="loginPassword">Senha:</label>
-                        <input type="password" id="loginPassword" required>
-                    </div>
-                    
-                    <div id="loginError" class="error-message"></div>
-                    
-                    <button type="submit" class="btn">🚀 Entrar</button>
-                    <button type="button" class="btn" onclick="showOptions()">⬅️ Voltar</button>
-                </form>
-                
-                <div class="forgot-password">
-                    <a href="#" onclick="showForgotPassword()">Esqueci minha senha</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Tela de Cadastro -->
-    <div id="registerScreen" class="screen">
-        <div class="welcome-screen">
-            <div class="form-container">
-                <h2 style="color: #FFD700; text-align: center; margin-bottom: 30px;">📝 Cadastro de Novo Membro</h2>
-                
-                <form id="registerForm">
-                    <div class="form-group">
-                        <label for="registerName">Nome Completo:</label>
-                        <input type="text" id="registerName" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="registerEmail">Email:</label>
-                        <input type="email" id="registerEmail" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="registerPassword">Senha:</label>
-                        <input type="password" id="registerPassword" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="registerConfirmPassword">Confirmar Senha:</label>
-                        <input type="password" id="registerConfirmPassword" required>
-                    </div>
-                    
-                    <div id="registerError" class="error-message"></div>
-                    
-                    <button type="submit" class="btn">🔥 Criar Cadastro</button>
-                    <button type="button" class="btn" onclick="showOptions()">⬅️ Voltar</button>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Tela de Esqueci Senha -->
-    <div id="forgotPasswordScreen" class="screen">
-        <div class="welcome-screen">
-            <div class="form-container">
-                <h2 style="color: #FFD700; text-align: center; margin-bottom: 30px;">🔄 Redefinir Senha</h2>
-                
-                <form id="forgotPasswordForm">
-                    <div class="form-group">
-                        <label for="forgotEmail">Email cadastrado:</label>
-                        <input type="email" id="forgotEmail" required>
-                    </div>
-                    
-                    <div id="forgotError" class="error-message"></div>
-                    
-                    <button type="submit" class="btn">📧 Enviar Nova Senha</button>
-                    <button type="button" class="btn" onclick="showLogin()">⬅️ Voltar</button>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Sistema Principal -->
-    <div id="mainSystem" class="screen main-system">
-        <div class="header">
-            <img src="LogoTriboSite.png" alt="Tribo do Cerrado" class="logo">
-        </div>
-        
-        <div class="nav-bar">
-            <button class="nav-btn active" onclick="showSection('agenda')">📅 Agenda</button>
-            <button class="nav-btn" onclick="showSection('perfil')">👤 Perfil</button>
-            <button class="nav-btn" onclick="showSection('email')">📧 E-mail</button>
-            <button class="nav-btn" onclick="showSection('estatuto')">📜 Estatuto</button>
-            <button class="nav-btn" onclick="logout()">🚪 Sair</button>
-        </div>
-
-        <!-- Seção Agenda -->
-        <div id="agendaSection" class="section">
-            <div class="events-container">
-                <h2 style="color: #FFD700; text-align: center; margin-bottom: 30px;">📅 Agenda de Eventos</h2>
-                <div id="eventsList"></div>
-            </div>
-        </div>
-
-        <!-- Seção Perfil -->
-        <div id="perfilSection" class="section" style="display: none;">
-            <div class="events-container">
-                <h2 style="color: #FFD700; text-align: center; margin-bottom: 30px;">👤 Meu Perfil</h2>
-                <div id="profileContent"></div>
-            </div>
-        </div>
-
-        <!-- Seção E-mail -->
-        <div id="emailSection" class="section" style="display: none;">
-            <div class="email-container">
-                <h2 style="color: #FFD700; text-align: center; margin-bottom: 30px;">📧 Sistema de E-mail</h2>
-                
-                <div class="email-tabs">
-                    <button class="email-tab active" onclick="showEmailTab('inbox')">📥 Caixa de Entrada</button>
-                    <button class="email-tab" onclick="showEmailTab('compose')">✍️ Compor</button>
-                    <button class="email-tab" onclick="showEmailTab('webmail')">🌐 Webmail Completo</button>
-                    <button class="email-tab" onclick="showEmailTab('settings')">⚙️ Configurações</button>
-                </div>
-
-                <div id="emailContent" class="email-content">
-                    <!-- Conteúdo do e-mail será carregado aqui -->
-                </div>
-            </div>
-        </div>
-
-        <!-- Seção Estatuto -->
-        <div id="estatutoSection" class="section" style="display: none;">
-            <div class="estatuto-container">
-                <h2 style="color: #FFD700; text-align: center; margin-bottom: 30px;">📜 Estatuto do TCMC</h2>
-                
-                <div style="text-align: center; margin-bottom: 20px;">
-                    <button class="btn" onclick="showEstatutoText()">📄 Ver Texto</button>
-                    <button class="btn" onclick="showEstatutoPDF()">📋 Ver PDF Original</button>
-                    <button class="btn" onclick="downloadEstatuto()">⬇️ Download PDF</button>
-                </div>
-
-                <div id="estatutoContent" class="estatuto-content">
-                    <!-- Conteúdo do estatuto será carregado aqui -->
-                </div>
-            </div>
-        </div>
+    <!-- Rodapé -->
+    <div class="footer">
+        © 2025 Tribo do Cerrado Motoclube - Goiânia, GO
     </div>
 
     <script>
-        // Variáveis globais
-        let currentUser = null;
-        let isPublicAccess = false;
-        let eventsData = [];
-
-        // String de conexão do Neon PostgreSQL
-        const NEON_CONNECTION = "postgresql://neondb_owner:npg_1bkT6ifrmlKY@ep-solitary-waterfall-a8ls02kn-pooler.eastus2.azure.neon.tech/neondb?sslmode=require&channel_binding=require";
-
-        // Funções de navegação
-        function showWelcome() {
-            hideAllScreens();
-            document.getElementById('welcomeScreen').style.display = 'flex';
-        }
-
-        function showOptions() {
-            hideAllScreens();
-            document.getElementById('optionsScreen').style.display = 'flex';
-        }
-
-        function showLogin() {
-            hideAllScreens();
-            document.getElementById('loginScreen').style.display = 'block';
-        }
-
-        function showRegister() {
-            hideAllScreens();
-            document.getElementById('registerScreen').style.display = 'block';
-        }
-
-        function showForgotPassword() {
-            hideAllScreens();
-            document.getElementById('forgotPasswordScreen').style.display = 'block';
-        }
-
-        function showPublicAccess() {
-            isPublicAccess = true;
-            currentUser = { nome_completo: 'Visitante', tipo_usuario: 'publico' };
-            showMainSystem();
-        }
-
-        function showMainSystem() {
-            hideAllScreens();
-            document.getElementById('mainSystem').style.display = 'block';
-            loadEvents();
-            showSection('agenda');
-        }
-
-        function hideAllScreens() {
-            const screens = document.querySelectorAll('.welcome-screen, .screen');
-            screens.forEach(screen => {
-                screen.style.display = 'none';
-            });
-        }
-
-        function logout() {
-            currentUser = null;
-            isPublicAccess = false;
-            showWelcome();
-        }
-
-        // Funções de seção
-        function showSection(sectionName) {
-            // Esconder todas as seções
-            document.querySelectorAll('.section').forEach(section => {
-                section.style.display = 'none';
-            });
-
-            // Remover classe active de todos os botões
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-
-            // Mostrar seção selecionada
-            document.getElementById(sectionName + 'Section').style.display = 'block';
-
-            // Ativar botão correspondente
-            event.target.classList.add('active');
-
-            // Carregar conteúdo específico
-            if (sectionName === 'agenda') {
-                loadEvents();
-            } else if (sectionName === 'perfil') {
-                loadProfile();
-            } else if (sectionName === 'email') {
-                showEmailTab('inbox');
-            } else if (sectionName === 'estatuto') {
-                showEstatutoText();
-            }
-        }
-
-        // Funções de autenticação
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-            
-            try {
-                // Simular autenticação (em produção, usar API real)
-                if (email === 'admin@tribodocerrado.org' && password === '123456') {
-                    currentUser = {
-                        id: 1,
-                        nome_completo: 'Administrador Tribo do Cerrado',
-                        email: email,
-                        tipo_usuario: 'administrador'
-                    };
-                    isPublicAccess = false;
-                    showMainSystem();
-                } else {
-                    document.getElementById('loginError').textContent = 'Email ou senha incorretos';
-                }
-            } catch (error) {
-                document.getElementById('loginError').textContent = 'Erro ao fazer login. Tente novamente.';
-            }
-        });
-
-        document.getElementById('registerForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const name = document.getElementById('registerName').value;
-            const email = document.getElementById('registerEmail').value;
-            const password = document.getElementById('registerPassword').value;
-            const confirmPassword = document.getElementById('registerConfirmPassword').value;
-            
-            if (password !== confirmPassword) {
-                document.getElementById('registerError').textContent = 'As senhas não coincidem';
-                return;
-            }
-            
-            try {
-                // Simular cadastro (em produção, usar API real)
-                alert('Cadastro realizado com sucesso! Faça login para continuar.');
-                showLogin();
-            } catch (error) {
-                document.getElementById('registerError').textContent = 'Erro ao criar cadastro. Tente novamente.';
-            }
-        });
-
-        document.getElementById('forgotPasswordForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const email = document.getElementById('forgotEmail').value;
-            
-            try {
-                // Simular envio de nova senha
-                alert('Nova senha enviada para seu e-mail!');
-                showLogin();
-            } catch (error) {
-                document.getElementById('forgotError').textContent = 'Erro ao enviar nova senha. Tente novamente.';
-            }
-        });
-
-        // Funções de eventos
-        async function loadEvents() {
-            try {
-                // Dados de exemplo (em produção, carregar do banco Neon)
-                eventsData = [
-                    {
-                        id: 1,
-                        titulo: 'Encontro Mensal da Tribo',
-                        descricao: 'Encontro mensal para confraternização e planejamento de atividades',
-                        data_evento: '2025-01-15T19:00:00',
-                        local_evento: 'Praça Central de Goiânia',
-                        endereco: 'Praça Cívica, Goiânia - GO',
-                        participantes_confirmados: 12,
-                        comboios_organizados: 2,
-                        latitude: -16.6869,
-                        longitude: -49.2648
-                    },
-                    {
-                        id: 2,
-                        titulo: 'Viagem para Chapada dos Veadeiros',
-                        descricao: 'Aventura de 3 dias pela Chapada dos Veadeiros com hospedagem organizada',
-                        data_evento: '2025-01-25T08:00:00',
-                        local_evento: 'Alto Paraíso de Goiás',
-                        endereco: 'Alto Paraíso de Goiás - GO',
-                        participantes_confirmados: 8,
-                        comboios_organizados: 2,
-                        latitude: -14.1319,
-                        longitude: -47.5156
-                    },
-                    {
-                        id: 3,
-                        titulo: 'Happy Hour da Tribo',
-                        descricao: 'Encontro descontraído para networking e diversão',
-                        data_evento: '2025-02-05T18:00:00',
-                        local_evento: 'Bar do Motoqueiro',
-                        endereco: 'Setor Bueno, Goiânia - GO',
-                        participantes_confirmados: 15,
-                        comboios_organizados: 1,
-                        latitude: -16.7014,
-                        longitude: -49.2372
-                    }
-                ];
-
-                displayEvents();
-            } catch (error) {
-                console.error('Erro ao carregar eventos:', error);
-            }
-        }
-
-        function displayEvents() {
-            const eventsList = document.getElementById('eventsList');
-            eventsList.innerHTML = '';
-
-            eventsData.forEach(event => {
-                const eventCard = document.createElement('div');
-                eventCard.className = 'event-card';
-                eventCard.onclick = () => toggleEventDetails(event.id);
-
-                const eventDate = new Date(event.data_evento);
-                const formattedDate = eventDate.toLocaleDateString('pt-BR');
-                const formattedTime = eventDate.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-
-                eventCard.innerHTML = `
-                    <div class="event-title">🏍️ ${event.titulo}</div>
-                    <div>📅 ${formattedDate} às ${formattedTime}</div>
-                    <div>📍 ${event.local_evento}</div>
-                    <div>📝 ${event.descricao}</div>
-                    <div>👥 ${event.participantes_confirmados} participantes confirmados</div>
-                    <div>🏁 ${event.comboios_organizados} comboios organizados</div>
-                    
-                    <div class="event-details" id="details-${event.id}">
-                        <table class="event-info-table">
-                            <tr><th>Informação</th><th>Detalhes</th></tr>
-                            <tr><td>📅 Data e Hora</td><td>${formattedDate} às ${formattedTime}</td></tr>
-                            <tr><td>📍 Local</td><td>${event.local_evento}</td></tr>
-                            <tr><td>🗺️ Endereço</td><td>${event.endereco}</td></tr>
-                            <tr><td>👥 Participantes</td><td>${event.participantes_confirmados} confirmados</td></tr>
-                            <tr><td>🏁 Comboios</td><td>${event.comboios_organizados} organizados</td></tr>
-                            <tr><td>📝 Descrição</td><td>${event.descricao}</td></tr>
-                        </table>
-                        
-                        <div style="margin-bottom: 15px;">
-                            <button class="btn" onclick="showEventMap(${event.id})" style="margin-right: 10px;">🗺️ Ver no Mapa</button>
-                            ${!isPublicAccess ? `
-                                <button class="btn" onclick="participateEvent(${event.id})">✋ Participar</button>
-                                <button class="btn" onclick="organizeComboio(${event.id})">🏁 Organizar Comboio</button>
-                            ` : `
-                                <button class="btn" onclick="alert('Faça login para participar!')" style="opacity: 0.6;">🔒 Participar (Login necessário)</button>
-                                <button class="btn" onclick="alert('Faça login para organizar comboios!')" style="opacity: 0.6;">🔒 Comboios (Login necessário)</button>
-                            `}
-                        </div>
-                        
-                        <div id="map-${event.id}" class="map-container" style="display: none;"></div>
-                    </div>
-                `;
-
-                eventsList.appendChild(eventCard);
-            });
-        }
-
-        function toggleEventDetails(eventId) {
-            const details = document.getElementById(`details-${eventId}`);
-            details.classList.toggle('expanded');
-        }
-
-        function showEventMap(eventId) {
-            const event = eventsData.find(e => e.id === eventId);
-            const mapContainer = document.getElementById(`map-${eventId}`);
-            
-            if (mapContainer.style.display === 'none') {
-                mapContainer.style.display = 'block';
-                
-                // Criar mapa Leaflet
-                const map = L.map(`map-${eventId}`).setView([event.latitude, event.longitude], 13);
-                
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '© OpenStreetMap contributors'
-                }).addTo(map);
-                
-                // Adicionar marcador
-                const marker = L.marker([event.latitude, event.longitude]).addTo(map);
-                marker.bindPopup(`
-                    <b>${event.titulo}</b><br>
-                    ${event.endereco}<br>
-                    <a href="https://www.google.com/maps/dir/?api=1&destination=${event.latitude},${event.longitude}" target="_blank">
-                        📱 Abrir no GPS
-                    </a>
-                `);
-                
-                // Redimensionar mapa após mostrar
-                setTimeout(() => {
-                    map.invalidateSize();
-                }, 100);
-            } else {
-                mapContainer.style.display = 'none';
-            }
-        }
-
-        function participateEvent(eventId) {
-            if (isPublicAccess) {
-                alert('Faça login para participar do evento!');
-                return;
-            }
-            alert('Participação confirmada no evento!');
-        }
-
-        function organizeComboio(eventId) {
-            if (isPublicAccess) {
-                alert('Faça login para organizar comboios!');
-                return;
-            }
-            alert('Comboio organizado com sucesso!');
-        }
-
-        // Funções de perfil
-        function loadProfile() {
-            const profileContent = document.getElementById('profileContent');
-            
-            if (isPublicAccess) {
-                profileContent.innerHTML = `
-                    <div style="text-align: center; padding: 50px;">
-                        <h3 style="color: #FFD700;">🔒 Acesso Restrito</h3>
-                        <p>Faça login para ver seu perfil completo.</p>
-                        <button class="btn" onclick="showLogin()">🔑 Fazer Login</button>
-                    </div>
-                `;
-                return;
-            }
-
-            profileContent.innerHTML = `
-                <div style="background: rgba(139,69,19,0.9); padding: 30px; border-radius: 15px; border: 2px solid #FFD700;">
-                    <h3 style="color: #FFD700; margin-bottom: 20px;">👤 Informações Pessoais</h3>
-                    <p><strong>Nome:</strong> ${currentUser.nome_completo}</p>
-                    <p><strong>Email:</strong> ${currentUser.email}</p>
-                    <p><strong>Tipo:</strong> ${currentUser.tipo_usuario}</p>
-                    <p><strong>Cidade:</strong> Goiânia - GO</p>
-                    
-                    <h3 style="color: #FFD700; margin: 30px 0 20px 0;">👨‍👩‍👧‍👦 Familiares</h3>
-                    <p>• Maria Silva (Esposa, 45 anos)</p>
-                    <p>• João Silva (Filho, 18 anos)</p>
-                    
-                    <h3 style="color: #FFD700; margin: 30px 0 20px 0;">🏆 Prêmios e Conquistas</h3>
-                    <p>• Melhor Piloto 2024 - Categoria Touring</p>
-                    <p>• Membro Fundador da Tribo</p>
-                    
-                    <h3 style="color: #FFD700; margin: 30px 0 20px 0;">🏍️ Minhas Motos</h3>
-                    <p>• Honda CB 600F Hornet 2022 (Vermelha, 600cc, ABC-1234)</p>
-                    <p>• Yamaha Tenere 250 2021 (Azul, 250cc, XYZ-5678)</p>
-                </div>
-            `;
-        }
-
-        // Funções de e-mail
-        function showEmailTab(tabName) {
-            // Remover classe active de todas as abas
-            document.querySelectorAll('.email-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-
-            // Ativar aba clicada
-            event.target.classList.add('active');
-
-            const emailContent = document.getElementById('emailContent');
-
-            switch(tabName) {
-                case 'inbox':
-                    emailContent.innerHTML = `
-                        <h3 style="color: #FFD700; margin-bottom: 20px;">📥 Caixa de Entrada</h3>
-                        <div style="background: rgba(139,69,19,0.7); padding: 20px; border-radius: 10px;">
-                            <div style="border-bottom: 1px solid #FFD700; padding: 10px; margin-bottom: 10px;">
-                                <strong>De:</strong> admin@tribodocerrado.org<br>
-                                <strong>Assunto:</strong> Bem-vindo à Tribo do Cerrado!<br>
-                                <strong>Data:</strong> 01/01/2025 10:00
-                            </div>
-                            <div style="border-bottom: 1px solid #FFD700; padding: 10px; margin-bottom: 10px;">
-                                <strong>De:</strong> eventos@tribodocerrado.org<br>
-                                <strong>Assunto:</strong> Próximo evento: Encontro Mensal<br>
-                                <strong>Data:</strong> 02/01/2025 14:30
-                            </div>
-                            <button class="btn" onclick="alert('Função de atualização implementada!')">🔄 Atualizar</button>
-                        </div>
-                    `;
-                    break;
-
-                case 'compose':
-                    emailContent.innerHTML = `
-                        <h3 style="color: #FFD700; margin-bottom: 20px;">✍️ Compor E-mail</h3>
-                        <form class="compose-form">
-                            <input type="email" placeholder="Para:" required>
-                            <input type="text" placeholder="Assunto:" required>
-                            <textarea placeholder="Mensagem:" required></textarea>
-                            <div>
-                                <button type="submit" class="btn">📧 Enviar</button>
-                                <button type="button" class="btn">💾 Salvar Rascunho</button>
-                            </div>
-                        </form>
-                    `;
-                    break;
-
-                case 'webmail':
-                    emailContent.innerHTML = `
-                        <h3 style="color: #FFD700; margin-bottom: 20px;">🌐 Webmail Completo</h3>
-                        <p style="margin-bottom: 15px;">Acesse a interface completa do webmail Migadu:</p>
-                        <button class="btn" onclick="loadWebmail()" style="margin-bottom: 15px;">🚀 Carregar Webmail</button>
-                        <div id="webmailContainer"></div>
-                    `;
-                    break;
-
-                case 'settings':
-                    emailContent.innerHTML = `
-                        <h3 style="color: #FFD700; margin-bottom: 20px;">⚙️ Configurações de E-mail</h3>
-                        <div style="background: rgba(139,69,19,0.7); padding: 20px; border-radius: 10px;">
-                            <h4 style="color: #FFD700;">📧 Conta Principal</h4>
-                            <p><strong>E-mail:</strong> administrador@tribodocerrado.org</p>
-                            <p><strong>Servidor IMAP:</strong> imap.migadu.com (993, SSL)</p>
-                            <p><strong>Servidor SMTP:</strong> smtp.migadu.com (465, SSL)</p>
-                            
-                            <h4 style="color: #FFD700; margin-top: 20px;">📊 Estatísticas</h4>
-                            <p><strong>E-mails enviados hoje:</strong> 3</p>
-                            <p><strong>E-mails recebidos hoje:</strong> 7</p>
-                            <p><strong>Espaço utilizado:</strong> 45MB / 5GB</p>
-                            
-                            <button class="btn" onclick="alert('Configurações salvas!')" style="margin-top: 15px;">💾 Salvar Configurações</button>
-                        </div>
-                    `;
-                    break;
-            }
-        }
-
-        function loadWebmail() {
-            const container = document.getElementById('webmailContainer');
-            container.innerHTML = `
-                <iframe src="https://webmail.migadu.com" class="webmail-frame"></iframe>
-                <p style="margin-top: 10px; font-size: 14px; color: #FFD700;">
-                    💡 Use suas credenciais: administrador@tribodocerrado.org
-                </p>
-            `;
-        }
-
-        // Funções do Estatuto
-        function showEstatutoText() {
-            const estatutoContent = document.getElementById('estatutoContent');
-            estatutoContent.innerHTML = `
-                <h2>TRIBO DO CERRADO MOTO CLUBE - TCMC</h2>
-                
-                <p><strong>Este Estatuto foi aprovado por unanimidade em Reunião, realizada no dia 20 de dezembro de 2003, passando a vigorar nos seguintes termos:</strong></p>
-                
-                <h3>CAPÍTULO I - Da Denominação, Fins, Sede, Duração, Filosofia e Símbolos</h3>
-                
-                <p><strong>Art. 1º</strong> - A Associação de Motociclistas, de natureza Social, Desportiva, Organizativa, Representativa, Educativa, Assistencial, de Incentivo à Cultura e Defesa do Meio Ambiente, com a denominação de <strong>TRIBO DO CERRADO MOTO CLUBE</strong> e com a sigla <strong>TCMC</strong>, que não terá fins lucrativos e visará à promoção da fraternidade e cooperação entre os motociclistas, defendendo no âmbito de suas atribuições, a boa imagem do motociclista e visando as mais abrangentes e diversificadas atividades relacionadas com o motociclismo; participar sempre que possível de atividades sociais e cívicas; a promoção de viagens turísticas em motocicletas pelo Brasil e pelo Exterior para seus associados; reuniões de confraternização com outros motoclubes ou associações de motociclistas; coordenar e dirigir atividades relacionadas com a prática do moto turismo, inclusive, com ênfase à cultura, educação e social; integradora e defensora das questões de apoio, desenvolvimento e crescimento de um motociclismo com Igualdade, Fraternidade e Irmandade; combater, recriminar e coibir todo e qualquer ato discriminatório contra o motociclismo e os motociclistas e a prestação de serviços sociais e filantrópicos às comunidades e pessoas carentes, bem como empreender atividades destinadas à preservação do meio ambiente.</p>
-                
-                <p><strong>Art. 2º</strong> - A associação terá sua sede provisória na Rua Valdir Luiz Costa, quadra 14, lote 32, Parque Trindade II, Aparecida de Goiânia, Estado de Goiás e poderá mudar de endereço, assim como abrir sucursais em outros Municípios, Estados da Federação e no Exterior, mediante aprovação em Assembléia Geral.</p>
-                
-                <p><strong>Art. 3º</strong> - O prazo de duração do TCMC é indeterminado.</p>
-                
-                <p><strong>Art. 4º</strong> - A filosofia do TCMC é: <strong>"LIBERDADE PARA O CORPO, ALMA E MENTE"</strong>, que deve ser interpretado na mais ampla e significativa expressão, com respeito à preservação da natureza, à ordem, às leis e aos bons costumes, bem como o primado pelo Criador do Universo, que nos proporciona a satisfação de estarmos juntos com irmãos motociclistas, curtindo o prazer de pilotar a nossa máquina nas estradas do nosso Planeta.</p>
-                
-                <p><strong>Art. 5º</strong> - Os Símbolos Oficiais e identificações do TCMC são:</p>
-                
-                <p><strong>§ 1º</strong> – Brasão (patch) do TCMC: circunferência amarela que representa o sol e o ouro da região centro-oeste, no seu interior; a árvore escura e retorcida representa a flora do cerrado; o calango, a fauna do cerrado e a motocicleta a incansável estradeira, a companheira de estradas; e os listeis em vermelho com as inscrições em branco do nome Tribo do Cerrado, e do país de origem. Com as seguintes medidas: a circunferência com raio de 12,5 módulos; o listel com a inscrição Tribo do Cerrado com 32,0 módulos de comprimento por 5,5 módulos de largura; e o listel do país de origem com 27 módulos de comprimento por 7,5 módulos de largura.</p>
-                
-                <p><strong>§ 2º</strong> - Bandeira preta com o Brasão do motoclube estampado ao centro.</p>
-                
-                <p><strong>§ 3º</strong> – Cores: PRETA, AMARELA, VERMELHA e BRANCA.</p>
-                
-                <p><strong>§ 4º</strong> – Número Oficial do TCMC é 23 com as seguintes cores:</p>
-                <p>I – Vermelho para o Presidente;</p>
-                <p>II – Verde para os Diretores;</p>
-                <p>III – Amarelo para os Membros Associados.</p>
-                
-                <p style="margin-top: 30px; text-align: center; color: #FFD700;"><strong>📜 Estatuto completo disponível para download em PDF</strong></p>
-            `;
-        }
-
-        function showEstatutoPDF() {
-            const estatutoContent = document.getElementById('estatutoContent');
-            estatutoContent.innerHTML = `
-                <iframe src="ESTATUTOEMVIGOR-TRIBODOCERRADOMOTOCLUBE.pdf" class="pdf-viewer"></iframe>
-                <p style="margin-top: 10px; text-align: center; color: #FFD700;">
-                    📋 Estatuto oficial em vigor - TCMC
-                </p>
-            `;
-        }
-
-        function downloadEstatuto() {
-            const link = document.createElement('a');
-            link.href = 'ESTATUTOEMVIGOR-TRIBODOCERRADOMOTOCLUBE.pdf';
-            link.download = 'Estatuto-TCMC-Tribo-do-Cerrado.pdf';
-            link.click();
-        }
-
-        // Inicializar aplicação
+        // Efeito de partículas de fogo (opcional)
         document.addEventListener('DOMContentLoaded', function() {
-            showWelcome();
+            const button = document.querySelector('.btn-fire-effect');
+            
+            button.addEventListener('mouseenter', function() {
+                this.style.animation = 'fire-glow 1.5s ease-in-out infinite alternate';
+            });
+            
+            button.addEventListener('mouseleave', function() {
+                this.style.animation = '';
+            });
         });
     </script>
 </body>

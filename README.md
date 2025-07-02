@@ -1,167 +1,212 @@
-# 🏍️ Tribo do Cerrado - Agenda de Eventos
+# 🏍️ Tribo do Cerrado - Motoclube de Goiânia
 
-Sistema completo de agenda de eventos para motoclubes com funcionalidades avançadas de moderação, calendário interativo e sistema de participação.
+Sistema completo para o motoclube Tribo do Cerrado, desenvolvido com tecnologias modernas e arquitetura escalável.
 
-## ✨ Funcionalidades
+## 🌐 **Site Oficial**
+**https://tribodocerrado.org**
 
-### 🎯 **Para Usuários:**
-- ✅ Calendário interativo com navegação por meses
-- ✅ Visualização de eventos aprovados
-- ✅ Sistema de sugestão de eventos com mapa
-- ✅ Busca automática de endereços
-- ✅ Sistema de participação e comboios
-- ✅ Interface responsiva (mobile/desktop)
+## 🚀 **Tecnologias**
 
-### 🛡️ **Para Administradores:**
-- ✅ Painel de moderação exclusivo
-- ✅ Gerenciamento completo de usuários
-- ✅ Aprovação/rejeição de eventos
-- ✅ Criação direta de eventos (aprovados automaticamente)
-- ✅ Exclusão de usuários e eventos
-- ✅ Controle total do sistema
+### **Frontend**
+- React 18 + TypeScript
+- Vite (build tool)
+- Tailwind CSS (design system)
+- Framer Motion (animações)
+- React Router (navegação)
+- Leaflet (mapas interativos)
 
-## 🚀 Deploy Permanente
+### **Backend**
+- Node.js + Express
+- TypeScript
+- Prisma ORM
+- PostgreSQL (Neon)
+- JWT + bcrypt (autenticação)
+- Cloudinary (upload de imagens)
+- Nodemailer + Migadu (e-mail)
 
-### **1. Configurar Neon PostgreSQL (GRATUITO)**
+### **Infraestrutura**
+- GitHub Actions (CI/CD)
+- Neon PostgreSQL (banco gratuito)
+- GitHub Pages (hospedagem)
+- Cloudinary (CDN de imagens)
+- Migadu (servidor de e-mail)
 
-1. **Criar conta no Neon:**
-   - Acesse: https://neon.com/
-   - Clique em "Sign Up" (gratuito)
-   - Use GitHub ou email para criar conta
-
-2. **Criar projeto:**
-   - Nome: `tribo-cerrado-agenda`
-   - Região: `US East (Ohio)` (recomendado)
-   - PostgreSQL version: `16` (mais recente)
-
-3. **Copiar string de conexão:**
-   - No dashboard, clique em "Connection string"
-   - Copie a URL completa que começa com `postgresql://`
-   - Exemplo: `postgresql://user:pass@ep-xxx.us-east-2.aws.neon.tech/neondb?sslmode=require`
-
-### **2. Configurar GitHub Secrets**
-
-No seu repositório GitHub, vá em **Settings > Secrets and variables > Actions** e adicione:
+## 📁 **Estrutura do Projeto**
 
 ```
-NEON_DATABASE_URL = postgresql://user:pass@ep-xxx.us-east-2.aws.neon.tech/neondb?sslmode=require
-SECRET_KEY = tribo-cerrado-agenda-eventos-2025-super-segura
-CLOUDINARY_CLOUD_NAME = demo
-CLOUDINARY_API_KEY = your-api-key  
-CLOUDINARY_API_SECRET = your-api-secret
+tribodocerrado/
+├── frontend/                 # Aplicação React
+│   ├── src/
+│   │   ├── components/      # Componentes reutilizáveis
+│   │   ├── pages/          # Páginas da aplicação
+│   │   ├── contexts/       # Context API (estado global)
+│   │   ├── services/       # Serviços e APIs
+│   │   └── styles/         # Estilos globais
+│   ├── public/             # Arquivos estáticos
+│   └── package.json
+├── backend/                  # API Node.js
+│   ├── src/
+│   │   ├── routes/         # Rotas da API
+│   │   ├── middleware/     # Middlewares
+│   │   ├── utils/          # Utilitários
+│   │   └── server.ts       # Servidor principal
+│   ├── prisma/             # Schema do banco
+│   └── package.json
+├── .github/workflows/        # GitHub Actions
+├── index.html               # Página inicial (GitHub Pages)
+├── LogoTriboSite.png        # Logo oficial
+├── FundoSIte.png           # Imagem de fundo
+└── README.md               # Este arquivo
 ```
 
-### **3. Fazer Deploy**
+## 🎯 **Funcionalidades**
 
-1. **Push para GitHub:**
-   ```bash
-   git add .
-   git commit -m "Deploy sistema completo Tribo do Cerrado"
-   git push origin main
-   ```
+### **✅ Implementadas**
+- 🏠 **Página inicial** com design responsivo
+- 🔐 **Sistema de autenticação** (login/registro)
+- 👤 **Perfis de usuário** completos
+- 📅 **Agenda de eventos** interativa
+- 🗺️ **Mapas integrados** (OpenStreetMap)
+- 📧 **Sistema de e-mail** (Migadu API)
+- 🖼️ **Upload de imagens** (Cloudinary)
+- 📱 **Design responsivo** (mobile-first)
+- 🔥 **Animações** e efeitos visuais
 
-2. **Acompanhar deploy:**
-   - Vá em **Actions** no GitHub
-   - Veja os logs em tempo real
-   - Deploy automático a cada push
+### **🚧 Em Desenvolvimento**
+- 📊 Dashboard administrativo
+- 🚗 Sistema de comboios
+- 🏆 Sistema de prêmios e menções
+- 👨‍👩‍👧‍👦 Cadastro de familiares
+- 🏍️ Cadastro de motos
+- 📄 Visualizador de estatuto
 
-### **4. Acessar Sistema**
+## 🛠️ **Desenvolvimento Local**
 
-- **URL**: Será gerada automaticamente pelo GitHub Pages ou Vercel
-- **Admin**: `admin@tribodocerrado.com` / `123456`
-- **Moderação**: Aba "Moderação" (apenas para admins)
+### **Pré-requisitos**
+- Node.js 18+
+- npm ou yarn
+- Conta no Neon PostgreSQL
+- Conta no Cloudinary (opcional)
 
-## 🔧 Configuração Local
-
-### **Pré-requisitos:**
-- Python 3.11+
-- PostgreSQL (ou usar Neon)
-
-### **Instalação:**
+### **Configuração**
 
 1. **Clone o repositório:**
    ```bash
-   git clone https://github.com/SEU_USUARIO/tribo-cerrado-agenda.git
-   cd tribo-cerrado-agenda
+   git clone https://github.com/rodrigorochalima/tribodocerrado.git
+   cd tribodocerrado
    ```
 
-2. **Instale dependências:**
+2. **Configure o backend:**
    ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Configure .env:**
-   ```bash
+   cd backend
+   npm install
    cp .env.example .env
-   # Edite .env com suas configurações
+   # Configure as variáveis no .env
+   npx prisma generate
+   npx prisma db push
+   npm run dev
    ```
 
-4. **Execute:**
+3. **Configure o frontend:**
    ```bash
-   python src/main.py
+   cd frontend
+   npm install
+   npm run dev
    ```
 
-5. **Acesse:**
-   - Local: http://localhost:5000
-   - Admin: admin@tribodocerrado.com / 123456
+4. **Acesse:**
+   - Frontend: http://localhost:5173
+   - Backend: http://localhost:3000
 
-## 📊 Logs e Monitoramento
+## 🔧 **Configuração de Produção**
 
-### **GitHub Actions:**
-- Logs completos de cada deploy
-- Status de sucesso/falha
-- Testes automáticos
-- Notificações de erro
+### **Variáveis de Ambiente**
+```env
+# Banco de dados
+DATABASE_URL=postgresql://user:pass@host/db
 
-### **Neon Dashboard:**
-- Métricas de uso do banco
-- Logs de conexão
-- Backup automático
-- Branching para desenvolvimento
+# Autenticação
+JWT_SECRET=sua-chave-secreta
 
-## 🛠️ Tecnologias
+# Cloudinary (upload de imagens)
+CLOUDINARY_CLOUD_NAME=seu-cloud-name
+CLOUDINARY_API_KEY=sua-api-key
+CLOUDINARY_API_SECRET=seu-api-secret
 
-- **Backend**: Flask + SQLAlchemy
-- **Frontend**: HTML5 + CSS3 + JavaScript
-- **Banco**: PostgreSQL (Neon)
-- **Mapas**: OpenStreetMap + Leaflet
-- **Deploy**: GitHub Actions
-- **Hospedagem**: Neon (banco) + GitHub Pages
+# E-mail (Migadu)
+SMTP_HOST=smtp.migadu.com
+SMTP_PORT=587
+SMTP_USER=admin@tribodocerrado.org
+SMTP_PASS=sua-senha
+```
 
-## 📱 Responsividade
+### **Deploy Automático**
+O projeto usa GitHub Actions para deploy automático:
+- **Push na main** → Deploy automático
+- **Testes** executados automaticamente
+- **Build** e deploy no GitHub Pages
 
-- **Desktop**: Logo 300px, layout completo
-- **Tablet**: Logo 250px, navegação adaptada
-- **Mobile**: Logo 200px, menu vertical
+## 📊 **Banco de Dados**
 
-## 🎨 Design
+### **Schema Principal**
+- **usuarios** - Dados dos membros
+- **eventos** - Agenda de eventos
+- **familiares** - Familiares dos membros
+- **motos** - Motos cadastradas
+- **premios_mencoes** - Prêmios e menções
+- **participacoes_eventos** - Participações em eventos
 
-- **Tema**: Harley Davidson (laranja/preto)
-- **Logo**: Emblema fixo no topo
-- **Fundo**: Imagem dramática com fogo e caveiras
-- **Transparência**: Caixas flutuantes sobre o fundo
+### **Dados Iniciais**
+- **Admin:** admin@tribodocerrado.org / 123456
+- **Eventos de exemplo** carregados
+- **Estrutura completa** configurada
 
-## 🔐 Segurança
+## 🎨 **Design System**
 
-- Autenticação por sessão
-- Validação de permissões
-- Sanitização de dados
-- CORS configurado
-- Secrets no GitHub
+### **Cores**
+- **Primária:** #ff6b35 (laranja fogo)
+- **Secundária:** #ff8c42 (laranja claro)
+- **Dourado:** #FFD700 (títulos)
+- **Escuro:** #0f172a (backgrounds)
 
-## 📞 Suporte
+### **Tipografia**
+- **Títulos:** Cinzel (serif elegante)
+- **Corpo:** Inter (sans-serif moderna)
 
-Sistema desenvolvido especificamente para a **Tribo do Cerrado**.
+### **Componentes**
+- Botões com efeito de fogo
+- Cards metálicos
+- Animações fluidas
+- Design responsivo
 
-**Funcionalidades principais:**
-- ✅ Sistema de eventos completo
-- ✅ Moderação avançada
-- ✅ Deploy automático
-- ✅ Logs visíveis
-- ✅ Banco gratuito (Neon)
-- ✅ Interface profissional
+## 📱 **Responsividade**
+
+- **Desktop:** Layout completo
+- **Tablet:** Adaptado para touch
+- **Mobile:** Menu colapsável, layout vertical
+
+## 🔐 **Segurança**
+
+- **JWT** para autenticação
+- **bcrypt** para senhas
+- **CORS** configurado
+- **Validação** de dados
+- **Sanitização** de inputs
+
+## 📞 **Contato**
+
+**Tribo do Cerrado Motoclube**
+- **Site:** https://tribodocerrado.org
+- **E-mail:** admin@tribodocerrado.org
+- **Localização:** Goiânia, GO
 
 ---
 
-**🏍️ Desenvolvido para a Tribo do Cerrado - Motoclube**
+## 📄 **Licença**
+
+Este projeto é propriedade do **Tribo do Cerrado Motoclube**.
+
+---
+
+**🏍️ Desenvolvido com ❤️ para a Tribo do Cerrado**
 
