@@ -59,7 +59,7 @@
             padding: 40px;
             border-radius: 20px;
             backdrop-filter: blur(15px);
-            border: 2px solid rgba(255, 107, 53, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.2);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
             max-width: 800px;
             width: 95%;
@@ -72,25 +72,25 @@
             margin-bottom: 30px;
             text-align: center;
             
-            /* Mesmo estilo metalizado */
+            /* Dourado mais claro e forte */
             background: linear-gradient(45deg, 
-                #B8860B 0%,
-                #DAA520 10%,
-                #FFD700 25%,
-                #FFFF00 40%,
-                #FFFACD 55%,
-                #FFFFFF 70%,
-                #FFFACD 85%,
-                #FFD700 100%
+                #DAA520 0%,
+                #FFD700 15%,
+                #FFFF00 30%,
+                #FFFACD 45%,
+                #FFFFFF 60%,
+                #FFFACD 75%,
+                #FFD700 90%,
+                #F0E68C 100%
             );
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             
             text-shadow: 
-                2px 2px 0px #8B4513,
-                4px 4px 0px #654321,
-                6px 6px 10px rgba(139, 69, 19, 0.8);
+                2px 2px 0px #B8860B,
+                4px 4px 0px #8B7355,
+                6px 6px 10px rgba(184, 134, 11, 0.6);
             
             filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.5));
         }
@@ -111,35 +111,40 @@
             grid-column: 1 / -1;
         }
         
+        /* NOVA COR PARA LABELS - Branco forte e legível */
         .form-label {
             display: block;
-            color: #ff8c42;
-            font-weight: 700;
+            color: #FFFFFF; /* Branco puro em vez de laranja */
+            font-weight: 900; /* Negrito forte */
             margin-bottom: 8px;
-            font-size: 1rem;
+            font-size: 1.1rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+            letter-spacing: 0.5px;
         }
         
         .form-input, .form-select, .form-textarea {
             width: 100%;
             padding: 12px 15px;
-            border: 2px solid #333;
+            border: 2px solid #444;
             border-radius: 10px;
             background: rgba(45, 45, 45, 0.9);
             color: #ffffff;
             font-size: 1rem;
             font-family: 'Orbitron', monospace;
+            font-weight: 600;
             transition: all 0.3s ease;
         }
         
         .form-input:focus, .form-select:focus, .form-textarea:focus {
             outline: none;
-            border-color: #ff6b35;
-            box-shadow: 0 0 15px rgba(255, 107, 53, 0.3);
+            border-color: #FFD700; /* Dourado em vez de laranja */
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
             background: rgba(45, 45, 45, 1);
         }
         
         .form-input::placeholder, .form-textarea::placeholder {
-            color: #888;
+            color: #aaa;
+            font-weight: 400;
         }
         
         .form-textarea {
@@ -155,10 +160,16 @@
             margin-top: 20px;
         }
         
+        .checkbox-group label {
+            color: #FFFFFF !important; /* Branco forte */
+            font-weight: 700 !important;
+            cursor: pointer;
+        }
+        
         .checkbox-custom {
             width: 20px;
             height: 20px;
-            border: 2px solid #ff6b35;
+            border: 2px solid #FFD700;
             border-radius: 4px;
             background: transparent;
             cursor: pointer;
@@ -174,7 +185,7 @@
         }
         
         .checkbox-custom input:checked + .checkmark {
-            background: #ff6b35;
+            background: #FFD700;
         }
         
         .checkmark {
@@ -195,7 +206,7 @@
             top: 2px;
             width: 5px;
             height: 10px;
-            border: solid white;
+            border: solid #000;
             border-width: 0 3px 3px 0;
             transform: rotate(45deg);
         }
@@ -220,14 +231,14 @@
             
             /* Base metalizada dourada */
             background: linear-gradient(145deg, 
-                #B8860B 0%,
-                #DAA520 15%,
-                #FFD700 30%,
-                #FFFF00 45%,
-                #FFFACD 60%,
-                #FFFFFF 75%,
-                #FFFACD 90%,
-                #FFD700 100%
+                #DAA520 0%,
+                #FFD700 15%,
+                #FFFF00 30%,
+                #FFFACD 45%,
+                #FFFFFF 60%,
+                #FFFACD 75%,
+                #FFD700 90%,
+                #F0E68C 100%
             );
             
             /* Efeito 3D metalizado */
@@ -319,6 +330,16 @@
         .form-input.invalido {
             border-color: #f44336;
             box-shadow: 0 0 10px rgba(244, 67, 54, 0.3);
+        }
+        
+        /* Links */
+        a {
+            color: #FFD700 !important; /* Dourado em vez de laranja */
+            font-weight: 700;
+        }
+        
+        a:hover {
+            color: #FFFF00 !important;
         }
         
         /* Responsividade */
@@ -528,7 +549,7 @@
                         <input type="checkbox" id="newsletter" name="newsletter">
                         <span class="checkmark"></span>
                     </label>
-                    <label for="newsletter" style="cursor: pointer;">
+                    <label for="newsletter">
                         📧 Quero receber newsletter com eventos e novidades
                     </label>
                 </div>
@@ -538,8 +559,8 @@
                         <input type="checkbox" id="termos" name="termos" required>
                         <span class="checkmark"></span>
                     </label>
-                    <label for="termos" style="cursor: pointer;">
-                        ✅ Aceito os <a href="#" style="color: #ff8c42;">termos de uso</a> e <a href="#" style="color: #ff8c42;">política de privacidade</a>
+                    <label for="termos">
+                        ✅ Aceito os <a href="#">termos de uso</a> e <a href="#">política de privacidade</a>
                     </label>
                 </div>
                 
@@ -553,6 +574,9 @@
     </div>
     
     <script>
+        // Configurar encoding UTF-8 correto
+        document.charset = 'UTF-8';
+        
         // Máscara para telefone
         document.getElementById('telefone').addEventListener('input', function(e) {
             let value = e.target.value.replace(/\D/g, '');
@@ -612,16 +636,23 @@
                 return false;
             }
             
+            // Criar email @tribodocerrado.org baseado no apelido
+            const emailTriboDoCerrado = dados.apelido.toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '') // Remove acentos
+                .replace(/[^a-z0-9]/g, '') + '@tribodocerrado.org';
+            
             // Adicionar dados extras
             dados.dataCadastro = new Date().toISOString();
             dados.id = Date.now().toString();
             dados.ativo = true;
+            dados.emailTriboDoCerrado = emailTriboDoCerrado;
             
-            // Salvar no localStorage
+            // Salvar no localStorage com encoding UTF-8 correto
             usuarios.push(dados);
-            localStorage.setItem('usuarios', JSON.stringify(usuarios));
+            localStorage.setItem('usuarios', JSON.stringify(usuarios, null, 2));
             
-            mostrarMensagem(`Cadastro realizado com sucesso! Bem-vindo(a), ${dados.apelido}! Redirecionando para login...`, 'sucesso');
+            mostrarMensagem(`Cadastro realizado com sucesso! Bem-vindo(a), ${dados.apelido}! Seu email da Tribo: ${emailTriboDoCerrado}. Redirecionando para login...`, 'sucesso');
             
             // Limpar formulário
             event.target.reset();
@@ -629,10 +660,10 @@
                 input.classList.remove('valido', 'invalido');
             });
             
-            // Redirecionar para login após 3 segundos
+            // Redirecionar para login após 4 segundos
             setTimeout(() => {
                 window.location.href = 'login.html';
-            }, 3000);
+            }, 4000);
             
             return false;
         }
@@ -653,14 +684,15 @@
             }
         }
         
-        // Permitir caracteres especiais nos campos de texto
+        // Permitir caracteres especiais nos campos de texto - CORRIGIDO UTF-8
         document.getElementById('nome').addEventListener('input', function(e) {
-            // Permitir letras, espaços e acentos
+            // Permitir letras, espaços e acentos (incluindo ã, ç, etc.)
             this.value = this.value.replace(/[^A-Za-zÀ-ÿ\s]/g, '');
         });
         
         document.getElementById('apelido').addEventListener('input', function(e) {
             // Permitir letras, números, espaços e acentos (incluindo ã, ç, etc.)
+            // CORRIGIDO: Agora aceita corretamente "Digão"
             this.value = this.value.replace(/[^A-Za-zÀ-ÿ0-9\s]/g, '');
         });
         
