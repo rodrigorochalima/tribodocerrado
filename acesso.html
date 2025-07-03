@@ -15,10 +15,8 @@
         
         body {
             font-family: 'Orbitron', monospace;
-            background: url('FundoSIte.png') center/cover no-repeat fixed;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
+            background: #000000;
+            color: #ffffff;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -27,23 +25,52 @@
             overflow-x: hidden;
         }
         
+        /* Container principal */
         .container {
-            text-align: center;
-            padding: 20px;
-            max-width: 90%;
-            background: rgba(0, 0, 0, 0.7);
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 255, 255, 0.1);
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
         }
         
-        /* Título da página */
+        /* Imagem de fundo centralizada - MESMO ESTILO DA PÁGINA INICIAL */
+        .fundo-imagem {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 90%;
+            max-height: 70%;
+            width: auto;
+            height: auto;
+            z-index: 1;
+            opacity: 0.3; /* Mais transparente para não interferir no conteúdo */
+        }
+        
+        /* Conteúdo sobreposto */
+        .conteudo {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.85);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(255, 107, 53, 0.3);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+            max-width: 600px;
+            width: 90%;
+        }
+        
         .titulo-acesso {
-            font-size: clamp(2rem, 6vw, 4rem);
+            font-size: clamp(2rem, 5vw, 3rem);
             font-weight: 900;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
             
-            /* Efeito 3D Metalizado */
+            /* Mesmo estilo metalizado */
             background: linear-gradient(45deg, 
                 #2c2c2c 0%,
                 #4a4a4a 15%,
@@ -64,10 +91,9 @@
                 6px 6px 10px rgba(0, 0, 0, 0.8);
             
             filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
-            animation: metalGlow 3s ease-in-out infinite alternate;
-            transform: perspective(400px) rotateX(10deg);
         }
         
+        /* Botões de acesso metalizados */
         .opcoes-acesso {
             display: flex;
             flex-direction: column;
@@ -75,178 +101,182 @@
             margin-bottom: 30px;
         }
         
-        /* Botões de acesso */
-        .btn-acesso {
-            display: inline-block;
+        .btn-opcao {
+            display: block;
             padding: 20px 30px;
-            font-size: 1.2rem;
-            font-weight: 700;
             text-decoration: none;
-            color: #ffffff;
-            border: none;
-            border-radius: 15px;
-            cursor: pointer;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.1rem;
             transition: all 0.3s ease;
             position: relative;
-            overflow: hidden;
-            transform: perspective(300px) rotateX(5deg);
+            
+            /* Base metalizada */
+            background: linear-gradient(145deg, 
+                #4a4a4a 0%,
+                #6b6b6b 15%,
+                #8c8c8c 30%,
+                #a8a8a8 45%,
+                #c4c4c4 60%,
+                #e0e0e0 75%,
+                #f5f5f5 90%,
+                #ffffff 100%
+            );
+            
+            /* Efeito 3D metalizado */
+            box-shadow: 
+                0 8px 20px rgba(0, 0, 0, 0.5),
+                inset 0 2px 0 rgba(255, 255, 255, 0.7),
+                inset 0 -2px 0 rgba(0, 0, 0, 0.3),
+                inset 2px 0 0 rgba(255, 255, 255, 0.5),
+                inset -2px 0 0 rgba(0, 0, 0, 0.2);
+            
+            transform: perspective(400px) rotateX(8deg) translateZ(5px);
+            
+            color: #333333;
+            text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.8);
         }
         
-        /* Botão Acesso Público */
+        .btn-opcao:hover {
+            transform: perspective(400px) rotateX(8deg) translateZ(3px) translateY(-2px);
+            box-shadow: 
+                0 12px 25px rgba(0, 0, 0, 0.7),
+                inset 0 3px 0 rgba(255, 255, 255, 0.8),
+                inset 0 -3px 0 rgba(0, 0, 0, 0.4),
+                inset 3px 0 0 rgba(255, 255, 255, 0.6),
+                inset -3px 0 0 rgba(0, 0, 0, 0.3);
+            
+            filter: brightness(1.1);
+        }
+        
+        .btn-opcao:active {
+            transform: perspective(400px) rotateX(8deg) translateZ(1px) translateY(1px);
+            box-shadow: 
+                0 4px 10px rgba(0, 0, 0, 0.8),
+                inset 0 1px 0 rgba(0, 0, 0, 0.2),
+                inset 0 -1px 0 rgba(255, 255, 255, 0.5);
+        }
+        
+        /* Cores específicas para cada opção */
         .btn-publico {
-            background: linear-gradient(45deg, #4CAF50, #66BB6A, #4CAF50, #388E3C);
-            background-size: 400% 400%;
-            animation: greenGlow 2s ease-in-out infinite alternate;
-            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+            border-left: 5px solid #4CAF50;
         }
         
-        .btn-publico:hover {
-            transform: perspective(300px) rotateX(5deg) translateY(-3px);
-            box-shadow: 0 10px 30px rgba(76, 175, 80, 0.6);
-        }
-        
-        /* Botão Login */
         .btn-login {
-            background: linear-gradient(45deg, #2196F3, #42A5F5, #2196F3, #1976D2);
-            background-size: 400% 400%;
-            animation: blueGlow 2s ease-in-out infinite alternate;
-            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
+            border-left: 5px solid #2196F3;
         }
         
-        .btn-login:hover {
-            transform: perspective(300px) rotateX(5deg) translateY(-3px);
-            box-shadow: 0 10px 30px rgba(33, 150, 243, 0.6);
-        }
-        
-        /* Botão Cadastro */
         .btn-cadastro {
-            background: linear-gradient(45deg, #ff6b35, #ff8c42, #ff6b35, #ff4500);
-            background-size: 400% 400%;
-            animation: fire-glow 1.2s ease-in-out infinite alternate;
-            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+            border-left: 5px solid #FF9800;
         }
         
-        .btn-cadastro:hover {
-            transform: perspective(300px) rotateX(5deg) translateY(-3px);
-            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.6);
-        }
-        
-        /* Botão Voltar */
+        /* Botão voltar */
         .btn-voltar {
-            background: linear-gradient(45deg, #757575, #9E9E9E, #757575, #424242);
-            background-size: 400% 400%;
-            animation: grayGlow 2s ease-in-out infinite alternate;
-            box-shadow: 0 6px 20px rgba(117, 117, 117, 0.4);
-            padding: 15px 25px;
-            font-size: 1rem;
+            background: linear-gradient(145deg, #757575, #424242);
+            color: #ffffff;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            display: inline-block;
+            
+            box-shadow: 
+                0 5px 15px rgba(117, 117, 117, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+            
+            transform: perspective(400px) rotateX(5deg) translateZ(3px);
         }
         
         .btn-voltar:hover {
-            transform: perspective(300px) rotateX(5deg) translateY(-3px);
-            box-shadow: 0 10px 30px rgba(117, 117, 117, 0.6);
+            transform: perspective(400px) rotateX(5deg) translateZ(1px) translateY(-2px);
+            box-shadow: 0 8px 20px rgba(117, 117, 117, 0.5);
         }
         
-        /* Descrições */
-        .descricao {
-            color: rgba(255, 255, 255, 0.8);
+        .opcao-titulo {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+            display: block;
+        }
+        
+        .opcao-descricao {
             font-size: 0.9rem;
-            margin-top: 5px;
-            font-weight: 400;
-        }
-        
-        /* Ícones */
-        .icone {
-            font-size: 1.5rem;
-            margin-right: 10px;
-        }
-        
-        /* Animações */
-        @keyframes metalGlow {
-            0% { filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3)); }
-            100% { filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.6)); }
-        }
-        
-        @keyframes greenGlow {
-            0% { background-position: 0% 50%; }
-            100% { background-position: 100% 50%; }
-        }
-        
-        @keyframes blueGlow {
-            0% { background-position: 0% 50%; }
-            100% { background-position: 100% 50%; }
-        }
-        
-        @keyframes fire-glow {
-            0% { background-position: 0% 50%; }
-            100% { background-position: 400% 50%; }
-        }
-        
-        @keyframes grayGlow {
-            0% { background-position: 0% 50%; }
-            100% { background-position: 100% 50%; }
+            opacity: 0.8;
+            display: block;
         }
         
         /* Responsividade */
         @media (max-width: 768px) {
-            .container {
-                padding: 15px;
+            .fundo-imagem {
+                max-width: 95%;
+                max-height: 60%;
+            }
+            
+            .conteudo {
+                padding: 30px 20px;
                 margin: 20px;
             }
             
             .titulo-acesso {
-                margin-bottom: 20px;
+                font-size: 2rem;
             }
             
-            .btn-acesso {
-                padding: 18px 25px;
-                font-size: 1.1rem;
-            }
-            
-            .opcoes-acesso {
-                gap: 15px;
+            .btn-opcao {
+                padding: 15px 20px;
+                font-size: 1rem;
             }
         }
         
         @media (max-width: 480px) {
-            .btn-acesso {
-                padding: 15px 20px;
-                font-size: 1rem;
+            .fundo-imagem {
+                max-width: 98%;
+                max-height: 50%;
             }
             
-            .icone {
-                font-size: 1.3rem;
+            .conteudo {
+                padding: 25px 15px;
+            }
+            
+            .titulo-acesso {
+                font-size: 1.8rem;
+            }
+            
+            .btn-opcao {
+                padding: 12px 15px;
+                font-size: 0.9rem;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1 class="titulo-acesso">ESCOLHA SEU ACESSO</h1>
+        <!-- Imagem de fundo centralizada - MESMO ESTILO -->
+        <img src="FundoSIte.png" alt="Fundo Tribo do Cerrado" class="fundo-imagem">
         
-        <div class="opcoes-acesso">
-            <a href="publico.html" class="btn-acesso btn-publico">
-                <span class="icone">👁️</span>
-                ACESSO PÚBLICO
-                <div class="descricao">Visualizar eventos e informações gerais</div>
-            </a>
+        <!-- Conteúdo sobreposto -->
+        <div class="conteudo">
+            <h1 class="titulo-acesso">ESCOLHA SEU ACESSO</h1>
             
-            <a href="login.html" class="btn-acesso btn-login">
-                <span class="icone">🔐</span>
-                FAZER LOGIN
-                <div class="descricao">Acesso completo para membros cadastrados</div>
-            </a>
+            <div class="opcoes-acesso">
+                <a href="publico.html" class="btn-opcao btn-publico">
+                    <span class="opcao-titulo">👁️ ACESSO PÚBLICO</span>
+                    <span class="opcao-descricao">Visualizar eventos e informações gerais</span>
+                </a>
+                
+                <a href="login.html" class="btn-opcao btn-login">
+                    <span class="opcao-titulo">🔐 FAZER LOGIN</span>
+                    <span class="opcao-descricao">Acesso completo para membros cadastrados</span>
+                </a>
+                
+                <a href="cadastro.html" class="btn-opcao btn-cadastro">
+                    <span class="opcao-titulo">📝 CRIAR CADASTRO</span>
+                    <span class="opcao-descricao">Registrar-se como novo membro</span>
+                </a>
+            </div>
             
-            <a href="cadastro.html" class="btn-acesso btn-cadastro">
-                <span class="icone">📝</span>
-                CRIAR CADASTRO
-                <div class="descricao">Registrar-se como novo membro</div>
-            </a>
+            <a href="index.html" class="btn-voltar">⬅️ VOLTAR</a>
         </div>
-        
-        <a href="index.html" class="btn-acesso btn-voltar">
-            <span class="icone">⬅️</span>
-            VOLTAR
-        </a>
     </div>
 </body>
 </html>
