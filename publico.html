@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acesso Público - Tribo do Cerrado</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Orbitron', monospace;
+            background: #000000;
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 3px solid #ff6b35;
+        }
+        
+        .logo-titulo {
+            font-size: clamp(1.5rem, 4vw, 3rem);
+            font-weight: 900;
+            background: linear-gradient(45deg, #ff6b35, #ff8c42, #ff6b35);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* Navegação */
+        .nav {
+            background: #1a1a1a;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .nav-link {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            background: linear-gradient(145deg, #2d2d2d, #1a1a1a);
+            border: 1px solid #ff6b35;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .nav-link:hover {
+            background: linear-gradient(145deg, #ff6b35, #ff4500);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.3);
+        }
+        
+        /* Container principal */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        /* Seções */
+        .secao {
+            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+            margin-bottom: 30px;
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid #333;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .secao h2 {
+            color: #ff6b35;
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 900;
+        }
+        
+        .secao p {
+            line-height: 1.8;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        
+        /* Grid de eventos */
+        .eventos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .evento-card {
+            background: linear-gradient(135deg, #2d2d2d, #1a1a1a);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #ff6b35;
+            transition: all 0.3s ease;
+        }
+        
+        .evento-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(255, 107, 53, 0.3);
+            border-color: #ff8c42;
+        }
+        
+        .evento-titulo {
+            color: #ff8c42;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .evento-data {
+            color: #cccccc;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+        
+        .evento-descricao {
+            color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        /* Galeria de fotos */
+        .galeria {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .foto-placeholder {
+            background: linear-gradient(135deg, #2d2d2d, #1a1a1a);
+            height: 200px;
+            border-radius: 10px;
+            border: 2px solid #ff6b35;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ff6b35;
+            font-size: 3rem;
+            transition: all 0.3s ease;
+        }
+        
+        .foto-placeholder:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(255, 107, 53, 0.3);
+        }
+        
+        /* Botão voltar */
+        .btn-voltar {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(145deg, #ff6b35, #ff4500);
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 700;
+            margin: 30px auto;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.3);
+        }
+        
+        .btn-voltar:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.5);
+        }
+        
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .nav {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .container {
+                padding: 20px 15px;
+            }
+            
+            .secao {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="logo-titulo">TRIBO DO CERRADO</h1>
+        <p>Motoclube de Goiânia - Acesso Público</p>
+    </div>
+    
+    <nav class="nav">
+        <a href="#eventos" class="nav-link">📅 Eventos</a>
+        <a href="#sobre" class="nav-link">ℹ️ Sobre Nós</a>
+        <a href="#galeria" class="nav-link">📸 Galeria</a>
+        <a href="#contato" class="nav-link">📞 Contato</a>
+        <a href="acesso.html" class="nav-link">🔐 Área Restrita</a>
+    </nav>
+    
+    <div class="container">
+        <!-- Seção Eventos -->
+        <section id="eventos" class="secao">
+            <h2>📅 PRÓXIMOS EVENTOS</h2>
+            <div class="eventos-grid">
+                <div class="evento-card">
+                    <div class="evento-titulo">Encontro Mensal</div>
+                    <div class="evento-data">📅 Todo primeiro sábado do mês</div>
+                    <div class="evento-descricao">
+                        Encontro mensal dos membros para confraternização, planejamento de viagens e troca de experiências.
+                    </div>
+                </div>
+                
+                <div class="evento-card">
+                    <div class="evento-titulo">Viagem ao Jalapão</div>
+                    <div class="evento-data">📅 15-17 de Março de 2025</div>
+                    <div class="evento-descricao">
+                        Aventura de 3 dias pelas trilhas e cachoeiras do Jalapão. Inscrições abertas para membros.
+                    </div>
+                </div>
+                
+                <div class="evento-card">
+                    <div class="evento-titulo">Moto Fest Goiânia</div>
+                    <div class="evento-data">📅 22-24 de Abril de 2025</div>
+                    <div class="evento-descricao">
+                        Participação no maior evento motociclístico de Goiás. Exposição e confraternização.
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Seção Sobre -->
+        <section id="sobre" class="secao">
+            <h2>ℹ️ SOBRE A TRIBO DO CERRADO</h2>
+            <p>
+                A Tribo do Cerrado é um motoclube fundado em Goiânia com o objetivo de unir motociclistas apaixonados 
+                pelas estradas e trilhas do Centro-Oeste brasileiro.
+            </p>
+            <p>
+                Nossos valores são baseados na fraternidade, respeito mútuo, paixão pelas motocicletas e amor pela 
+                natureza exuberante do Cerrado goiano.
+            </p>
+            <p>
+                Organizamos viagens, encontros, eventos beneficentes e atividades que fortalecem os laços entre 
+                os membros e promovem o motociclismo responsável.
+            </p>
+        </section>
+        
+        <!-- Seção Galeria -->
+        <section id="galeria" class="secao">
+            <h2>📸 GALERIA DE FOTOS</h2>
+            <div class="galeria">
+                <div class="foto-placeholder">📸</div>
+                <div class="foto-placeholder">🏍️</div>
+                <div class="foto-placeholder">🌄</div>
+                <div class="foto-placeholder">👥</div>
+                <div class="foto-placeholder">🛣️</div>
+                <div class="foto-placeholder">🌅</div>
+            </div>
+            <p style="text-align: center; margin-top: 20px; color: #cccccc;">
+                Em breve: fotos dos nossos encontros e viagens!
+            </p>
+        </section>
+        
+        <!-- Seção Contato -->
+        <section id="contato" class="secao">
+            <h2>📞 CONTATO</h2>
+            <p><strong>📧 Email:</strong> contato@tribodocerrado.org</p>
+            <p><strong>📱 WhatsApp:</strong> (62) 99999-9999</p>
+            <p><strong>📍 Endereço:</strong> Goiânia - GO</p>
+            <p><strong>🕒 Encontros:</strong> Todo primeiro sábado do mês às 14h</p>
+            <p style="margin-top: 20px;">
+                <strong>Interessado em participar?</strong> Entre em contato conosco ou compareça a um de nossos encontros!
+            </p>
+        </section>
+        
+        <div style="text-align: center;">
+            <a href="acesso.html" class="btn-voltar">⬅️ VOLTAR</a>
+        </div>
+    </div>
+</body>
+</html>
+
