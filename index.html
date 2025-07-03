@@ -54,20 +54,28 @@
             opacity: 0.8;
         }
         
-        /* Container do conteúdo - MOVIDO PARA BORDA INFERIOR */
+        /* Container do conteúdo - MOVIDO MAIS PARA BAIXO */
         .conteudo {
             position: fixed;
-            bottom: 80px; /* Posicionado na borda inferior */
+            bottom: 5px; /* Movido 2cm (75px) para baixo: 80px - 75px = 5px */
             left: 50%;
             transform: translateX(-50%);
             z-index: 2;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 20px;
+            gap: 15px; /* Reduzido para acomodar botão menor */
             width: 100%;
             max-width: 600px;
             padding: 0 20px;
+        }
+        
+        /* Botão ENTRAR - REDUZIDO EM 50% */
+        .metal-button.small-custom {
+            padding: 9px 17px; /* 50% do original (18px 35px) */
+            font-size: 11px; /* 50% do original (22px) */
+            border-radius: 6px; /* 50% do original (12px) */
+            margin: 5px; /* 50% do original (10px) */
         }
         
         /* Texto MOTOCLUBE DE GOIÂNIA - Ajustado para borda inferior */
@@ -128,8 +136,8 @@
             }
             
             .conteudo {
-                bottom: 60px; /* Mais próximo da borda em tablets */
-                gap: 15px;
+                bottom: 5px; /* Mantém posição baixa em tablets */
+                gap: 12px;
             }
             
             .titulo-motoclube {
@@ -144,19 +152,20 @@
             }
             
             .conteudo {
-                bottom: 40px; /* Mais próximo da borda em mobile */
-                gap: 12px;
+                bottom: 5px; /* Mantém posição baixa em mobile */
+                gap: 10px;
                 padding: 0 15px;
             }
             
             .titulo-motoclube {
                 font-size: clamp(1.2rem, 6vw, 1.8rem);
-                margin-top: 10px;
+                margin-top: 8px;
             }
             
             .rodape {
                 font-size: 0.8rem;
                 bottom: 10px;
+                display: none; /* Oculta rodapé em mobile para dar mais espaço */
             }
         }
         
@@ -188,8 +197,8 @@
         
         <!-- Conteúdo principal -->
         <div class="conteudo">
-            <!-- Botão ENTRAR com novo padrão metalizado -->
-            <a href="acesso.html" class="metal-button primary large">
+            <!-- Botão ENTRAR com novo padrão metalizado - REDUZIDO EM 50% -->
+            <a href="acesso.html" class="metal-button primary small-custom">
                 ENTRAR
             </a>
             
