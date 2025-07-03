@@ -22,11 +22,11 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            overflow-x: hidden;
+            overflow: hidden;
         }
         
         /* Container principal */
-        .container {
+        .container-principal {
             width: 100%;
             height: 100vh;
             display: flex;
@@ -38,7 +38,7 @@
         
         /* Imagem de fundo centralizada */
         .fundo-imagem {
-            position: absolute;
+            position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
@@ -47,162 +47,125 @@
             width: auto;
             height: auto;
             z-index: 1;
+            opacity: 0.8;
         }
         
-        /* Conteúdo sobreposto */
+        /* Container do conteúdo */
         .conteudo {
             position: relative;
             z-index: 2;
-            text-align: center;
-            margin-top: 45vh; /* Posiciona abaixo da imagem */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+            margin-top: 120px; /* Espaço para não sobrepor a imagem */
         }
         
-        /* Título principal - MOTOCLUBE DE GOIÂNIA */
-        .titulo-principal {
-            font-size: clamp(2.5rem, 8vw, 5rem);
+        /* Botão ENTRAR - Posicionado primeiro (acima) */
+        .btn-entrar {
+            padding: 18px 40px;
+            font-size: 1.4rem;
             font-weight: 900;
-            margin-bottom: 40px;
+            color: #333333;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: 'Orbitron', monospace;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
             
-            /* Dourado mais forte e claro */
+            /* Base metalizada prateada */
+            background: linear-gradient(145deg, 
+                #C0C0C0 0%,
+                #E5E5E5 15%,
+                #F5F5F5 30%,
+                #FFFFFF 45%,
+                #F8F8FF 60%,
+                #FFFFFF 75%,
+                #F0F0F0 90%,
+                #D3D3D3 100%
+            );
+            
+            /* Efeito 3D metalizado */
+            box-shadow: 
+                0 10px 25px rgba(192, 192, 192, 0.4),
+                inset 0 2px 0 rgba(255, 255, 255, 0.8),
+                inset 0 -2px 0 rgba(105, 105, 105, 0.3),
+                inset 2px 0 0 rgba(255, 255, 255, 0.6),
+                inset -2px 0 0 rgba(105, 105, 105, 0.2);
+            
+            transform: perspective(400px) rotateX(8deg) translateZ(5px);
+            text-shadow: 1px 1px 0px rgba(105, 105, 105, 0.8);
+        }
+        
+        .btn-entrar:hover {
+            transform: perspective(400px) rotateX(8deg) translateZ(3px) translateY(-2px);
+            box-shadow: 
+                0 15px 35px rgba(192, 192, 192, 0.6),
+                inset 0 3px 0 rgba(255, 255, 255, 0.9),
+                inset 0 -3px 0 rgba(105, 105, 105, 0.4),
+                inset 3px 0 0 rgba(255, 255, 255, 0.7),
+                inset -3px 0 0 rgba(105, 105, 105, 0.3);
+            
+            filter: brightness(1.1);
+        }
+        
+        .btn-entrar:active {
+            transform: perspective(400px) rotateX(8deg) translateZ(1px) translateY(1px);
+            box-shadow: 
+                0 5px 15px rgba(192, 192, 192, 0.8),
+                inset 0 1px 0 rgba(105, 105, 105, 0.2),
+                inset 0 -1px 0 rgba(255, 255, 255, 0.5);
+        }
+        
+        /* Texto MOTOCLUBE DE GOIÂNIA - Posicionado abaixo do botão */
+        .titulo-motoclube {
+            font-size: 2.8rem; /* Máximo 2x o tamanho do botão (1.4rem * 2) */
+            font-weight: 900;
+            text-align: center;
+            margin-top: 20px;
+            
+            /* Dourado 30% mais claro */
             background: linear-gradient(45deg, 
-                #B8860B 0%,    /* Dark goldenrod */
-                #DAA520 10%,   /* Goldenrod */
-                #FFD700 25%,   /* Gold */
-                #FFFF00 40%,   /* Yellow */
-                #FFFACD 55%,   /* Lemon chiffon */
-                #FFFFFF 70%,   /* White */
-                #FFFACD 85%,   /* Lemon chiffon */
-                #FFD700 100%   /* Gold */
+                #DAA520 0%,    /* Goldenrod mais claro */
+                #FFD700 10%,   /* Gold */
+                #FFFF00 20%,   /* Yellow */
+                #FFFACD 30%,   /* Lemon chiffon */
+                #FFFFFF 40%,   /* White */
+                #FFFFFE 50%,   /* Quase branco */
+                #FFFFFF 60%,   /* White */
+                #FFFACD 70%,   /* Lemon chiffon */
+                #FFFF00 80%,   /* Yellow */
+                #FFD700 90%,   /* Gold */
+                #F0E68C 100%   /* Khaki claro */
             );
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             
-            /* Sombras 3D mais pronunciadas */
+            /* Sombra 3D metalizada */
             text-shadow: 
-                2px 2px 0px #8B4513,
-                4px 4px 0px #654321,
-                6px 6px 0px #4a3018,
-                8px 8px 0px #2f1e0f,
-                10px 10px 15px rgba(139, 69, 19, 0.8),
-                0 0 30px rgba(255, 215, 0, 0.6);
+                2px 2px 0px #B8860B,
+                4px 4px 0px #8B7355,
+                6px 6px 10px rgba(184, 134, 11, 0.6);
             
-            filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.8));
-            animation: goldGlow 3s ease-in-out infinite alternate;
+            filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.7));
+            
+            /* Efeito 3D no texto */
+            transform: perspective(400px) rotateX(5deg);
         }
         
-        /* Botão ENTRAR metalizado */
-        .btn-entrar {
-            display: inline-block;
-            padding: 20px 50px;
-            font-size: 1.8rem;
-            font-weight: 900;
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 15px;
-            font-family: 'Orbitron', monospace;
-            margin-top: 30px;
-            transition: all 0.3s ease;
-            position: relative;
-            
-            /* Gradiente metalizado */
-            background: linear-gradient(145deg, 
-                #4a4a4a 0%,
-                #6b6b6b 15%,
-                #8c8c8c 30%,
-                #a8a8a8 45%,
-                #c4c4c4 60%,
-                #e0e0e0 75%,
-                #f5f5f5 90%,
-                #ffffff 100%
-            );
-            
-            /* Efeito 3D metalizado real */
-            box-shadow: 
-                /* Sombra externa principal */
-                0 12px 30px rgba(0, 0, 0, 0.6),
-                /* Bordas internas para relevo */
-                inset 0 3px 0 rgba(255, 255, 255, 0.8),
-                inset 0 -3px 0 rgba(0, 0, 0, 0.4),
-                inset 3px 0 0 rgba(255, 255, 255, 0.6),
-                inset -3px 0 0 rgba(0, 0, 0, 0.3),
-                /* Brilho metalizado */
-                inset 0 0 20px rgba(255, 255, 255, 0.3);
-            
-            /* Perspectiva 3D */
-            transform: perspective(500px) rotateX(10deg) translateZ(8px);
-            
-            /* Texto com sombra */
-            text-shadow: 
-                1px 1px 0px #333333,
-                2px 2px 0px #1a1a1a,
-                3px 3px 5px rgba(0, 0, 0, 0.8);
-        }
-        
-        .btn-entrar:hover {
-            /* Efeito de "levantamento" */
-            transform: perspective(500px) rotateX(10deg) translateZ(5px) translateY(-3px);
-            
-            box-shadow: 
-                0 18px 40px rgba(0, 0, 0, 0.8),
-                inset 0 4px 0 rgba(255, 255, 255, 0.9),
-                inset 0 -4px 0 rgba(0, 0, 0, 0.5),
-                inset 4px 0 0 rgba(255, 255, 255, 0.7),
-                inset -4px 0 0 rgba(0, 0, 0, 0.4),
-                inset 0 0 25px rgba(255, 255, 255, 0.4);
-            
-            /* Brilho mais intenso */
-            filter: brightness(1.1);
-        }
-        
-        .btn-entrar:active {
-            /* Efeito de "pressão" */
-            transform: perspective(500px) rotateX(10deg) translateZ(2px) translateY(2px);
-            
-            box-shadow: 
-                0 6px 15px rgba(0, 0, 0, 0.9),
-                inset 0 2px 0 rgba(0, 0, 0, 0.3),
-                inset 0 -2px 0 rgba(255, 255, 255, 0.6),
-                inset 2px 0 0 rgba(0, 0, 0, 0.2),
-                inset -2px 0 0 rgba(255, 255, 255, 0.5),
-                inset 0 0 15px rgba(0, 0, 0, 0.2);
-            
-            filter: brightness(0.9);
-        }
-        
-        /* Copyright */
-        .copyright {
-            position: absolute;
+        /* Rodapé */
+        .rodape {
+            position: fixed;
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
+            z-index: 2;
             color: rgba(255, 255, 255, 0.7);
             font-size: 0.9rem;
-            z-index: 2;
-        }
-        
-        /* Animação do brilho dourado */
-        @keyframes goldGlow {
-            0% { 
-                filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.8));
-                text-shadow: 
-                    2px 2px 0px #8B4513,
-                    4px 4px 0px #654321,
-                    6px 6px 0px #4a3018,
-                    8px 8px 0px #2f1e0f,
-                    10px 10px 15px rgba(139, 69, 19, 0.8),
-                    0 0 30px rgba(255, 215, 0, 0.6);
-            }
-            100% { 
-                filter: drop-shadow(0 0 35px rgba(255, 215, 0, 1.2));
-                text-shadow: 
-                    2px 2px 0px #8B4513,
-                    4px 4px 0px #654321,
-                    6px 6px 0px #4a3018,
-                    8px 8px 0px #2f1e0f,
-                    10px 10px 15px rgba(139, 69, 19, 0.8),
-                    0 0 45px rgba(255, 215, 0, 0.9);
-            }
+            text-align: center;
         }
         
         /* Responsividade */
@@ -213,17 +176,17 @@
             }
             
             .conteudo {
-                margin-top: 40vh;
-            }
-            
-            .titulo-principal {
-                font-size: clamp(2rem, 10vw, 3.5rem);
-                margin-bottom: 30px;
+                margin-top: 80px;
+                gap: 30px;
             }
             
             .btn-entrar {
-                padding: 15px 35px;
-                font-size: 1.4rem;
+                padding: 15px 30px;
+                font-size: 1.2rem;
+            }
+            
+            .titulo-motoclube {
+                font-size: 2.2rem; /* Mantém proporção 2x */
             }
         }
         
@@ -234,40 +197,66 @@
             }
             
             .conteudo {
-                margin-top: 35vh;
-            }
-            
-            .titulo-principal {
-                font-size: clamp(1.5rem, 12vw, 2.5rem);
-                margin-bottom: 25px;
+                margin-top: 60px;
+                gap: 25px;
             }
             
             .btn-entrar {
                 padding: 12px 25px;
-                font-size: 1.2rem;
+                font-size: 1rem;
             }
             
-            .copyright {
+            .titulo-motoclube {
+                font-size: 2rem; /* Mantém proporção 2x */
+            }
+            
+            .rodape {
                 font-size: 0.8rem;
                 bottom: 15px;
             }
         }
+        
+        /* Animação de entrada */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .btn-entrar, .titulo-motoclube {
+            animation: fadeInUp 1s ease-out;
+        }
+        
+        .titulo-motoclube {
+            animation-delay: 0.3s;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container-principal">
         <!-- Imagem de fundo centralizada -->
         <img src="FundoSIte.png" alt="Fundo Tribo do Cerrado" class="fundo-imagem">
         
-        <!-- Conteúdo abaixo da imagem -->
+        <!-- Conteúdo principal -->
         <div class="conteudo">
-            <h1 class="titulo-principal">MOTOCLUBE DE GOIÂNIA</h1>
+            <!-- Botão ENTRAR (posicionado acima) -->
+            <a href="acesso.html" class="btn-entrar">
+                ENTRAR
+            </a>
             
-            <a href="acesso.html" class="btn-entrar">ENTRAR</a>
+            <!-- Título MOTOCLUBE DE GOIÂNIA (posicionado abaixo) -->
+            <h1 class="titulo-motoclube">
+                MOTOCLUBE DE GOIÂNIA
+            </h1>
         </div>
         
-        <!-- Copyright -->
-        <div class="copyright">
+        <!-- Rodapé -->
+        <div class="rodape">
             © 2025 Tribo do Cerrado Motoclube - Goiânia, GO
         </div>
     </div>
