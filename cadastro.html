@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - Tribo do Cerrado</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Orbitron', monospace;
+            background: url('FundoSIte.png') center/cover no-repeat fixed;
+            background-size: cover;
+            background-position: center;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            padding: 20px 0;
+        }
+        
+        .container {
+            background: rgba(0, 0, 0, 0.85);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(255, 107, 53, 0.3);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+            max-width: 600px;
+            width: 90%;
+            margin: 20px 0;
+        }
+        
+        .titulo-cadastro {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 900;
+            margin-bottom: 30px;
+            text-align: center;
+            
+            background: linear-gradient(45deg, 
+                #8B4513 0%,
+                #A0522D 15%,
+                #CD853F 30%,
+                #DAA520 45%,
+                #FFD700 60%,
+                #FFFF99 75%,
+                #FFFACD 90%,
+                #FFFFFF 100%
+            );
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            
+            text-shadow: 
+                1px 1px 0px #654321,
+                2px 2px 0px #4a3018,
+                3px 3px 0px #2f1e0f,
+                4px 4px 5px rgba(139, 69, 19, 0.8);
+            
+            filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.4));
+            animation: goldGlow 2.5s ease-in-out infinite alternate;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .form-label {
+            display: block;
+            color: #ff8c42;
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+        
+        .form-input, .form-select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #333;
+            border-radius: 8px;
+            background: rgba(45, 45, 45, 0.9);
+            color: #ffffff;
+            font-size: 0.95rem;
+            font-family: 'Orbitron', monospace;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: #ff6b35;
+            box-shadow: 0 0 10px rgba(255, 107, 53, 0.3);
+            background: rgba(45, 45, 45, 1);
+        }
+        
+        .form-input::placeholder {
+            color: #888;
+        }
+        
+        .form-select option {
+            background: #2d2d2d;
+            color: #ffffff;
+        }
+        
+        /* Checkbox personalizado */
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .checkbox-custom {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            accent-color: #ff6b35;
+        }
+        
+        .checkbox-label {
+            color: #cccccc;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        .checkbox-label a {
+            color: #ff8c42;
+            text-decoration: none;
+        }
+        
+        .checkbox-label a:hover {
+            color: #ff6b35;
+            text-decoration: underline;
+        }
+        
+        /* Botão Cadastrar 3D */
+        .btn-cadastrar {
+            width: 100%;
+            padding: 18px;
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: 'Orbitron', monospace;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            
+            background: linear-gradient(145deg, 
+                #ff8c42 0%,
+                #ff6b35 25%,
+                #ff4500 50%,
+                #ff6b35 75%,
+                #ff8c42 100%
+            );
+            
+            /* Relevo 3D */
+            box-shadow: 
+                0 10px 25px rgba(255, 107, 53, 0.4),
+                inset 0 2px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -2px 0 rgba(0, 0, 0, 0.3),
+                inset 2px 0 0 rgba(255, 255, 255, 0.2),
+                inset -2px 0 0 rgba(0, 0, 0, 0.2);
+            
+            transform: perspective(400px) rotateX(8deg) translateZ(5px);
+        }
+        
+        .btn-cadastrar:hover {
+            transform: perspective(400px) rotateX(8deg) translateZ(3px) translateY(1px);
+            box-shadow: 
+                0 6px 20px rgba(255, 107, 53, 0.6),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.4);
+        }
+        
+        .btn-cadastrar:active {
+            transform: perspective(400px) rotateX(8deg) translateZ(0px) translateY(3px);
+        }
+        
+        .btn-cadastrar:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: perspective(400px) rotateX(8deg) translateZ(0px);
+        }
+        
+        /* Botão Voltar */
+        .btn-voltar {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(145deg, #757575, #424242);
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 700;
+            text-align: center;
+            display: block;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(117, 117, 117, 0.3);
+        }
+        
+        .btn-voltar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(117, 117, 117, 0.5);
+        }
+        
+        /* Mensagem de erro/sucesso */
+        .mensagem {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+            display: none;
+        }
+        
+        .mensagem.erro {
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid #f44336;
+            color: #ff6b6b;
+        }
+        
+        .mensagem.sucesso {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid #4caf50;
+            color: #81c784;
+        }
+        
+        /* Animações */
+        @keyframes goldGlow {
+            0% { filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.4)); }
+            100% { filter: drop-shadow(0 0 16px rgba(255, 215, 0, 0.7)); }
+        }
+        
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            
+            .container {
+                padding: 30px 20px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .titulo-cadastro {
+                font-size: 1.8rem;
+            }
+            
+            .form-input, .form-select {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+            
+            .btn-cadastrar {
+                padding: 15px;
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="titulo-cadastro">CADASTRO</h1>
+        
+        <div id="mensagem" class="mensagem"></div>
+        
+        <form id="formCadastro" onsubmit="return realizarCadastro(event)">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="nome" class="form-label">👤 Nome Completo:</label>
+                    <input 
+                        type="text" 
+                        id="nome" 
+                        name="nome" 
+                        class="form-input" 
+                        placeholder="Seu nome completo"
+                        required
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label for="apelido" class="form-label">🏷️ Apelido/Alcunha:</label>
+                    <input 
+                        type="text" 
+                        id="apelido" 
+                        name="apelido" 
+                        class="form-input" 
+                        placeholder="Como quer ser chamado"
+                    >
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="email" class="form-label">📧 Email:</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        class="form-input" 
+                        placeholder="seu@email.com"
+                        required
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label for="telefone" class="form-label">📱 Telefone:</label>
+                    <input 
+                        type="tel" 
+                        id="telefone" 
+                        name="telefone" 
+                        class="form-input" 
+                        placeholder="(62) 99999-9999"
+                        required
+                    >
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="senha" class="form-label">🔒 Senha:</label>
+                    <input 
+                        type="password" 
+                        id="senha" 
+                        name="senha" 
+                        class="form-input" 
+                        placeholder="Mínimo 6 caracteres"
+                        required
+                        minlength="6"
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirmarSenha" class="form-label">🔒 Confirmar Senha:</label>
+                    <input 
+                        type="password" 
+                        id="confirmarSenha" 
+                        name="confirmarSenha" 
+                        class="form-input" 
+                        placeholder="Repita a senha"
+                        required
+                    >
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="cidade" class="form-label">🏙️ Cidade:</label>
+                    <input 
+                        type="text" 
+                        id="cidade" 
+                        name="cidade" 
+                        class="form-input" 
+                        placeholder="Sua cidade"
+                        required
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label for="estado" class="form-label">🗺️ Estado:</label>
+                    <select id="estado" name="estado" class="form-select" required>
+                        <option value="">Selecione...</option>
+                        <option value="GO">Goiás</option>
+                        <option value="DF">Distrito Federal</option>
+                        <option value="MT">Mato Grosso</option>
+                        <option value="MS">Mato Grosso do Sul</option>
+                        <option value="TO">Tocantins</option>
+                        <option value="MG">Minas Gerais</option>
+                        <option value="BA">Bahia</option>
+                        <option value="SP">São Paulo</option>
+                        <option value="outro">Outro</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="moto" class="form-label">🏍️ Motocicleta (Marca/Modelo/Ano):</label>
+                <input 
+                    type="text" 
+                    id="moto" 
+                    name="moto" 
+                    class="form-input" 
+                    placeholder="Ex: Honda CB 600F 2020"
+                    required
+                >
+            </div>
+            
+            <div class="form-group">
+                <label for="experiencia" class="form-label">🛣️ Experiência com Motociclismo:</label>
+                <select id="experiencia" name="experiencia" class="form-select" required>
+                    <option value="">Selecione...</option>
+                    <option value="iniciante">Iniciante (menos de 1 ano)</option>
+                    <option value="intermediario">Intermediário (1-5 anos)</option>
+                    <option value="avancado">Avançado (5-10 anos)</option>
+                    <option value="expert">Expert (mais de 10 anos)</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="motivacao" class="form-label">💭 Por que quer fazer parte da Tribo?</label>
+                <textarea 
+                    id="motivacao" 
+                    name="motivacao" 
+                    class="form-input" 
+                    rows="3" 
+                    placeholder="Conte-nos sua motivação..."
+                    style="resize: vertical; min-height: 80px;"
+                ></textarea>
+            </div>
+            
+            <div class="checkbox-group">
+                <input type="checkbox" id="termos" name="termos" class="checkbox-custom" required>
+                <label for="termos" class="checkbox-label">
+                    Aceito os <a href="#" onclick="mostrarTermos()">termos de uso</a> e 
+                    <a href="#" onclick="mostrarPrivacidade()">política de privacidade</a>
+                </label>
+            </div>
+            
+            <div class="checkbox-group">
+                <input type="checkbox" id="newsletter" name="newsletter" class="checkbox-custom">
+                <label for="newsletter" class="checkbox-label">
+                    Quero receber informações sobre eventos e novidades por email
+                </label>
+            </div>
+            
+            <button type="submit" class="btn-cadastrar">
+                📝 CRIAR CADASTRO
+            </button>
+        </form>
+        
+        <a href="acesso.html" class="btn-voltar">⬅️ VOLTAR</a>
+    </div>
+    
+    <script>
+        function realizarCadastro(event) {
+            event.preventDefault();
+            
+            const senha = document.getElementById('senha').value;
+            const confirmarSenha = document.getElementById('confirmarSenha').value;
+            const termos = document.getElementById('termos').checked;
+            
+            // Validações
+            if (senha !== confirmarSenha) {
+                mostrarMensagem('As senhas não coincidem. Verifique e tente novamente.', 'erro');
+                return false;
+            }
+            
+            if (!termos) {
+                mostrarMensagem('Você deve aceitar os termos de uso para continuar.', 'erro');
+                return false;
+            }
+            
+            // Simular cadastro (em produção seria enviado para o backend)
+            const formData = new FormData(event.target);
+            const dadosCadastro = Object.fromEntries(formData);
+            
+            // Salvar no localStorage para demonstração
+            const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
+            
+            // Verificar se email já existe
+            if (usuarios.find(u => u.email === dadosCadastro.email)) {
+                mostrarMensagem('Este email já está cadastrado. Tente fazer login.', 'erro');
+                return false;
+            }
+            
+            // Adicionar novo usuário
+            dadosCadastro.id = Date.now();
+            dadosCadastro.dataCadastro = new Date().toISOString();
+            usuarios.push(dadosCadastro);
+            localStorage.setItem('usuarios', JSON.stringify(usuarios));
+            
+            mostrarMensagem('Cadastro realizado com sucesso! Redirecionando para login...', 'sucesso');
+            
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 3000);
+            
+            return false;
+        }
+        
+        function mostrarMensagem(texto, tipo) {
+            const mensagem = document.getElementById('mensagem');
+            mensagem.textContent = texto;
+            mensagem.className = `mensagem ${tipo}`;
+            mensagem.style.display = 'block';
+            
+            if (tipo === 'erro') {
+                setTimeout(() => {
+                    mensagem.style.display = 'none';
+                }, 5000);
+            }
+        }
+        
+        function mostrarTermos() {
+            alert('Termos de Uso:\n\n1. Respeitar todos os membros\n2. Participar das atividades com responsabilidade\n3. Manter conduta adequada\n4. Seguir as regras de segurança\n\n(Versão completa em desenvolvimento)');
+        }
+        
+        function mostrarPrivacidade() {
+            alert('Política de Privacidade:\n\nSeus dados serão utilizados apenas para:\n- Comunicação sobre eventos\n- Gestão de membros\n- Melhorias do serviço\n\nNão compartilhamos dados com terceiros.\n\n(Versão completa em desenvolvimento)');
+        }
+        
+        // Máscara para telefone
+        document.getElementById('telefone').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 11) {
+                value = value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+            } else if (value.length >= 7) {
+                value = value.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+            } else if (value.length >= 3) {
+                value = value.replace(/(\d{2})(\d{0,5})/, '($1) $2');
+            }
+            e.target.value = value;
+        });
+    </script>
+</body>
+</html>
+
