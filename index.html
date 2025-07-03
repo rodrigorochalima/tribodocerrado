@@ -54,23 +54,28 @@
             opacity: 0.8;
         }
         
-        /* Container do conteúdo */
+        /* Container do conteúdo - MOVIDO PARA BORDA INFERIOR */
         .conteudo {
-            position: relative;
+            position: fixed;
+            bottom: 80px; /* Posicionado na borda inferior */
+            left: 50%;
+            transform: translateX(-50%);
             z-index: 2;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 30px;
-            margin-top: 200px; /* Mais espaço para não cortar a imagem */
+            gap: 20px;
+            width: 100%;
+            max-width: 600px;
+            padding: 0 20px;
         }
         
-        /* Texto MOTOCLUBE DE GOIÂNIA - Posicionado abaixo do botão */
+        /* Texto MOTOCLUBE DE GOIÂNIA - Ajustado para borda inferior */
         .titulo-motoclube {
-            font-size: 2.8rem; /* Exatamente 2x o tamanho do botão (1.4rem * 2) */
+            font-size: clamp(1.8rem, 4vw, 2.4rem); /* Responsivo e menor */
             font-weight: 900;
             text-align: center;
-            margin-top: 25px;
+            margin-top: 15px;
             
             /* Dourado 30% MAIS CLARO e mais forte */
             background: linear-gradient(45deg, 
@@ -123,12 +128,12 @@
             }
             
             .conteudo {
-                margin-top: 80px;
-                gap: 30px;
+                bottom: 60px; /* Mais próximo da borda em tablets */
+                gap: 15px;
             }
             
             .titulo-motoclube {
-                font-size: 2.2rem; /* Mantém proporção 2x */
+                font-size: clamp(1.4rem, 5vw, 2rem);
             }
         }
         
@@ -139,17 +144,19 @@
             }
             
             .conteudo {
-                margin-top: 60px;
-                gap: 25px;
+                bottom: 40px; /* Mais próximo da borda em mobile */
+                gap: 12px;
+                padding: 0 15px;
             }
             
             .titulo-motoclube {
-                font-size: 2rem; /* Mantém proporção 2x */
+                font-size: clamp(1.2rem, 6vw, 1.8rem);
+                margin-top: 10px;
             }
             
             .rodape {
                 font-size: 0.8rem;
-                bottom: 15px;
+                bottom: 10px;
             }
         }
         
