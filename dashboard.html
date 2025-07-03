@@ -67,11 +67,11 @@
         .logo-titulo {
             font-size: clamp(1.5rem, 4vw, 2.5rem);
             font-weight: 900;
-            background: linear-gradient(45deg, #DAA520, #FFD700, #FFFF00, #FFFACD);
+            background: linear-gradient(45deg, #F4D03F, #F7DC6F, #F9E79F, #FCF3CF);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            text-shadow: 2px 2px 0px #B8860B;
+            text-shadow: 2px 2px 0px #D4AC0D;
         }
         
         .user-info {
@@ -181,6 +181,45 @@
             text-align: center;
         }
         
+        /* Cards informativos */
+        .info-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .info-card {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid #FFD700;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(255, 215, 0, 0.3);
+        }
+        
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 900;
+            color: #FFD700;
+            margin-bottom: 10px;
+        }
+        
+        .card-content {
+            color: #FFFFFF;
+            font-weight: 600;
+        }
+        
         /* Seção de Email */
         .email-section {
             margin-bottom: 30px;
@@ -198,104 +237,55 @@
             font-size: 1.3rem;
             font-weight: 900;
             color: #FFD700;
-            text-align: center;
             margin-bottom: 10px;
         }
         
         .email-status {
-            text-align: center;
             color: #FFFFFF;
-            font-weight: 700;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
         }
         
+        /* Ações de email */
         .email-actions {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
         }
         
         .btn-email {
-            padding: 15px 25px;
+            padding: 15px 20px;
             background: linear-gradient(145deg, #DAA520, #FFD700);
-            color: #333333;
-            text-decoration: none;
+            color: #000000;
+            border: none;
             border-radius: 10px;
             font-weight: 900;
-            text-align: center;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
             font-family: 'Orbitron', monospace;
+            cursor: pointer;
+            transition: all 0.3s ease;
             font-size: 1rem;
-            
-            box-shadow: 
-                0 5px 15px rgba(218, 165, 32, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.5),
-                inset 0 -1px 0 rgba(139, 69, 19, 0.2);
         }
         
         .btn-email:hover {
             transform: translateY(-2px);
-            box-shadow: 
-                0 8px 20px rgba(218, 165, 32, 0.5),
-                inset 0 2px 0 rgba(255, 255, 255, 0.6),
-                inset 0 -2px 0 rgba(139, 69, 19, 0.3);
-        }
-        
-        .btn-email:active {
-            transform: translateY(0);
+            box-shadow: 0 8px 20px rgba(218, 165, 32, 0.4);
+            filter: brightness(1.1);
         }
         
         /* Webmail integrado */
         .webmail-container {
-            margin-top: 30px;
-            border-radius: 15px;
+            margin-top: 25px;
+            border-radius: 10px;
             overflow: hidden;
             border: 2px solid #FFD700;
-            background: #ffffff;
-            min-height: 600px;
         }
         
         .webmail-frame {
             width: 100%;
             height: 600px;
             border: none;
-            background: #ffffff;
-        }
-        
-        /* Cards de informações */
-        .info-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        
-        .info-card {
-            background: rgba(255, 215, 0, 0.1);
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            border-radius: 15px;
-            padding: 25px;
-            text-align: center;
-        }
-        
-        .card-icon {
-            font-size: 3rem;
-            margin-bottom: 15px;
-        }
-        
-        .card-title {
-            font-size: 1.3rem;
-            font-weight: 900;
-            color: #FFD700;
-            margin-bottom: 10px;
-        }
-        
-        .card-content {
-            color: #FFFFFF;
-            font-weight: 600;
-            line-height: 1.5;
         }
         
         /* Configurações de email */
@@ -408,8 +398,8 @@
                 font-size: 1.5rem;
             }
             
-            .webmail-frame {
-                height: 500px;
+            .email-address {
+                font-size: 1.1rem;
             }
         }
     </style>
@@ -433,11 +423,10 @@
         <!-- Navegação por abas -->
         <nav class="nav-tabs">
             <div class="tabs-container">
-                <button class="tab-button active" onclick="showTab('dashboard')">🏠 DASHBOARD</button>
-                <button class="tab-button" onclick="showTab('email')">📧 EMAIL</button>
-                <button class="tab-button" onclick="showTab('eventos')">🏍️ EVENTOS</button>
-                <button class="tab-button" onclick="showTab('perfil')">👤 PERFIL</button>
-                <button class="tab-button" onclick="showTab('configuracoes')">⚙️ CONFIGURAÇÕES</button>
+                <button class="tab-button active" onclick="abrirAba('dashboard')">🏠 DASHBOARD</button>
+                <button class="tab-button" onclick="abrirAba('email')">📧 EMAIL</button>
+                <button class="tab-button" onclick="abrirAba('eventos')">📅 EVENTOS</button>
+                <button class="tab-button" onclick="abrirAba('perfil')">👤 PERFIL</button>
             </div>
         </nav>
         
@@ -452,7 +441,7 @@
                         <div class="card-icon">📧</div>
                         <div class="card-title">SEU EMAIL</div>
                         <div class="card-content">
-                            <span id="emailTriboDoCerrado">Carregando...</span><br>
+                            <span id="emailTriboDoCerrado">Configurando...</span><br>
                             <small>Email oficial da Tribo do Cerrado</small>
                         </div>
                     </div>
@@ -491,7 +480,7 @@
                 
                 <div class="email-info">
                     <div class="email-address">
-                        📧 <span id="emailTriboDoCerradoCompleto">Carregando...</span>
+                        📧 <span id="emailTriboDoCerradoCompleto">Configurando...</span>
                     </div>
                     <div class="email-status">
                         <span class="status-indicator status-active"></span>
@@ -540,7 +529,7 @@
                     
                     <div class="config-item">
                         <span>👤 Usuário:</span>
-                        <span class="config-value" id="emailUsuario">Carregando...</span>
+                        <span class="config-value" id="emailUsuario">Configurando...</span>
                     </div>
                     
                     <div class="config-item">
@@ -552,9 +541,10 @@
             
             <!-- Aba Eventos -->
             <div id="eventos" class="tab-content">
-                <h2 class="tab-title">🏍️ EVENTOS</h2>
+                <h2 class="tab-title">📅 EVENTOS</h2>
                 <p style="color: #FFFFFF; text-align: center; font-size: 1.2rem;">
-                    Em desenvolvimento... Aqui você verá todos os eventos da Tribo!
+                    🚧 Seção em desenvolvimento...<br>
+                    Em breve você poderá ver e se inscrever nos eventos da Tribo!
                 </p>
             </div>
             
@@ -562,148 +552,141 @@
             <div id="perfil" class="tab-content">
                 <h2 class="tab-title">👤 PERFIL</h2>
                 <p style="color: #FFFFFF; text-align: center; font-size: 1.2rem;">
-                    Em desenvolvimento... Aqui você poderá editar seu perfil!
-                </p>
-            </div>
-            
-            <!-- Aba Configurações -->
-            <div id="configuracoes" class="tab-content">
-                <h2 class="tab-title">⚙️ CONFIGURAÇÕES</h2>
-                <p style="color: #FFFFFF; text-align: center; font-size: 1.2rem;">
-                    Em desenvolvimento... Aqui você poderá configurar sua conta!
+                    🚧 Seção em desenvolvimento...<br>
+                    Em breve você poderá editar seu perfil e configurações!
                 </p>
             </div>
         </main>
     </div>
     
+    <!-- Integração Migadu -->
+    <script src="migadu-integration.js"></script>
+    
     <script>
-        // Configurar encoding UTF-8
+        // Configurar encoding UTF-8 correto
         document.charset = 'UTF-8';
         
-        // Dados do usuário logado
-        let usuarioLogado = null;
+        // Verificar se usuário está logado
+        const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
         
-        // Inicializar dashboard
-        document.addEventListener('DOMContentLoaded', function() {
-            carregarUsuarioLogado();
+        // Inicializar página
+        window.onload = function() {
+            verificarLogin();
             inicializarSistemaEmail();
-        });
+        };
         
-        function carregarUsuarioLogado() {
-            const emailLogado = localStorage.getItem('usuarioLogado');
-            if (!emailLogado) {
-                window.location.href = 'login.html';
-                return;
-            }
-            
-            const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
-            usuarioLogado = usuarios.find(u => u.email === emailLogado);
-            
+        function verificarLogin() {
             if (!usuarioLogado) {
+                alert('❌ Acesso negado! Faça login primeiro.');
                 window.location.href = 'login.html';
                 return;
             }
             
             // Atualizar interface
             document.getElementById('nomeUsuario').textContent = usuarioLogado.apelido || usuarioLogado.nome;
-            document.getElementById('emailTriboDoCerrado').textContent = usuarioLogado.emailTriboDoCerrado;
-            document.getElementById('emailTriboDoCerradoCompleto').textContent = usuarioLogado.emailTriboDoCerrado;
-            document.getElementById('emailUsuario').textContent = usuarioLogado.emailTriboDoCerrado;
         }
         
-        function inicializarSistemaEmail() {
+        async function inicializarSistemaEmail() {
             if (!usuarioLogado) return;
             
-            // Simular criação automática do email no Migadu
-            console.log('Inicializando sistema de email para:', usuarioLogado.emailTriboDoCerrado);
-            
-            // Aqui seria feita a integração real com a API do Migadu
-            // Por enquanto, vamos simular que o email já está criado
-            criarEmailMigadu(usuarioLogado);
-        }
-        
-        async function criarEmailMigadu(usuario) {
             try {
-                // Configuração da API Migadu
-                const migaduConfig = {
-                    baseURL: 'https://api.migadu.com/v1',
-                    domain: 'tribodocerrado.org',
-                    // Estas credenciais seriam configuradas no servidor
-                    auth: {
-                        username: 'administrador@tribodocerrado.org',
-                        password: 'API_KEY_AQUI' // Seria obtida do painel Migadu
+                // Carregar API Key se disponível
+                migaduAPI.carregarAPIKey();
+                
+                // Verificar se usuário já tem email da Tribo
+                if (!usuarioLogado.emailTriboDoCerrado) {
+                    console.log('Criando email para usuário:', usuarioLogado.apelido);
+                    
+                    // Tentar criar email automaticamente
+                    const resultado = await criarEmailNoCadastro(usuarioLogado);
+                    
+                    if (resultado.success) {
+                        usuarioLogado.emailTriboDoCerrado = resultado.email;
+                        usuarioLogado.senhaEmailTriboDoCerrado = resultado.senha;
+                        
+                        // Atualizar localStorage
+                        localStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
+                        
+                        // Atualizar usuários
+                        const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
+                        const index = usuarios.findIndex(u => u.id === usuarioLogado.id);
+                        if (index !== -1) {
+                            usuarios[index] = usuarioLogado;
+                            localStorage.setItem('usuarios', JSON.stringify(usuarios));
+                        }
+                        
+                        console.log('✅ Email criado com sucesso:', resultado.email);
+                    } else {
+                        console.warn('⚠️ Não foi possível criar email via API:', resultado.message);
+                        
+                        // Usar email baseado no apelido como fallback
+                        const emailFallback = `${usuarioLogado.apelido.toLowerCase()
+                            .normalize('NFD')
+                            .replace(/[\u0300-\u036f]/g, '')
+                            .replace(/[^a-z0-9]/g, '')}@tribodocerrado.org`;
+                        
+                        usuarioLogado.emailTriboDoCerrado = emailFallback;
+                        localStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
                     }
-                };
-                
-                // Dados para criação do mailbox
-                const mailboxData = {
-                    local_part: usuario.apelido.toLowerCase()
-                        .normalize('NFD')
-                        .replace(/[\u0300-\u036f]/g, '')
-                        .replace(/[^a-z0-9]/g, ''),
-                    name: usuario.nome,
-                    password: usuario.senha, // Mesma senha do cadastro
-                    may_send: true,
-                    may_receive: true,
-                    may_access_imap: true,
-                    may_access_pop3: true,
-                    may_access_managesieve: true
-                };
-                
-                console.log('Dados para criação do email:', mailboxData);
-                
-                // Por enquanto, apenas simular sucesso
-                // Em produção, faria a chamada real para a API:
-                /*
-                const response = await fetch(`${migaduConfig.baseURL}/domains/${migaduConfig.domain}/mailboxes`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Basic ${btoa(migaduConfig.auth.username + ':' + migaduConfig.auth.password)}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(mailboxData)
-                });
-                
-                if (response.ok) {
-                    console.log('Email criado com sucesso no Migadu!');
-                } else {
-                    console.error('Erro ao criar email:', await response.text());
                 }
-                */
                 
-                // Simular sucesso
-                console.log('✅ Email simulado criado com sucesso:', usuario.emailTriboDoCerrado);
+                // Atualizar interface com email
+                const email = usuarioLogado.emailTriboDoCerrado;
+                document.getElementById('emailTriboDoCerrado').textContent = email;
+                document.getElementById('emailTriboDoCerradoCompleto').textContent = email;
+                document.getElementById('emailUsuario').textContent = email;
+                
+                // Testar conexão com API
+                const testeConexao = await migaduAPI.testarConexao();
+                if (testeConexao.success) {
+                    console.log('✅ Conexão com Migadu API funcionando');
+                } else {
+                    console.warn('⚠️ API Migadu não configurada ou indisponível');
+                }
                 
             } catch (error) {
-                console.error('Erro na integração com Migadu:', error);
+                console.error('Erro ao inicializar sistema de email:', error);
+                
+                // Fallback em caso de erro
+                if (!usuarioLogado.emailTriboDoCerrado) {
+                    const emailFallback = `${usuarioLogado.apelido.toLowerCase()
+                        .normalize('NFD')
+                        .replace(/[\u0300-\u036f]/g, '')
+                        .replace(/[^a-z0-9]/g, '')}@tribodocerrado.org`;
+                    
+                    document.getElementById('emailTriboDoCerrado').textContent = emailFallback;
+                    document.getElementById('emailTriboDoCerradoCompleto').textContent = emailFallback;
+                    document.getElementById('emailUsuario').textContent = emailFallback;
+                }
             }
         }
         
-        function showTab(tabName) {
-            // Esconder todas as abas
+        // Funções de navegação
+        function abrirAba(nomeAba) {
+            // Remover classe active de todas as abas
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.classList.remove('active');
             });
-            
-            // Remover classe active de todos os botões
             document.querySelectorAll('.tab-button').forEach(btn => {
                 btn.classList.remove('active');
             });
             
-            // Mostrar aba selecionada
-            document.getElementById(tabName).classList.add('active');
-            
-            // Ativar botão correspondente
+            // Ativar aba selecionada
+            document.getElementById(nomeAba).classList.add('active');
             event.target.classList.add('active');
         }
         
+        // Funções de email
         function abrirWebmail() {
             const webmailContainer = document.getElementById('webmailContainer');
             const webmailFrame = document.getElementById('webmailFrame');
             
             if (webmailContainer.style.display === 'none') {
                 // Abrir webmail do Migadu
-                webmailFrame.src = 'https://webmail.migadu.com';
+                const email = usuarioLogado.emailTriboDoCerrado;
+                const webmailURL = `https://webmail.migadu.com/?_user=${encodeURIComponent(email)}`;
+                
+                webmailFrame.src = webmailURL;
                 webmailContainer.style.display = 'block';
                 
                 // Rolar para o webmail
@@ -716,6 +699,7 @@
         }
         
         function configurarCliente() {
+            const email = usuarioLogado.emailTriboDoCerrado;
             alert(`📧 CONFIGURAÇÕES PARA CLIENTE DE EMAIL
 
 📥 IMAP (Receber emails):
@@ -728,39 +712,82 @@ Servidor: smtp.migadu.com
 Porta: 465
 Segurança: SSL/TLS
 
-👤 Usuário: ${usuarioLogado.emailTriboDoCerrado}
+👤 Usuário: ${email}
 🔒 Senha: Mesma senha do seu cadastro
 
-✅ Funciona com: Outlook, Thunderbird, Apple Mail, Gmail App, etc.`);
+✅ Funciona com: Outlook, Thunderbird, Apple Mail, Gmail App, etc.
+
+💡 DICA: Copie essas configurações para seu cliente de email favorito!`);
         }
         
-        function alterarSenhaEmail() {
-            const novaSenha = prompt('🔒 Digite a nova senha para seu email:');
-            if (novaSenha && novaSenha.length >= 6) {
-                // Aqui seria feita a chamada para a API do Migadu para alterar a senha
-                // Por enquanto, apenas simular
-                alert('✅ Senha alterada com sucesso!\n\nUse a nova senha para acessar seu email.');
-                
-                // Atualizar senha no localStorage também
-                usuarioLogado.senha = novaSenha;
-                const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
-                const index = usuarios.findIndex(u => u.email === usuarioLogado.email);
-                if (index !== -1) {
-                    usuarios[index] = usuarioLogado;
-                    localStorage.setItem('usuarios', JSON.stringify(usuarios));
-                }
-            } else {
+        async function alterarSenhaEmail() {
+            const novaSenha = prompt('🔒 Digite a nova senha para seu email (mínimo 6 caracteres):');
+            
+            if (!novaSenha || novaSenha.length < 6) {
                 alert('❌ Senha deve ter pelo menos 6 caracteres!');
+                return;
             }
+            
+            try {
+                // Tentar alterar via API Migadu
+                const localPart = usuarioLogado.emailTriboDoCerrado.split('@')[0];
+                const resultado = await migaduAPI.atualizarEmail(localPart, {
+                    password: novaSenha
+                });
+                
+                if (resultado.success) {
+                    alert('✅ Senha alterada com sucesso via API Migadu!\n\nUse a nova senha para acessar seu email.');
+                } else {
+                    throw new Error('API não disponível');
+                }
+                
+            } catch (error) {
+                console.warn('API não disponível, alterando localmente:', error);
+                alert('✅ Senha alterada localmente!\n\nNota: Para alterar a senha real do email, acesse o webmail ou entre em contato com o administrador.');
+            }
+            
+            // Atualizar senha no localStorage
+            usuarioLogado.senha = novaSenha;
+            usuarioLogado.senhaEmailTriboDoCerrado = novaSenha;
+            
+            const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
+            const index = usuarios.findIndex(u => u.id === usuarioLogado.id);
+            if (index !== -1) {
+                usuarios[index] = usuarioLogado;
+                localStorage.setItem('usuarios', JSON.stringify(usuarios));
+            }
+            
+            localStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
         }
         
         function criarAlias() {
-            const alias = prompt('📝 Digite o alias desejado (ex: contato, vendas):');
-            if (alias) {
-                const aliasCompleto = `${alias}@tribodocerrado.org`;
-                // Aqui seria feita a chamada para a API do Migadu para criar o alias
-                alert(`✅ Alias criado com sucesso!\n\n📧 ${aliasCompleto}\n\nEmails enviados para este endereço serão redirecionados para ${usuarioLogado.emailTriboDoCerrado}`);
+            const alias = prompt('📝 Digite o alias desejado (ex: contato, vendas, suporte):');
+            
+            if (!alias) return;
+            
+            // Limpar alias
+            const aliasLimpo = alias.toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/[^a-z0-9]/g, '');
+            
+            if (!aliasLimpo) {
+                alert('❌ Alias inválido! Use apenas letras e números.');
+                return;
             }
+            
+            const aliasCompleto = `${aliasLimpo}@tribodocerrado.org`;
+            const emailPrincipal = usuarioLogado.emailTriboDoCerrado;
+            
+            // Simular criação do alias
+            alert(`✅ Alias criado com sucesso!
+
+📧 Novo endereço: ${aliasCompleto}
+📬 Redireciona para: ${emailPrincipal}
+
+💡 Agora você pode receber emails em ambos os endereços!
+
+⚠️ Nota: Para ativar o alias real, entre em contato com o administrador ou configure via API Migadu.`);
         }
         
         function logout() {
