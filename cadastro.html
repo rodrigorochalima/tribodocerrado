@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro - Tribo do Cerrado</title>
+    
+    <!-- CSS do novo padrão de botão -->
+    <link rel="stylesheet" href="metal-button.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
         
@@ -195,7 +198,36 @@
             width: 100%;
             height: 100%;
             border-radius: 2px;
+        }
+        
+        /* Container para campo de senha com botão mostrar/ocultar */
+        .password-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        
+        .password-container .form-input {
+            padding-right: 50px; /* Espaço para o botão */
+        }
+        
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            background: none;
+            border: none;
+            color: #FFD700;
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 5px;
             transition: all 0.3s ease;
+            z-index: 10;
+        }
+        
+        .toggle-password:hover {
+            color: #FFFFFF;
+            transform: scale(1.1);
+        }   transition: all 0.3s ease;
         }
         
         .checkmark:after {
@@ -454,28 +486,38 @@
                     
                     <div class="form-group">
                         <label for="senha" class="form-label">🔒 Senha:</label>
-                        <input 
-                            type="password" 
-                            id="senha" 
-                            name="senha" 
-                            class="form-input" 
-                            placeholder="Mínimo 6 caracteres"
-                            required
-                            minlength="6"
-                        >
+                        <div class="password-container">
+                            <input 
+                                type="password" 
+                                id="senha" 
+                                name="senha" 
+                                class="form-input" 
+                                placeholder="Mínimo 6 caracteres"
+                                required
+                                minlength="6"
+                            >
+                            <button type="button" class="toggle-password" onclick="togglePassword('senha')">
+                                👁️
+                            </button>
+                        </div>
                     </div>
                     
                     <div class="form-group">
                         <label for="confirmarSenha" class="form-label">🔒 Confirmar Senha:</label>
-                        <input 
-                            type="password" 
-                            id="confirmarSenha" 
-                            name="confirmarSenha" 
-                            class="form-input" 
-                            placeholder="Repita a senha"
-                            required
-                            minlength="6"
-                        >
+                        <div class="password-container">
+                            <input 
+                                type="password" 
+                                id="confirmarSenha" 
+                                name="confirmarSenha" 
+                                class="form-input" 
+                                placeholder="Repita a senha"
+                                required
+                                minlength="6"
+                            >
+                            <button type="button" class="toggle-password" onclick="togglePassword('confirmarSenha')">
+                                👁️
+                            </button>
+                        </div>
                     </div>
                     
                     <div class="form-group">
@@ -564,18 +606,36 @@
                     </label>
                 </div>
                 
-                <button type="submit" class="btn-cadastrar">
-                    SALVAR CADASTRO
+                <!-- Botão CADASTRAR com novo padrão metalizado -->
+                <button type="submit" class="metal-button primary full-width large">
+                    💾 SALVAR CADASTRO
                 </button>
             </form>
             
-            <a href="acesso.html" class="btn-voltar">⬅️ VOLTAR</a>
+            <!-- Botão VOLTAR com novo padrão metalizado -->
+            <a href="acesso.html" class="metal-button secondary full-width">
+                ⬅️ VOLTAR
+            </a>
         </div>
     </div>
     
     <script>
         // Configurar encoding UTF-8 correto
         document.charset = 'UTF-8';
+        
+        // Função para mostrar/ocultar senha
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const button = input.nextElementSibling;
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                button.textContent = '🙈'; // Ícone para ocultar
+            } else {
+                input.type = 'password';
+                button.textContent = '👁️'; // Ícone para mostrar
+            }
+        }
         
         // Máscara para telefone
         document.getElementById('telefone').addEventListener('input', function(e) {
