@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tribo do Cerrado - Motoclube de Goiânia</title>
+    
+    <!-- CSS do novo padrão de botão -->
+    <link rel="stylesheet" href="metal-button.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Orbitron', monospace;
+            background: #000000;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        
+        /* Container principal */
+        .container-principal {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        
+        /* Imagem de fundo centralizada */
+        .fundo-imagem {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 90%;
+            max-height: 70%;
+            width: auto;
+            height: auto;
+            z-index: 1;
+            opacity: 0.8;
+        }
+        
+        /* Container do conteúdo - MOVIDO MAIS PARA BAIXO */
+        .conteudo {
+            position: fixed;
+            bottom: 5px; /* Movido 2cm (75px) para baixo: 80px - 75px = 5px */
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px; /* Reduzido para acomodar botão menor */
+            width: 100%;
+            max-width: 600px;
+            padding: 0 20px;
+        }
+        
+        /* Botão ENTRAR - REDUZIDO EM 50% */
+        .metal-button.small-custom {
+            padding: 9px 17px; /* 50% do original (18px 35px) */
+            font-size: 11px; /* 50% do original (22px) */
+            border-radius: 6px; /* 50% do original (12px) */
+            margin: 5px; /* 50% do original (10px) */
+        }
+        
+        /* Texto MOTOCLUBE DE GOIÂNIA - Ajustado para borda inferior */
+        .titulo-motoclube {
+            font-size: clamp(1.8rem, 4vw, 2.4rem); /* Responsivo e menor */
+            font-weight: 900;
+            text-align: center;
+            margin-top: 15px;
+            
+            /* Dourado 30% MAIS CLARO e mais forte */
+            background: linear-gradient(45deg, 
+                #F4D03F 0%,    /* Dourado mais claro */
+                #F7DC6F 10%,   /* Dourado claro */
+                #F9E79F 20%,   /* Amarelo dourado claro */
+                #FCF3CF 30%,   /* Creme dourado */
+                #FFFEF7 40%,   /* Quase branco dourado */
+                #FFFFFF 50%,   /* Branco puro */
+                #FFFEF7 60%,   /* Quase branco dourado */
+                #FCF3CF 70%,   /* Creme dourado */
+                #F9E79F 80%,   /* Amarelo dourado claro */
+                #F7DC6F 90%,   /* Dourado claro */
+                #F4D03F 100%   /* Dourado mais claro */
+            );
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            
+            /* Sombra 3D metalizada mais forte */
+            text-shadow: 
+                2px 2px 0px #D4AC0D,
+                4px 4px 0px #B7950B,
+                6px 6px 0px #9A7D0A,
+                8px 8px 15px rgba(212, 172, 13, 0.7);
+            
+            filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.8));
+            
+            /* Efeito 3D no texto */
+            transform: perspective(400px) rotateX(5deg);
+        }
+        
+        /* Rodapé */
+        .rodape {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .fundo-imagem {
+                max-width: 95%;
+                max-height: 60%;
+            }
+            
+            .conteudo {
+                bottom: 5px; /* Mantém posição baixa em tablets */
+                gap: 12px;
+            }
+            
+            .titulo-motoclube {
+                font-size: clamp(1.4rem, 5vw, 2rem);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .fundo-imagem {
+                max-width: 98%;
+                max-height: 50%;
+            }
+            
+            .conteudo {
+                bottom: 5px; /* Mantém posição baixa em mobile */
+                gap: 10px;
+                padding: 0 15px;
+            }
+            
+            .titulo-motoclube {
+                font-size: clamp(1.2rem, 6vw, 1.8rem);
+                margin-top: 8px;
+            }
+            
+            .rodape {
+                font-size: 0.8rem;
+                bottom: 10px;
+                display: none; /* Oculta rodapé em mobile para dar mais espaço */
+            }
+        }
+        
+        /* Animação de entrada */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .metal-button, .titulo-motoclube {
+            animation: fadeInUp 1s ease-out;
+        }
+        
+        .titulo-motoclube {
+            animation-delay: 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-principal">
+        <!-- Imagem de fundo centralizada -->
+        <img src="FundoSIte.png" alt="Fundo Tribo do Cerrado" class="fundo-imagem">
+        
+        <!-- Conteúdo principal -->
+        <div class="conteudo">
+            <!-- Botão ENTRAR com novo padrão metalizado - REDUZIDO EM 50% -->
+            <a href="acesso.html" class="metal-button primary small-custom">
+                ENTRAR
+            </a>
+            
+            <!-- Título MOTOCLUBE DE GOIÂNIA (posicionado abaixo) -->
+            <h1 class="titulo-motoclube">
+                MOTOCLUBE DE GOIÂNIA
+            </h1>
+        </div>
+        
+        <!-- Rodapé -->
+        <div class="rodape">
+            © 2025 Tribo do Cerrado Motoclube - Goiânia, GO
+        </div>
+    </div>
+</body>
+</html>
+

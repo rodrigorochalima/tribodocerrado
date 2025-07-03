@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeria - Tribo do Cerrado</title>
+    
+    <!-- CSS do padrão de botão -->
+    <link rel="stylesheet" href="metal-button.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Orbitron', monospace;
+            background: #000000;
+            color: #ffffff;
+            min-height: 100vh;
+            background-image: url('FundoSIte.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        
+        /* Overlay escuro */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1;
+        }
+        
+        /* Container principal */
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+            border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+        }
+        
+        .logo-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+        }
+        
+        .title {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: #FFD700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+        
+        .user-info {
+            text-align: right;
+        }
+        
+        .user-name {
+            font-size: 1.1rem;
+            color: #FFD700;
+            margin-bottom: 5px;
+        }
+        
+        /* Conteúdo principal */
+        .main-content {
+            background: rgba(20, 20, 20, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+        }
+        
+        .page-title {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: #FFD700;
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+        
+        /* Controles da galeria */
+        .gallery-controls {
+            background: rgba(30, 30, 30, 0.9);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+        
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            align-items: end;
+        }
+        
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .control-label {
+            color: #FFD700;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        
+        .control-input {
+            padding: 10px 12px;
+            border: 2px solid #444;
+            border-radius: 6px;
+            background: rgba(45, 45, 45, 0.9);
+            color: #ffffff;
+            font-family: 'Orbitron', monospace;
+            font-size: 0.9rem;
+        }
+        
+        .control-input:focus {
+            outline: none;
+            border-color: #FFD700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+        
+        /* Upload de fotos */
+        .upload-section {
+            background: rgba(30, 30, 30, 0.9);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+        
+        .upload-area {
+            border: 2px dashed rgba(255, 215, 0, 0.4);
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            background: rgba(40, 40, 40, 0.5);
+            transition: all 0.3s ease;
+        }
+        
+        .upload-area:hover {
+            border-color: #FFD700;
+            background: rgba(40, 40, 40, 0.8);
+        }
+        
+        .upload-area.dragover {
+            border-color: #FFD700;
+            background: rgba(255, 215, 0, 0.1);
+        }
+        
+        .upload-icon {
+            font-size: 3rem;
+            color: #FFD700;
+            margin-bottom: 15px;
+        }
+        
+        .upload-text {
+            font-size: 1.1rem;
+            color: #ffffff;
+            margin-bottom: 15px;
+        }
+        
+        .upload-hint {
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+        
+        /* Grid de fotos */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .photo-card {
+            background: rgba(30, 30, 30, 0.9);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .photo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(255, 215, 0, 0.3);
+            border-color: #FFD700;
+        }
+        
+        .photo-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .photo-card:hover .photo-image {
+            transform: scale(1.05);
+        }
+        
+        .photo-info {
+            padding: 15px;
+        }
+        
+        .photo-date {
+            color: #FFD700;
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .photo-location {
+            color: #ffffff;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+        
+        .photo-description {
+            color: #ccc;
+            font-size: 0.8rem;
+            line-height: 1.4;
+        }
+        
+        .photo-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .action-btn {
+            padding: 5px 10px;
+            font-size: 0.7rem;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-edit {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .btn-delete {
+            background: #f44336;
+            color: white;
+        }
+        
+        .action-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Modal de visualização */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+        }
+        
+        .modal-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: #FFD700;
+            font-size: 2rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+        
+        /* Estado vazio */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #ccc;
+        }
+        
+        .empty-icon {
+            font-size: 4rem;
+            color: #FFD700;
+            margin-bottom: 20px;
+        }
+        
+        .empty-text {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .empty-hint {
+            font-size: 0.9rem;
+        }
+        
+        /* Navegação */
+        .navigation {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            .page-title {
+                font-size: 1.8rem;
+            }
+            
+            .controls-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .gallery-controls,
+            .upload-section {
+                padding: 15px;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo-title">
+                <img src="LogoTriboSite.png" alt="Logo Tribo do Cerrado" class="logo">
+                <h1 class="title">TRIBO DO CERRADO</h1>
+            </div>
+            <div class="user-info">
+                <div class="user-name" id="userName">Carregando...</div>
+                <div style="font-size: 0.9rem; color: #ccc;">📸 Galeria de Fotos</div>
+            </div>
+        </header>
+        
+        <!-- Conteúdo Principal -->
+        <main class="main-content">
+            <h2 class="page-title">📸 MINHA GALERIA</h2>
+            
+            <!-- Controles de Filtro -->
+            <section class="gallery-controls">
+                <div class="controls-grid">
+                    <div class="control-group">
+                        <label class="control-label">🗓️ Filtrar por Mês/Ano</label>
+                        <input type="month" id="filtroData" class="control-input">
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">📍 Filtrar por Local</label>
+                        <input type="text" id="filtroLocal" class="control-input" placeholder="Digite o local...">
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">🔍 Buscar</label>
+                        <input type="text" id="filtroBusca" class="control-input" placeholder="Buscar na descrição...">
+                    </div>
+                    <div class="control-group">
+                        <button class="metal-button secondary" onclick="limparFiltros()">
+                            🗑️ Limpar Filtros
+                        </button>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Upload de Fotos -->
+            <section class="upload-section">
+                <h3 style="color: #FFD700; margin-bottom: 20px; font-size: 1.3rem;">
+                    📤 Adicionar Novas Fotos
+                </h3>
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📷</div>
+                    <div class="upload-text">Clique aqui ou arraste suas fotos</div>
+                    <div class="upload-hint">Formatos aceitos: JPG, PNG, GIF (máx. 10MB cada)</div>
+                    <input type="file" id="fileInput" multiple accept="image/*" style="display: none;">
+                    <button class="metal-button primary" style="margin-top: 15px;" onclick="document.getElementById('fileInput').click()">
+                        📁 Escolher Arquivos
+                    </button>
+                </div>
+            </section>
+            
+            <!-- Grid de Fotos -->
+            <section class="gallery-grid" id="galleryGrid">
+                <!-- Fotos serão carregadas aqui -->
+            </section>
+            
+            <!-- Estado Vazio -->
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <div class="empty-icon">📷</div>
+                <div class="empty-text">Sua galeria está vazia</div>
+                <div class="empty-hint">Adicione suas primeiras fotos usando o botão acima</div>
+            </div>
+            
+            <!-- Navegação -->
+            <nav class="navigation">
+                <a href="dashboard.html" class="metal-button secondary">
+                    🏠 Dashboard
+                </a>
+                <a href="perfil.html" class="metal-button secondary">
+                    👤 Perfil
+                </a>
+                <a href="e-mail.html" class="metal-button secondary">
+                    📧 Email
+                </a>
+                <a href="eventos.html" class="metal-button secondary">
+                    📅 Eventos
+                </a>
+            </nav>
+        </main>
+    </div>
+    
+    <!-- Modal de Visualização -->
+    <div class="modal" id="photoModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="fecharModal()">×</button>
+            <img class="modal-image" id="modalImage" src="" alt="Foto ampliada">
+        </div>
+    </div>
+    
+    <script>
+        let galeriaFotos = [];
+        let fotosFiltradas = [];
+        
+        // Verificar se usuário está logado
+        function verificarLogin() {
+            const usuarioLogado = localStorage.getItem('usuarioLogado');
+            if (!usuarioLogado) {
+                alert('❌ Acesso negado! Faça login primeiro.');
+                window.location.href = 'login.html';
+                return false;
+            }
+            return JSON.parse(usuarioLogado);
+        }
+        
+        // Carregar informações do usuário
+        function carregarInformacoes() {
+            const usuario = verificarLogin();
+            if (!usuario) return;
+            
+            document.getElementById('userName').textContent = usuario.nome || usuario.apelido;
+            
+            // Carregar galeria do usuário
+            galeriaFotos = usuario.galeria || [];
+            fotosFiltradas = [...galeriaFotos];
+            
+            renderizarGaleria();
+        }
+        
+        // Upload de arquivos
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        
+        // Drag and drop
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            processarArquivos(files);
+        });
+        
+        // Seleção de arquivos
+        fileInput.addEventListener('change', (e) => {
+            processarArquivos(e.target.files);
+        });
+        
+        // Processar arquivos selecionados
+        function processarArquivos(files) {
+            Array.from(files).forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    if (file.size > 10 * 1024 * 1024) {
+                        alert(`❌ Arquivo ${file.name} muito grande! Máximo 10MB.`);
+                        return;
+                    }
+                    
+                    adicionarFoto(file);
+                } else {
+                    alert(`❌ ${file.name} não é um arquivo de imagem válido.`);
+                }
+            });
+        }
+        
+        // Adicionar foto à galeria
+        function adicionarFoto(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const local = prompt('📍 Digite o local onde a foto foi tirada:') || 'Local não informado';
+                const descricao = prompt('📝 Digite uma descrição para a foto (opcional):') || '';
+                
+                const novaFoto = {
+                    id: Date.now() + Math.random(),
+                    src: e.target.result,
+                    nome: file.name,
+                    dataUpload: new Date().toISOString(),
+                    local: local,
+                    descricao: descricao,
+                    tamanho: file.size
+                };
+                
+                galeriaFotos.unshift(novaFoto); // Adiciona no início (mais recente primeiro)
+                salvarGaleria();
+                aplicarFiltros();
+                
+                alert('✅ Foto adicionada com sucesso!');
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        // Salvar galeria no localStorage
+        function salvarGaleria() {
+            const usuario = JSON.parse(localStorage.getItem('usuarioLogado'));
+            usuario.galeria = galeriaFotos;
+            
+            localStorage.setItem('usuarioLogado', JSON.stringify(usuario));
+            
+            // Atualizar lista de usuários
+            const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
+            const index = usuarios.findIndex(u => u.id === usuario.id);
+            if (index !== -1) {
+                usuarios[index] = usuario;
+                localStorage.setItem('usuarios', JSON.stringify(usuarios));
+            }
+        }
+        
+        // Renderizar galeria
+        function renderizarGaleria() {
+            const grid = document.getElementById('galleryGrid');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (fotosFiltradas.length === 0) {
+                grid.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            
+            grid.innerHTML = fotosFiltradas.map(foto => `
+                <div class="photo-card" onclick="abrirModal('${foto.src}')">
+                    <img src="${foto.src}" alt="${foto.nome}" class="photo-image">
+                    <div class="photo-info">
+                        <div class="photo-date">
+                            📅 ${new Date(foto.dataUpload).toLocaleDateString('pt-BR')}
+                        </div>
+                        <div class="photo-location">
+                            📍 ${foto.local}
+                        </div>
+                        <div class="photo-description">
+                            ${foto.descricao || 'Sem descrição'}
+                        </div>
+                        <div class="photo-actions">
+                            <button class="action-btn btn-edit" onclick="event.stopPropagation(); editarFoto('${foto.id}')">
+                                ✏️ Editar
+                            </button>
+                            <button class="action-btn btn-delete" onclick="event.stopPropagation(); excluirFoto('${foto.id}')">
+                                🗑️ Excluir
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Filtros
+        document.getElementById('filtroData').addEventListener('change', aplicarFiltros);
+        document.getElementById('filtroLocal').addEventListener('input', aplicarFiltros);
+        document.getElementById('filtroBusca').addEventListener('input', aplicarFiltros);
+        
+        function aplicarFiltros() {
+            const filtroData = document.getElementById('filtroData').value;
+            const filtroLocal = document.getElementById('filtroLocal').value.toLowerCase();
+            const filtroBusca = document.getElementById('filtroBusca').value.toLowerCase();
+            
+            fotosFiltradas = galeriaFotos.filter(foto => {
+                const dataFoto = new Date(foto.dataUpload);
+                const mesAnoFoto = `${dataFoto.getFullYear()}-${String(dataFoto.getMonth() + 1).padStart(2, '0')}`;
+                
+                const passaData = !filtroData || mesAnoFoto === filtroData;
+                const passaLocal = !filtroLocal || foto.local.toLowerCase().includes(filtroLocal);
+                const passaBusca = !filtroBusca || 
+                    foto.descricao.toLowerCase().includes(filtroBusca) ||
+                    foto.local.toLowerCase().includes(filtroBusca) ||
+                    foto.nome.toLowerCase().includes(filtroBusca);
+                
+                return passaData && passaLocal && passaBusca;
+            });
+            
+            renderizarGaleria();
+        }
+        
+        function limparFiltros() {
+            document.getElementById('filtroData').value = '';
+            document.getElementById('filtroLocal').value = '';
+            document.getElementById('filtroBusca').value = '';
+            aplicarFiltros();
+        }
+        
+        // Modal de visualização
+        function abrirModal(src) {
+            document.getElementById('modalImage').src = src;
+            document.getElementById('photoModal').style.display = 'flex';
+        }
+        
+        function fecharModal() {
+            document.getElementById('photoModal').style.display = 'none';
+        }
+        
+        // Fechar modal clicando fora
+        document.getElementById('photoModal').addEventListener('click', (e) => {
+            if (e.target.id === 'photoModal') {
+                fecharModal();
+            }
+        });
+        
+        // Editar foto
+        function editarFoto(id) {
+            const foto = galeriaFotos.find(f => f.id == id);
+            if (!foto) return;
+            
+            const novoLocal = prompt('📍 Editar local:', foto.local);
+            const novaDescricao = prompt('📝 Editar descrição:', foto.descricao);
+            
+            if (novoLocal !== null) foto.local = novoLocal;
+            if (novaDescricao !== null) foto.descricao = novaDescricao;
+            
+            salvarGaleria();
+            aplicarFiltros();
+            
+            alert('✅ Foto editada com sucesso!');
+        }
+        
+        // Excluir foto
+        function excluirFoto(id) {
+            if (confirm('❌ Tem certeza que deseja excluir esta foto?')) {
+                galeriaFotos = galeriaFotos.filter(f => f.id != id);
+                salvarGaleria();
+                aplicarFiltros();
+                
+                alert('✅ Foto excluída com sucesso!');
+            }
+        }
+        
+        // Inicializar página
+        document.addEventListener('DOMContentLoaded', function() {
+            carregarInformacoes();
+        });
+    </script>
+</body>
+</html>
+

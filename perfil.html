@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil - Tribo do Cerrado</title>
+    
+    <!-- CSS do padrão de botão -->
+    <link rel="stylesheet" href="metal-button.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Orbitron', monospace;
+            background: #000000;
+            color: #ffffff;
+            min-height: 100vh;
+            background-image: url('FundoSIte.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        
+        /* Overlay escuro */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1;
+        }
+        
+        /* Container principal */
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+            border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+        }
+        
+        .logo-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+        }
+        
+        .title {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: #FFD700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+        
+        .user-info {
+            text-align: right;
+        }
+        
+        .user-name {
+            font-size: 1.1rem;
+            color: #FFD700;
+            margin-bottom: 5px;
+        }
+        
+        /* Conteúdo principal */
+        .main-content {
+            background: rgba(20, 20, 20, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+        }
+        
+        .page-title {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: #FFD700;
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+        
+        /* Seções do perfil */
+        .profile-section {
+            background: rgba(30, 30, 30, 0.9);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+        
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #FFD700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+            padding-bottom: 10px;
+        }
+        
+        /* Formulário */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .form-label {
+            display: block;
+            color: #FFD700;
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+        
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #444;
+            border-radius: 8px;
+            background: rgba(45, 45, 45, 0.9);
+            color: #ffffff;
+            font-size: 1rem;
+            font-family: 'Orbitron', monospace;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #FFD700;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+            background: rgba(45, 45, 45, 1);
+        }
+        
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        /* Upload de foto */
+        .photo-upload {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            padding: 20px;
+            border: 2px dashed rgba(255, 215, 0, 0.3);
+            border-radius: 10px;
+            background: rgba(40, 40, 40, 0.5);
+        }
+        
+        .photo-preview {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #FFD700;
+        }
+        
+        .photo-placeholder {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: rgba(60, 60, 60, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #FFD700;
+            border: 3px solid rgba(255, 215, 0, 0.3);
+        }
+        
+        /* Lista dinâmica (filhos, motos) */
+        .dynamic-list {
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            background: rgba(40, 40, 40, 0.6);
+        }
+        
+        .list-item {
+            background: rgba(50, 50, 50, 0.8);
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #FFD700;
+            position: relative;
+        }
+        
+        .remove-item {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ff4444;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        
+        .add-item-btn {
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        /* Navegação */
+        .navigation {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .save-section {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid rgba(255, 215, 0, 0.3);
+        }
+        
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            .page-title {
+                font-size: 1.8rem;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .navigation {
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .profile-section {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo-title">
+                <img src="LogoTriboSite.png" alt="Logo Tribo do Cerrado" class="logo">
+                <h1 class="title">TRIBO DO CERRADO</h1>
+            </div>
+            <div class="user-info">
+                <div class="user-name" id="userName">Carregando...</div>
+                <div style="font-size: 0.9rem; color: #ccc;">👤 Perfil do Membro</div>
+            </div>
+        </header>
+        
+        <!-- Conteúdo Principal -->
+        <main class="main-content">
+            <h2 class="page-title">👤 MEU PERFIL</h2>
+            
+            <form id="perfilForm">
+                <!-- Foto do Membro -->
+                <section class="profile-section">
+                    <h3 class="section-title">
+                        📸 Foto do Membro
+                    </h3>
+                    <div class="photo-upload">
+                        <div id="photoPreview" class="photo-placeholder">
+                            📷
+                        </div>
+                        <input type="file" id="fotoMembro" accept="image/*" style="display: none;">
+                        <button type="button" class="metal-button primary" onclick="document.getElementById('fotoMembro').click()">
+                            📤 Escolher Foto
+                        </button>
+                        <small style="color: #ccc;">Formatos aceitos: JPG, PNG, GIF (máx. 5MB)</small>
+                    </div>
+                </section>
+                
+                <!-- Descrição Pessoal -->
+                <section class="profile-section">
+                    <h3 class="section-title">
+                        📝 Descrição Pessoal
+                    </h3>
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label for="descricaoPersonal" class="form-label">Sua Descrição Pessoal</label>
+                            <textarea 
+                                id="descricaoPersonal" 
+                                class="form-textarea" 
+                                placeholder="Conte um pouco sobre você, seus hobbies, interesses..."
+                                rows="4"
+                            ></textarea>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="biografiaMotociclismo" class="form-label">Sua Biografia no Motociclismo</label>
+                            <textarea 
+                                id="biografiaMotociclismo" 
+                                class="form-textarea" 
+                                placeholder="Sua história no motociclismo, experiências, viagens..."
+                                rows="4"
+                            ></textarea>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Esposa/Companheira -->
+                <section class="profile-section">
+                    <h3 class="section-title">
+                        💕 Esposa/Companheira
+                    </h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="nomeEsposa" class="form-label">Nome ou Apelido</label>
+                            <input 
+                                type="text" 
+                                id="nomeEsposa" 
+                                class="form-input" 
+                                placeholder="Nome da esposa/companheira"
+                            >
+                        </div>
+                        <div class="form-group">
+                            <label for="dataNascimentoEsposa" class="form-label">Data de Nascimento</label>
+                            <input 
+                                type="date" 
+                                id="dataNascimentoEsposa" 
+                                class="form-input"
+                            >
+                        </div>
+                        <div class="form-group">
+                            <label for="contatoEsposa" class="form-label">Contato (Opcional)</label>
+                            <input 
+                                type="text" 
+                                id="contatoEsposa" 
+                                class="form-input" 
+                                placeholder="Telefone ou email (opcional)"
+                            >
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Filhos -->
+                <section class="profile-section">
+                    <h3 class="section-title">
+                        👶 Filhos (Opcional)
+                    </h3>
+                    <div class="dynamic-list" id="filhosList">
+                        <p style="color: #ccc; text-align: center; margin: 20px 0;">
+                            Nenhum filho cadastrado. Clique em "Adicionar Filho" para começar.
+                        </p>
+                    </div>
+                    <button type="button" class="metal-button success add-item-btn" onclick="adicionarFilho()">
+                        ➕ Adicionar Filho
+                    </button>
+                    <small style="color: #ccc; display: block; margin-top: 10px;">
+                        Máximo de 5 filhos
+                    </small>
+                </section>
+                
+                <!-- Motocicletas -->
+                <section class="profile-section">
+                    <h3 class="section-title">
+                        🏍️ Motocicletas (Obrigatório pelo menos 1)
+                    </h3>
+                    <div class="dynamic-list" id="motosList">
+                        <!-- Primeira moto será adicionada automaticamente -->
+                    </div>
+                    <button type="button" class="metal-button success add-item-btn" onclick="adicionarMoto()">
+                        ➕ Adicionar Motocicleta
+                    </button>
+                    <small style="color: #ccc; display: block; margin-top: 10px;">
+                        Máximo de 5 motocicletas. Pelo menos 1 é obrigatória.
+                    </small>
+                </section>
+                
+                <!-- Botões de Ação -->
+                <div class="save-section">
+                    <button type="submit" class="metal-button primary large">
+                        💾 SALVAR PERFIL
+                    </button>
+                </div>
+            </form>
+            
+            <!-- Navegação -->
+            <nav class="navigation">
+                <a href="dashboard.html" class="metal-button secondary">
+                    🏠 Dashboard
+                </a>
+                <a href="e-mail.html" class="metal-button secondary">
+                    📧 Email
+                </a>
+                <a href="galeria.html" class="metal-button secondary">
+                    📸 Galeria
+                </a>
+                <a href="eventos.html" class="metal-button secondary">
+                    📅 Eventos
+                </a>
+            </nav>
+        </main>
+    </div>
+    
+    <script>
+        let filhosCount = 0;
+        let motosCount = 0;
+        
+        // Verificar se usuário está logado
+        function verificarLogin() {
+            const usuarioLogado = localStorage.getItem('usuarioLogado');
+            if (!usuarioLogado) {
+                alert('❌ Acesso negado! Faça login primeiro.');
+                window.location.href = 'login.html';
+                return false;
+            }
+            return JSON.parse(usuarioLogado);
+        }
+        
+        // Carregar informações do usuário
+        function carregarInformacoes() {
+            const usuario = verificarLogin();
+            if (!usuario) return;
+            
+            document.getElementById('userName').textContent = usuario.nome || usuario.apelido;
+            
+            // Carregar dados do perfil se existirem
+            if (usuario.descricaoPersonal) {
+                document.getElementById('descricaoPersonal').value = usuario.descricaoPersonal;
+            }
+            if (usuario.biografiaMotociclismo) {
+                document.getElementById('biografiaMotociclismo').value = usuario.biografiaMotociclismo;
+            }
+            
+            // Carregar dados da esposa
+            if (usuario.esposa) {
+                document.getElementById('nomeEsposa').value = usuario.esposa.nome || '';
+                document.getElementById('dataNascimentoEsposa').value = usuario.esposa.dataNascimento || '';
+                document.getElementById('contatoEsposa').value = usuario.esposa.contato || '';
+            }
+            
+            // Carregar filhos
+            if (usuario.filhos && usuario.filhos.length > 0) {
+                usuario.filhos.forEach(filho => {
+                    adicionarFilho(filho.nome, filho.dataNascimento);
+                });
+            }
+            
+            // Carregar motocicletas
+            if (usuario.motocicletas && usuario.motocicletas.length > 0) {
+                usuario.motocicletas.forEach(moto => {
+                    adicionarMoto(moto);
+                });
+            } else {
+                // Adicionar primeira moto automaticamente
+                adicionarMoto();
+            }
+            
+            // Carregar foto se existir
+            if (usuario.foto) {
+                mostrarFoto(usuario.foto);
+            }
+        }
+        
+        // Upload de foto
+        document.getElementById('fotoMembro').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('❌ Arquivo muito grande! Máximo 5MB.');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    mostrarFoto(e.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        function mostrarFoto(src) {
+            const preview = document.getElementById('photoPreview');
+            preview.innerHTML = `<img src="${src}" class="photo-preview" alt="Foto do membro">`;
+        }
+        
+        // Adicionar filho
+        function adicionarFilho(nome = '', dataNascimento = '') {
+            if (filhosCount >= 5) {
+                alert('❌ Máximo de 5 filhos permitido.');
+                return;
+            }
+            
+            filhosCount++;
+            const filhosList = document.getElementById('filhosList');
+            
+            // Remover mensagem de "nenhum filho"
+            if (filhosCount === 1) {
+                filhosList.innerHTML = '';
+            }
+            
+            const filhoDiv = document.createElement('div');
+            filhoDiv.className = 'list-item';
+            filhoDiv.innerHTML = `
+                <button type="button" class="remove-item" onclick="removerFilho(this)">×</button>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Nome do Filho</label>
+                        <input type="text" class="form-input" name="nomeFilho" value="${nome}" placeholder="Nome do filho" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Data de Nascimento</label>
+                        <input type="date" class="form-input" name="dataNascimentoFilho" value="${dataNascimento}" required>
+                    </div>
+                </div>
+            `;
+            
+            filhosList.appendChild(filhoDiv);
+        }
+        
+        // Remover filho
+        function removerFilho(button) {
+            button.parentElement.remove();
+            filhosCount--;
+            
+            if (filhosCount === 0) {
+                document.getElementById('filhosList').innerHTML = `
+                    <p style="color: #ccc; text-align: center; margin: 20px 0;">
+                        Nenhum filho cadastrado. Clique em "Adicionar Filho" para começar.
+                    </p>
+                `;
+            }
+        }
+        
+        // Adicionar motocicleta
+        function adicionarMoto(moto = {}) {
+            if (motosCount >= 5) {
+                alert('❌ Máximo de 5 motocicletas permitido.');
+                return;
+            }
+            
+            motosCount++;
+            const motosList = document.getElementById('motosList');
+            
+            const motoDiv = document.createElement('div');
+            motoDiv.className = 'list-item';
+            motoDiv.innerHTML = `
+                <button type="button" class="remove-item" onclick="removerMoto(this)" ${motosCount === 1 ? 'style="display: none;"' : ''}>×</button>
+                <h4 style="color: #FFD700; margin-bottom: 15px;">🏍️ Motocicleta ${motosCount}</h4>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Marca *</label>
+                        <input type="text" class="form-input" name="marcaMoto" value="${moto.marca || ''}" placeholder="Ex: Honda" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Modelo *</label>
+                        <input type="text" class="form-input" name="modeloMoto" value="${moto.modelo || ''}" placeholder="Ex: CB 600F" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Ano de Fabricação *</label>
+                        <input type="number" class="form-input" name="anoMoto" value="${moto.anoFabricacao || ''}" placeholder="Ex: 2020" min="1900" max="2030" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Chassi *</label>
+                        <input type="text" class="form-input" name="chassiMoto" value="${moto.chassi || ''}" placeholder="Ex: 9C2JC3210LR123456" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">RENAVAN *</label>
+                        <input type="text" class="form-input" name="renavanMoto" value="${moto.renavan || ''}" placeholder="Ex: 12345678901" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Placa *</label>
+                        <input type="text" class="form-input" name="placaMoto" value="${moto.placa || ''}" placeholder="Ex: ABC-1234" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label class="form-label">Foto da Motocicleta *</label>
+                        <input type="file" class="form-input" name="fotoMoto" accept="image/*" ${!moto.foto ? 'required' : ''}>
+                        ${moto.foto ? `<small style="color: #4CAF50;">✅ Foto já carregada</small>` : ''}
+                    </div>
+                </div>
+            `;
+            
+            motosList.appendChild(motoDiv);
+        }
+        
+        // Remover motocicleta
+        function removerMoto(button) {
+            if (motosCount <= 1) {
+                alert('❌ Pelo menos uma motocicleta é obrigatória.');
+                return;
+            }
+            
+            button.parentElement.remove();
+            motosCount--;
+            
+            // Renumerar motocicletas
+            const motos = document.querySelectorAll('#motosList .list-item h4');
+            motos.forEach((h4, index) => {
+                h4.textContent = `🏍️ Motocicleta ${index + 1}`;
+            });
+            
+            // Mostrar botão de remover na primeira moto se houver mais de uma
+            if (motosCount > 1) {
+                const primeiroRemover = document.querySelector('#motosList .list-item .remove-item');
+                if (primeiroRemover) {
+                    primeiroRemover.style.display = 'block';
+                }
+            }
+        }
+        
+        // Salvar perfil
+        document.getElementById('perfilForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const usuario = JSON.parse(localStorage.getItem('usuarioLogado'));
+            
+            // Coletar dados do formulário
+            const perfilData = {
+                foto: document.querySelector('#photoPreview img')?.src || null,
+                descricaoPersonal: document.getElementById('descricaoPersonal').value,
+                biografiaMotociclismo: document.getElementById('biografiaMotociclismo').value,
+                esposa: {
+                    nome: document.getElementById('nomeEsposa').value,
+                    dataNascimento: document.getElementById('dataNascimentoEsposa').value,
+                    contato: document.getElementById('contatoEsposa').value
+                },
+                filhos: [],
+                motocicletas: []
+            };
+            
+            // Coletar filhos
+            const filhosInputs = document.querySelectorAll('#filhosList .list-item');
+            filhosInputs.forEach(item => {
+                const nome = item.querySelector('input[name="nomeFilho"]').value;
+                const dataNascimento = item.querySelector('input[name="dataNascimentoFilho"]').value;
+                if (nome && dataNascimento) {
+                    perfilData.filhos.push({ nome, dataNascimento });
+                }
+            });
+            
+            // Coletar motocicletas
+            const motosInputs = document.querySelectorAll('#motosList .list-item');
+            motosInputs.forEach(item => {
+                const moto = {
+                    marca: item.querySelector('input[name="marcaMoto"]').value,
+                    modelo: item.querySelector('input[name="modeloMoto"]').value,
+                    anoFabricacao: item.querySelector('input[name="anoMoto"]').value,
+                    chassi: item.querySelector('input[name="chassiMoto"]').value,
+                    renavan: item.querySelector('input[name="renavanMoto"]').value,
+                    placa: item.querySelector('input[name="placaMoto"]').value,
+                    foto: item.querySelector('input[name="fotoMoto"]').files[0] ? 'foto_carregada' : null
+                };
+                
+                if (moto.marca && moto.modelo && moto.anoFabricacao && moto.chassi && moto.renavan && moto.placa) {
+                    perfilData.motocicletas.push(moto);
+                }
+            });
+            
+            // Validar pelo menos uma motocicleta
+            if (perfilData.motocicletas.length === 0) {
+                alert('❌ Pelo menos uma motocicleta é obrigatória.');
+                return;
+            }
+            
+            // Atualizar dados do usuário
+            Object.assign(usuario, perfilData);
+            
+            // Salvar no localStorage
+            localStorage.setItem('usuarioLogado', JSON.stringify(usuario));
+            
+            // Atualizar lista de usuários
+            const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
+            const index = usuarios.findIndex(u => u.id === usuario.id);
+            if (index !== -1) {
+                usuarios[index] = usuario;
+                localStorage.setItem('usuarios', JSON.stringify(usuarios));
+            }
+            
+            alert('✅ Perfil salvo com sucesso!');
+        });
+        
+        // Inicializar página
+        document.addEventListener('DOMContentLoaded', function() {
+            carregarInformacoes();
+        });
+    </script>
+</body>
+</html>
+

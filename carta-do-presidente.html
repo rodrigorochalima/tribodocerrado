@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carta do Presidente - Tribo do Cerrado</title>
+    
+    <!-- CSS do padrão de botão -->
+    <link rel="stylesheet" href="metal-button.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Orbitron', monospace;
+            background: #000000;
+            color: #ffffff;
+            min-height: 100vh;
+            background-image: url('FundoSIte.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        
+        /* Overlay escuro */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1;
+        }
+        
+        /* Container principal */
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+            border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+        }
+        
+        .logo-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+        }
+        
+        .title {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: #FFD700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+        
+        .back-link {
+            text-decoration: none;
+        }
+        
+        /* Conteúdo principal */
+        .main-content {
+            background: rgba(20, 20, 20, 0.95);
+            border-radius: 15px;
+            padding: 40px;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+        }
+        
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #FFD700;
+            text-align: center;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+        
+        /* Seção do presidente */
+        .president-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+        
+        /* Máscara/Moldura da foto */
+        .president-frame {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin-bottom: 25px;
+        }
+        
+        .frame-mask {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #FFD700, #B8860B);
+            padding: 8px;
+            box-shadow: 
+                0 0 30px rgba(255, 215, 0, 0.6),
+                inset 0 0 20px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+        
+        .frame-mask::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #FFD700, #FFA500, #FFD700);
+            z-index: -1;
+            animation: frameGlow 3s ease-in-out infinite alternate;
+        }
+        
+        @keyframes frameGlow {
+            0% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.4); }
+            100% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.8); }
+        }
+        
+        .president-photo {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #000000;
+        }
+        
+        .photo-placeholder {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: rgba(40, 40, 40, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: #FFD700;
+            border: 4px solid #000000;
+        }
+        
+        /* Informações do mandato */
+        .mandate-info {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(30, 30, 30, 0.8);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+        
+        .president-name {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: #FFD700;
+            margin-bottom: 10px;
+        }
+        
+        .mandate-period {
+            font-size: 1.2rem;
+            color: #ffffff;
+            margin-bottom: 5px;
+        }
+        
+        .mandate-dates {
+            font-size: 1rem;
+            color: #ccc;
+            font-weight: 600;
+        }
+        
+        /* Carta do presidente */
+        .president-letter {
+            background: rgba(30, 30, 30, 0.9);
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            line-height: 1.8;
+        }
+        
+        .letter-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #FFD700;
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+            padding-bottom: 10px;
+        }
+        
+        .letter-content {
+            font-size: 1.1rem;
+            color: #ffffff;
+            text-align: justify;
+            margin-bottom: 20px;
+        }
+        
+        .letter-signature {
+            text-align: right;
+            font-style: italic;
+            color: #FFD700;
+            font-weight: 700;
+            margin-top: 30px;
+            border-top: 1px solid rgba(255, 215, 0, 0.3);
+            padding-top: 15px;
+        }
+        
+        /* Contatos do presidente */
+        .president-contacts {
+            background: rgba(30, 30, 30, 0.9);
+            border-radius: 10px;
+            padding: 25px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+        
+        .contacts-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #FFD700;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .contacts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .contact-item {
+            background: rgba(40, 40, 40, 0.8);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #FFD700;
+            transition: all 0.3s ease;
+        }
+        
+        .contact-item:hover {
+            background: rgba(50, 50, 50, 0.9);
+            transform: translateY(-2px);
+        }
+        
+        .contact-label {
+            font-size: 0.9rem;
+            color: #FFD700;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .contact-value {
+            font-size: 1.1rem;
+            color: #ffffff;
+            font-weight: 600;
+        }
+        
+        .contact-link {
+            color: #4CAF50;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .contact-link:hover {
+            color: #66BB6A;
+            text-decoration: underline;
+        }
+        
+        /* Navegação */
+        .navigation {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .main-content {
+                padding: 25px;
+            }
+            
+            .page-title {
+                font-size: 2rem;
+            }
+            
+            .president-frame {
+                width: 250px;
+                height: 250px;
+            }
+            
+            .president-name {
+                font-size: 1.5rem;
+            }
+            
+            .letter-content {
+                font-size: 1rem;
+            }
+            
+            .contacts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            .president-frame {
+                width: 200px;
+                height: 200px;
+            }
+            
+            .letter-content {
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo-title">
+                <img src="LogoTriboSite.png" alt="Logo Tribo do Cerrado" class="logo">
+                <h1 class="title">TRIBO DO CERRADO</h1>
+            </div>
+            <a href="index.html" class="back-link">
+                <button class="metal-button secondary">
+                    ⬅️ Voltar
+                </button>
+            </a>
+        </header>
+        
+        <!-- Conteúdo Principal -->
+        <main class="main-content">
+            <h2 class="page-title">👑 CARTA DO PRESIDENTE</h2>
+            
+            <!-- Seção do Presidente -->
+            <section class="president-section">
+                <!-- Foto do Presidente com Máscara/Moldura -->
+                <div class="president-frame">
+                    <div class="frame-mask">
+                        <div id="presidentPhoto" class="photo-placeholder">
+                            👤
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Informações do Mandato -->
+                <div class="mandate-info">
+                    <div class="president-name" id="presidentName">
+                        [Nome do Presidente]
+                    </div>
+                    <div class="mandate-period">
+                        Presidente em Exercício
+                    </div>
+                    <div class="mandate-dates" id="mandateDates">
+                        Mandato: [Mês/Ano] - [Mês/Ano]
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Carta do Presidente -->
+            <section class="president-letter">
+                <h3 class="letter-title">📜 Mensagem do Presidente</h3>
+                <div class="letter-content" id="letterContent">
+                    <p>Caros membros e visitantes da Tribo do Cerrado,</p>
+                    
+                    <p>É com grande honra e responsabilidade que me dirijo a vocês como presidente deste motoclube que representa muito mais que uma simples associação de motociclistas. Somos uma família unida pela paixão pelas duas rodas e pelo espírito de fraternidade que nos move.</p>
+                    
+                    <p>Durante meu mandato, tenho o compromisso de fortalecer ainda mais os laços que nos unem, promover eventos que celebrem nossa paixão pelo motociclismo e trabalhar incansavelmente para que nossa comunidade continue crescendo de forma saudável e respeitosa.</p>
+                    
+                    <p>Acredito que juntos podemos alcançar grandes conquistas, sempre mantendo os valores que nos definem: respeito, união, segurança e paixão pelas motocicletas. Cada membro desta tribo é fundamental para o sucesso de nossos objetivos.</p>
+                    
+                    <p>Convido todos a participarem ativamente de nossas atividades, eventos e iniciativas. Sua presença e contribuição fazem toda a diferença em nossa jornada.</p>
+                    
+                    <p>Que possamos continuar rodando juntos, sempre com segurança e alegria, levando o nome da Tribo do Cerrado com orgulho por todos os caminhos.</p>
+                    
+                    <p>Forte abraço motociclístico!</p>
+                </div>
+                <div class="letter-signature" id="letterSignature">
+                    [Nome do Presidente]<br>
+                    Presidente - Tribo do Cerrado Motoclube
+                </div>
+            </section>
+            
+            <!-- Contatos do Presidente -->
+            <section class="president-contacts">
+                <h3 class="contacts-title">📞 Contatos do Presidente</h3>
+                <div class="contacts-grid">
+                    <div class="contact-item">
+                        <div class="contact-label">📱 Celular</div>
+                        <div class="contact-value" id="presidentPhone">
+                            <a href="tel:+5562999999999" class="contact-link">
+                                (62) 99999-9999
+                            </a>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-label">💬 WhatsApp</div>
+                        <div class="contact-value" id="presidentWhatsapp">
+                            <a href="https://wa.me/5562999999999" target="_blank" class="contact-link">
+                                (62) 99999-9999
+                            </a>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-label">📧 Email</div>
+                        <div class="contact-value" id="presidentEmail">
+                            <a href="mailto:presidente@tribodocerrado.org" class="contact-link">
+                                presidente@tribodocerrado.org
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Navegação -->
+            <nav class="navigation">
+                <a href="index.html" class="metal-button secondary">
+                    🏠 Página Inicial
+                </a>
+                <a href="eventos.html" class="metal-button secondary">
+                    📅 Eventos
+                </a>
+                <a href="login.html" class="metal-button primary">
+                    🔐 Área do Membro
+                </a>
+            </nav>
+        </main>
+    </div>
+    
+    <script>
+        // Dados do presidente (podem ser editados pelo administrador)
+        const presidentData = {
+            name: "João Silva",
+            photo: null, // URL da foto será inserida aqui
+            mandateStart: "Janeiro 2024",
+            mandateEnd: "Janeiro 2026",
+            phone: "(62) 99999-9999",
+            whatsapp: "5562999999999",
+            email: "presidente@tribodocerrado.org",
+            letter: `Caros membros e visitantes da Tribo do Cerrado,
+
+É com grande honra e responsabilidade que me dirijo a vocês como presidente deste motoclube que representa muito mais que uma simples associação de motociclistas. Somos uma família unida pela paixão pelas duas rodas e pelo espírito de fraternidade que nos move.
+
+Durante meu mandato, tenho o compromisso de fortalecer ainda mais os laços que nos unem, promover eventos que celebrem nossa paixão pelo motociclismo e trabalhar incansavelmente para que nossa comunidade continue crescendo de forma saudável e respeitosa.
+
+Acredito que juntos podemos alcançar grandes conquistas, sempre mantendo os valores que nos definem: respeito, união, segurança e paixão pelas motocicletas. Cada membro desta tribo é fundamental para o sucesso de nossos objetivos.
+
+Convido todos a participarem ativamente de nossas atividades, eventos e iniciativas. Sua presença e contribuição fazem toda a diferença em nossa jornada.
+
+Que possamos continuar rodando juntos, sempre com segurança e alegria, levando o nome da Tribo do Cerrado com orgulho por todos os caminhos.
+
+Forte abraço motociclístico!`
+        };
+        
+        // Carregar informações do presidente
+        function carregarInformacoes() {
+            // Verificar se há dados salvos no localStorage
+            const dadosSalvos = localStorage.getItem('presidentData');
+            const dados = dadosSalvos ? JSON.parse(dadosSalvos) : presidentData;
+            
+            // Atualizar elementos da página
+            document.getElementById('presidentName').textContent = dados.name;
+            document.getElementById('mandateDates').textContent = `Mandato: ${dados.mandateStart} - ${dados.mandateEnd}`;
+            document.getElementById('letterSignature').innerHTML = `${dados.name}<br>Presidente - Tribo do Cerrado Motoclube`;
+            
+            // Atualizar foto
+            if (dados.photo) {
+                document.getElementById('presidentPhoto').innerHTML = `
+                    <img src="${dados.photo}" alt="Foto do Presidente" class="president-photo">
+                `;
+            }
+            
+            // Atualizar carta
+            const letterContent = document.getElementById('letterContent');
+            letterContent.innerHTML = dados.letter.split('\n\n').map(paragraph => `<p>${paragraph}</p>`).join('');
+            
+            // Atualizar contatos
+            document.getElementById('presidentPhone').innerHTML = `
+                <a href="tel:+55${dados.phone.replace(/\D/g, '')}" class="contact-link">
+                    ${dados.phone}
+                </a>
+            `;
+            
+            document.getElementById('presidentWhatsapp').innerHTML = `
+                <a href="https://wa.me/${dados.whatsapp}" target="_blank" class="contact-link">
+                    ${dados.phone}
+                </a>
+            `;
+            
+            document.getElementById('presidentEmail').innerHTML = `
+                <a href="mailto:${dados.email}" class="contact-link">
+                    ${dados.email}
+                </a>
+            `;
+        }
+        
+        // Função para administradores editarem (pode ser chamada via console)
+        function editarPresidente() {
+            const usuarioLogado = localStorage.getItem('usuarioLogado');
+            if (!usuarioLogado) {
+                alert('❌ Acesso negado! Apenas administradores podem editar.');
+                return;
+            }
+            
+            const usuario = JSON.parse(usuarioLogado);
+            if (usuario.email !== 'admin@tribodocerrado.org') {
+                alert('❌ Acesso negado! Apenas administradores podem editar.');
+                return;
+            }
+            
+            const dados = JSON.parse(localStorage.getItem('presidentData') || JSON.stringify(presidentData));
+            
+            const novoNome = prompt('Nome do Presidente:', dados.name);
+            const novoMandatoInicio = prompt('Início do Mandato (ex: Janeiro 2024):', dados.mandateStart);
+            const novoMandatoFim = prompt('Fim do Mandato (ex: Janeiro 2026):', dados.mandateEnd);
+            const novoTelefone = prompt('Telefone:', dados.phone);
+            const novoEmail = prompt('Email:', dados.email);
+            const novaCarta = prompt('Carta do Presidente:', dados.letter);
+            
+            if (novoNome) dados.name = novoNome;
+            if (novoMandatoInicio) dados.mandateStart = novoMandatoInicio;
+            if (novoMandatoFim) dados.mandateEnd = novoMandatoFim;
+            if (novoTelefone) dados.phone = novoTelefone;
+            if (novoEmail) dados.email = novoEmail;
+            if (novaCarta) dados.letter = novaCarta;
+            
+            dados.whatsapp = '55' + dados.phone.replace(/\D/g, '');
+            
+            localStorage.setItem('presidentData', JSON.stringify(dados));
+            carregarInformacoes();
+            
+            alert('✅ Informações do presidente atualizadas!');
+        }
+        
+        // Inicializar página
+        document.addEventListener('DOMContentLoaded', function() {
+            carregarInformacoes();
+        });
+        
+        // Disponibilizar função de edição globalmente (para administradores)
+        window.editarPresidente = editarPresidente;
+    </script>
+</body>
+</html>
+
