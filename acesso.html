@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acesso - Tribo do Cerrado</title>
+    
+    <!-- CSS dos botões metalizados -->
+    <link rel="stylesheet" href="metal-button.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Orbitron', monospace;
+            background: url('FundoSIte.png') center/cover no-repeat fixed;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            /* Preencher resto com preto */
+            background-color: #000000;
+        }
+        
+        /* Container principal */
+        .container-acesso {
+            text-align: center;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            background: rgba(0, 0, 0, 0.85);
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 
+                0 0 30px rgba(255, 215, 0, 0.2),
+                inset 0 0 20px rgba(255, 215, 0, 0.1);
+        }
+        
+        /* Título da página */
+        .titulo-acesso {
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            font-weight: 900;
+            margin-bottom: 30px;
+            color: #FFD700;
+            text-shadow: 
+                2px 2px 4px rgba(0, 0, 0, 0.8),
+                0 0 10px rgba(255, 215, 0, 0.5);
+            letter-spacing: 2px;
+        }
+        
+        /* Container dos botões */
+        .opcoes-acesso {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        /* Descrições dos botões */
+        .btn-descricao {
+            font-size: 0.9rem;
+            color: #CCCCCC;
+            margin-top: 5px;
+            font-weight: 400;
+        }
+        
+        /* Botão voltar menor */
+        .btn-voltar {
+            margin-top: 20px;
+        }
+        
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .container-acesso {
+                padding: 20px;
+                max-width: 95%;
+            }
+            
+            .titulo-acesso {
+                font-size: 1.5rem;
+                margin-bottom: 20px;
+            }
+            
+            .opcoes-acesso {
+                gap: 12px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container-acesso {
+                padding: 15px;
+            }
+            
+            .titulo-acesso {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-acesso">
+        <h1 class="titulo-acesso">ESCOLHA SEU ACESSO</h1>
+        
+        <div class="opcoes-acesso">
+            <!-- Acesso Público -->
+            <div>
+                <a href="publico.html" class="metal-button primary large">
+                    🌐 ACESSO PÚBLICO
+                </a>
+                <div class="btn-descricao">Visualizar eventos e informações gerais</div>
+            </div>
+            
+            <!-- Fazer Login -->
+            <div>
+                <a href="login.html" class="metal-button primary large">
+                    🔐 FAZER LOGIN
+                </a>
+                <div class="btn-descricao">Acesso completo para membros cadastrados</div>
+            </div>
+            
+            <!-- Criar Cadastro -->
+            <div>
+                <a href="cadastro.html" class="metal-button primary large">
+                    📝 CRIAR CADASTRO
+                </a>
+                <div class="btn-descricao">Registrar-se como novo membro</div>
+            </div>
+        </div>
+        
+        <!-- Botão Voltar -->
+        <div class="btn-voltar">
+            <a href="index.html" class="metal-button secondary medium">
+                ← VOLTAR
+            </a>
+        </div>
+    </div>
+    
+    <!-- Rodapé -->
+    <div style="position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); 
+                color: rgba(255, 255, 255, 0.6); font-size: 0.8rem; text-align: center;">
+        © 2025 Tribo do Cerrado Motoclube - Goiânia, GO
+    </div>
+</body>
+</html>
+
