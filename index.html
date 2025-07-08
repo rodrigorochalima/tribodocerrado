@@ -5,9 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tribo do Cerrado - Motoclube de Goiânia</title>
     
-    <!-- CSS do novo padrão de botão -->
-    <link rel="stylesheet" href="metal-button.css">
-    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
         
@@ -23,89 +20,108 @@
             color: #ffffff;
             min-height: 100vh;
             overflow: hidden;
-        }
-        
-        /* SISTEMA GRID 3x3 (JOGO DA VELHA) */
-        .grid-container {
-            width: 100vw;
-            height: 100vh;
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr; /* 3 colunas iguais */
-            grid-template-rows: 1fr 1fr 1fr;    /* 3 linhas iguais */
+            display: flex;
+            justify-content: center;
+            align-items: center;
             position: relative;
         }
         
-        /* Posições do grid (1-9) */
-        .grid-1 { grid-area: 1 / 1 / 2 / 2; } /* Superior esquerda */
-        .grid-2 { grid-area: 1 / 2 / 2 / 3; } /* Superior centro */
-        .grid-3 { grid-area: 1 / 3 / 2 / 4; } /* Superior direita */
-        .grid-4 { grid-area: 2 / 1 / 3 / 2; } /* Meio esquerda */
-        .grid-5 { grid-area: 2 / 2 / 3 / 3; } /* Centro (logo) */
-        .grid-6 { grid-area: 2 / 3 / 3 / 4; } /* Meio direita */
-        .grid-7 { grid-area: 3 / 1 / 4 / 2; } /* Inferior esquerda */
-        .grid-8 { grid-area: 3 / 2 / 4 / 3; } /* Inferior centro (DESTINO) */
-        .grid-9 { grid-area: 3 / 3 / 4 / 4; } /* Inferior direita */
-        
-        /* Imagem de fundo centralizada na posição 5 (centro) */
-        .fundo-imagem {
+        /* Container principal centralizado */
+        .container-principal {
             width: 100%;
-            height: 100%;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            position: relative;
         }
         
-        .fundo-imagem img {
-            max-width: 90%;
-            max-height: 90%;
+        /* LOGO CLICÁVEL COM EFEITO HOVER */
+        .logo-clicavel {
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+        
+        .logo-clicavel img {
+            max-width: 90vw;
+            max-height: 80vh;
             width: auto;
             height: auto;
-            object-fit: contain;
+            display: block;
+            transition: all 0.3s ease;
         }
         
-        /* POSIÇÃO 8 - Inferior Centro (DESTINO DOS ELEMENTOS) */
-        .posicao-8 {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            padding: 20px;
+        /* EFEITOS HOVER INCRÍVEIS */
+        .logo-clicavel:hover {
+            transform: scale(1.05);
+            filter: brightness(1.2) saturate(1.3);
+            box-shadow: 
+                0 0 30px rgba(255, 215, 0, 0.6),
+                0 0 60px rgba(255, 140, 0, 0.4),
+                0 0 90px rgba(255, 69, 0, 0.3);
         }
         
-        /* Botão ENTRAR na posição 8 */
-        .botao-entrar {
-            /* Usando o estilo metal-button existente */
+        .logo-clicavel:hover img {
+            filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.8));
         }
         
-        /* Texto MOTOCLUBE DE GOIÂNIA na posição 8 */
-        .titulo-motoclube {
-            font-size: 2.2rem;
-            font-weight: 900;
-            text-align: center;
-            
-            /* Dourado metalizado */
-            background: linear-gradient(45deg, 
-                #F4D03F 0%,    
-                #F7DC6F 25%,   
-                #FCF3CF 50%,   
-                #F7DC6F 75%,   
-                #F4D03F 100%   
-            );
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            
-            /* Sombra 3D metalizada */
-            text-shadow: 
-                2px 2px 0px #D4AC0D,
-                4px 4px 0px #B7950B,
-                6px 6px 15px rgba(212, 172, 13, 0.7);
-            
-            filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.6));
+        /* EFEITO DE CLIQUE */
+        .logo-clicavel:active {
+            transform: scale(0.98);
+            transition: all 0.1s ease;
         }
         
-        /* Rodapé fixo */
+        /* INDICADOR VISUAL DE CLIQUE */
+        .logo-clicavel::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .logo-clicavel:hover::before {
+            width: 120%;
+            height: 120%;
+        }
+        
+        /* TEXTO FLUTUANTE NO HOVER */
+        .logo-clicavel::after {
+            content: 'CLIQUE PARA ENTRAR';
+            position: absolute;
+            bottom: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: #FFD700;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 700;
+            opacity: 0;
+            transition: all 0.3s ease;
+            pointer-events: none;
+            border: 2px solid #FFD700;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+            z-index: 2;
+        }
+        
+        .logo-clicavel:hover::after {
+            opacity: 1;
+            bottom: -50px;
+        }
+        
+        /* Rodapé */
         .rodape {
             position: fixed;
             bottom: 20px;
@@ -119,19 +135,31 @@
         
         /* Responsividade */
         @media (max-width: 768px) {
-            .titulo-motoclube {
-                font-size: 1.8rem;
+            .logo-clicavel img {
+                max-width: 95vw;
+                max-height: 70vh;
+            }
+            
+            .logo-clicavel::after {
+                font-size: 0.9rem;
+                padding: 8px 16px;
+                bottom: -50px;
+            }
+            
+            .logo-clicavel:hover::after {
+                bottom: -40px;
             }
         }
         
         @media (max-width: 480px) {
-            .titulo-motoclube {
-                font-size: 1.5rem;
+            .logo-clicavel img {
+                max-width: 98vw;
+                max-height: 60vh;
             }
             
-            .posicao-8 {
-                gap: 15px;
-                padding: 15px;
+            .logo-clicavel::after {
+                font-size: 0.8rem;
+                padding: 6px 12px;
             }
             
             .rodape {
@@ -140,74 +168,46 @@
             }
         }
         
-        /* Animações */
-        @keyframes fadeInUp {
+        /* Animação de entrada */
+        @keyframes fadeInScale {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: scale(0.8);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: scale(1);
             }
         }
         
-        .botao-entrar, .titulo-motoclube {
-            animation: fadeInUp 1s ease-out;
+        .logo-clicavel {
+            animation: fadeInScale 1s ease-out;
         }
         
-        .titulo-motoclube {
-            animation-delay: 0.3s;
+        /* EFEITO PULSANTE SUTIL */
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+            }
+        }
+        
+        .logo-clicavel {
+            animation: fadeInScale 1s ease-out, pulse 3s ease-in-out infinite;
         }
     </style>
 </head>
 <body>
-    <div class="grid-container">
-        <!-- POSIÇÃO 1 - Superior Esquerda (vazia) -->
-        <div class="grid-1"></div>
-        
-        <!-- POSIÇÃO 2 - Superior Centro (vazia) -->
-        <div class="grid-2"></div>
-        
-        <!-- POSIÇÃO 3 - Superior Direita (vazia) -->
-        <div class="grid-3"></div>
-        
-        <!-- POSIÇÃO 4 - Meio Esquerda (vazia) -->
-        <div class="grid-4"></div>
-        
-        <!-- POSIÇÃO 5 - Centro (LOGO/IMAGEM DE FUNDO) -->
-        <div class="grid-5">
-            <div class="fundo-imagem">
-                <img src="FundoSIte.png" alt="Tribo do Cerrado Logo">
-            </div>
-        </div>
-        
-        <!-- POSIÇÃO 6 - Meio Direita (vazia) -->
-        <div class="grid-6"></div>
-        
-        <!-- POSIÇÃO 7 - Inferior Esquerda (vazia) -->
-        <div class="grid-7"></div>
-        
-        <!-- POSIÇÃO 8 - Inferior Centro (BOTÃO + TEXTO) -->
-        <div class="grid-8">
-            <div class="posicao-8">
-                <!-- Botão ENTRAR -->
-                <a href="acesso.html" class="metal-button primary large botao-entrar">
-                    ENTRAR
-                </a>
-                
-                <!-- Título MOTOCLUBE DE GOIÂNIA -->
-                <h1 class="titulo-motoclube">
-                    MOTOCLUBE DE GOIÂNIA
-                </h1>
-            </div>
-        </div>
-        
-        <!-- POSIÇÃO 9 - Inferior Direita (vazia) -->
-        <div class="grid-9"></div>
+    <div class="container-principal">
+        <!-- LOGO CLICÁVEL -->
+        <a href="acesso.html" class="logo-clicavel">
+            <img src="FundoSIte.png" alt="Tribo do Cerrado - Clique para Entrar">
+        </a>
     </div>
     
-    <!-- Rodapé fixo -->
+    <!-- Rodapé -->
     <div class="rodape">
         © 2025 Tribo do Cerrado Motoclube - Goiânia, GO
     </div>
