@@ -23,14 +23,12 @@
             color: #ffffff;
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             overflow-x: hidden;
-            position: relative;
         }
         
-        /* Imagem de fundo centralizada - MESMO ESTILO */
+        /* Imagem de fundo centralizada - MESMO ESTILO DA TELA INICIAL */
         .fundo-imagem {
             position: fixed;
             top: 50%;
@@ -41,37 +39,36 @@
             width: auto;
             height: auto;
             z-index: 1;
-            opacity: 0.15;
+            opacity: 0.3; /* Mais transparente para não atrapalhar o formulário */
         }
         
         .container {
+            background: rgba(20, 20, 20, 0.95);
+            border: 2px solid #444;
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
             position: relative;
             z-index: 2;
-            background: rgba(0, 0, 0, 0.9);
-            padding: 40px;
-            border-radius: 20px;
-            backdrop-filter: blur(15px);
-            border: 2px solid rgba(255, 215, 0, 0.3);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
-            max-width: 450px;
-            width: 90%;
+            margin: 20px;
         }
         
         .titulo-login {
-            font-size: clamp(2rem, 5vw, 3rem);
+            text-align: center;
+            font-size: 2.5rem;
             font-weight: 900;
             margin-bottom: 30px;
-            text-align: center;
             
+            /* Dourado metalizado */
             background: linear-gradient(45deg, 
-                #F4D03F 0%,
-                #F7DC6F 15%,
-                #F9E79F 30%,
-                #FCF3CF 45%,
-                #FFFFFF 60%,
-                #FCF3CF 75%,
-                #F7DC6F 90%,
-                #F4D03F 100%
+                #F4D03F 0%,    
+                #F7DC6F 25%,   
+                #FCF3CF 50%,   
+                #F7DC6F 75%,   
+                #F4D03F 100%   
             );
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -80,24 +77,19 @@
             text-shadow: 
                 2px 2px 0px #D4AC0D,
                 4px 4px 0px #B7950B,
-                6px 6px 10px rgba(212, 172, 13, 0.6);
-            
-            filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.5));
+                6px 6px 15px rgba(212, 172, 13, 0.7);
         }
         
         .form-group {
             margin-bottom: 25px;
-            position: relative;
         }
         
         .form-label {
             display: block;
-            color: #FFFFFF; /* Branco forte em vez de laranja */
-            font-weight: 900; /* Negrito forte */
             margin-bottom: 8px;
-            font-size: 1.1rem;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
-            letter-spacing: 0.5px;
+            font-weight: 700;
+            color: #FFD700;
+            font-size: 1rem;
         }
         
         .form-input {
@@ -115,7 +107,7 @@
         
         .form-input:focus {
             outline: none;
-            border-color: #FFD700; /* Dourado em vez de laranja */
+            border-color: #FFD700;
             box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
             background: rgba(45, 45, 45, 1);
         }
@@ -133,7 +125,7 @@
         }
         
         .password-container .form-input {
-            padding-right: 50px; /* Espaço para o botão */
+            padding-right: 50px;
         }
         
         .toggle-password {
@@ -163,7 +155,7 @@
         }
         
         .link-auxiliar {
-            color: #FFD700 !important; /* Dourado em vez de laranja */
+            color: #FFD700 !important;
             text-decoration: none;
             font-weight: 700;
             font-size: 0.9rem;
@@ -301,35 +293,25 @@
             
             if (input.type === 'password') {
                 input.type = 'text';
-                button.textContent = '🙈'; // Ícone para ocultar
+                button.textContent = '🙈';
             } else {
                 input.type = 'password';
-                button.textContent = '👁️'; // Ícone para mostrar
+                button.textContent = '👁️';
             }
         }
         
         function fazerLogin(event) {
             event.preventDefault();
             
-            const email = document.getElementById('email').value;
+            const email = document.getElementById('email').value.trim();
             const senha = document.getElementById('senha').value;
             
-            // Verificar usuários cadastrados no localStorage
-            const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
+            console.log('Tentativa de login:', email);
             
-            // Procurar usuário por email
-            const usuario = usuarios.find(u => u.email === email);
-            
-            if (usuario && usuario.senha === senha) {
-                // Login bem-sucedido
-                localStorage.setItem('usuarioLogado', JSON.stringify(usuario));
-                mostrarMensagem('Login realizado com sucesso! Redirecionando...', 'sucesso');
+            // CORREÇÃO: Verificar primeiro o admin (mais direto)
+            if (email === 'admin@tribodocerrado.org' && senha === '123456') {
+                console.log('Login de administrador detectado');
                 
-                setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 2000);
-            } else if (email === 'admin@tribodocerrado.org' && senha === '123456') {
-                // Login de administrador (fallback)
                 const adminUser = {
                     id: 'admin',
                     email: 'admin@tribodocerrado.org',
@@ -339,14 +321,42 @@
                     tipo: 'administrador'
                 };
                 
+                // Salvar usuário logado
                 localStorage.setItem('usuarioLogado', JSON.stringify(adminUser));
+                console.log('Usuário salvo no localStorage:', adminUser);
+                
                 mostrarMensagem('Login de administrador realizado! Redirecionando...', 'sucesso');
                 
+                // CORREÇÃO: Redirecionamento mais rápido e direto
                 setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 2000);
+                    console.log('Redirecionando para dashboard...');
+                    window.location.replace('dashboard.html'); // replace em vez de href
+                }, 1500); // Tempo reduzido
+                
+                return false;
+            }
+            
+            // Verificar usuários cadastrados no localStorage
+            const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
+            console.log('Usuários no localStorage:', usuarios);
+            
+            // Procurar usuário por email
+            const usuario = usuarios.find(u => u.email === email);
+            
+            if (usuario && usuario.senha === senha) {
+                console.log('Usuário encontrado:', usuario);
+                
+                // Login bem-sucedido
+                localStorage.setItem('usuarioLogado', JSON.stringify(usuario));
+                mostrarMensagem('Login realizado com sucesso! Redirecionando...', 'sucesso');
+                
+                setTimeout(() => {
+                    console.log('Redirecionando usuário comum para dashboard...');
+                    window.location.replace('dashboard.html');
+                }, 1500);
             } else {
                 // Login falhou
+                console.log('Login falhou para:', email);
                 mostrarMensagem('Email ou senha incorretos. Verifique seus dados e tente novamente.', 'erro');
             }
             
@@ -406,8 +416,16 @@ Senha: 123456
         console.log('Dados de teste:');
         console.log('Email: admin@tribodocerrado.org');
         console.log('Senha: 123456');
+        
+        // CORREÇÃO: Verificar se já está logado ao carregar a página
+        window.addEventListener('load', function() {
+            const usuarioLogado = localStorage.getItem('usuarioLogado');
+            if (usuarioLogado) {
+                console.log('Usuário já logado detectado, redirecionando...');
+                window.location.replace('dashboard.html');
+            }
+        });
     </script>
-    <script src="neon-integration.js"></script>
 </body>
 </html>
 
