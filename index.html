@@ -54,36 +54,23 @@
             opacity: 0.8;
         }
         
-        /* Container do conteúdo - MOVIDO MAIS PARA BAIXO */
+        /* Container do conteúdo */
         .conteudo {
-            position: fixed;
-            bottom: 5px; /* Movido 2cm (75px) para baixo: 80px - 75px = 5px */
-            left: 50%;
-            transform: translateX(-50%);
+            position: relative;
             z-index: 2;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 15px; /* Reduzido para acomodar botão menor */
-            width: 100%;
-            max-width: 600px;
-            padding: 0 20px;
+            gap: 30px;
+            margin-top: 200px; /* Mais espaço para não cortar a imagem */
         }
         
-        /* Botão ENTRAR - REDUZIDO EM 50% */
-        .metal-button.small-custom {
-            padding: 9px 17px; /* 50% do original (18px 35px) */
-            font-size: 11px; /* 50% do original (22px) */
-            border-radius: 6px; /* 50% do original (12px) */
-            margin: 5px; /* 50% do original (10px) */
-        }
-        
-        /* Texto MOTOCLUBE DE GOIÂNIA - Ajustado para borda inferior */
+        /* Texto MOTOCLUBE DE GOIÂNIA - Posicionado abaixo do botão */
         .titulo-motoclube {
-            font-size: clamp(1.8rem, 4vw, 2.4rem); /* Responsivo e menor */
+            font-size: 2.8rem; /* Exatamente 2x o tamanho do botão (1.4rem * 2) */
             font-weight: 900;
             text-align: center;
-            margin-top: 15px;
+            margin-top: 25px;
             
             /* Dourado 30% MAIS CLARO e mais forte */
             background: linear-gradient(45deg, 
@@ -136,12 +123,12 @@
             }
             
             .conteudo {
-                bottom: 5px; /* Mantém posição baixa em tablets */
-                gap: 12px;
+                margin-top: 80px;
+                gap: 30px;
             }
             
             .titulo-motoclube {
-                font-size: clamp(1.4rem, 5vw, 2rem);
+                font-size: 2.2rem; /* Mantém proporção 2x */
             }
         }
         
@@ -152,20 +139,17 @@
             }
             
             .conteudo {
-                bottom: 5px; /* Mantém posição baixa em mobile */
-                gap: 10px;
-                padding: 0 15px;
+                margin-top: 60px;
+                gap: 25px;
             }
             
             .titulo-motoclube {
-                font-size: clamp(1.2rem, 6vw, 1.8rem);
-                margin-top: 8px;
+                font-size: 2rem; /* Mantém proporção 2x */
             }
             
             .rodape {
                 font-size: 0.8rem;
-                bottom: 10px;
-                display: none; /* Oculta rodapé em mobile para dar mais espaço */
+                bottom: 15px;
             }
         }
         
@@ -197,8 +181,8 @@
         
         <!-- Conteúdo principal -->
         <div class="conteudo">
-            <!-- Botão ENTRAR com novo padrão metalizado - REDUZIDO EM 50% -->
-            <a href="acesso.html" class="metal-button primary small-custom">
+            <!-- Botão ENTRAR com novo padrão metalizado -->
+            <a href="acesso.html" class="metal-button primary large">
                 ENTRAR
             </a>
             
