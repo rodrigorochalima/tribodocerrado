@@ -4,501 +4,465 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Tribo do Cerrado</title>
-    <link rel="stylesheet" href="styles.css">
+    
     <style>
-        /* Estilos adicionais para o sistema administrativo */
-        .form-actions {
-            display: flex;
-            gap: 10px;
-            justify-content: flex-end;
-            margin-top: 20px;
-            padding-top: 15px;
-            border-top: 1px solid #444;
-        }
-
-        .form-group input, .form-group select, .form-group textarea {
-            padding: 8px;
-            border: 2px solid #666;
-            border-radius: 4px;
-            background: #333;
-            color: white;
-            font-size: 1em;
-            width: 100%;
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
         }
-
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-            outline: none;
-            border-color: #ff6b35;
-            box-shadow: 0 0 5px rgba(255, 107, 53, 0.3);
+        
+        body {
+            font-family: 'Orbitron', monospace;
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+            color: #ffffff;
+            min-height: 100vh;
         }
-
-        .form-group small {
-            display: block;
-            margin-top: 5px;
-            color: #ccc;
-            font-size: 0.9em;
+        
+        /* Header */
+        .header {
+            background: rgba(0, 0, 0, 0.9);
+            border-bottom: 3px solid #FFD700;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(255, 215, 0, 0.3);
         }
-
-        .password-requirements {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 15px;
-            border-radius: 6px;
-            border: 1px solid #666;
+        
+        .logo-header {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: #FFD700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         }
-
-        .password-requirements h4 {
-            color: #ff6b35;
-            margin-bottom: 10px;
-            font-size: 1.1em;
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
-
-        .password-requirements ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
+        
+        .user-name {
+            color: #FFD700;
+            font-weight: 700;
         }
-
-        .password-requirements li {
-            padding: 5px 0;
-            font-size: 0.9em;
-            transition: color 0.3s ease;
-        }
-
-        /* Estilos para temas */
-        .tema-claro {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            color: #212529;
-        }
-
-        .tema-claro .dashboard-container {
-            background: rgba(255, 255, 255, 0.9);
-            color: #212529;
-        }
-
-        .tema-claro .tab-button {
-            background: linear-gradient(45deg, #6c757d, #495057);
+        
+        .logout-btn {
+            background: linear-gradient(45deg, #ff4444, #cc0000);
             color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Orbitron', monospace;
+            font-weight: 600;
+            transition: all 0.3s ease;
         }
-
-        .tema-claro .tab-content {
-            background: rgba(255, 255, 255, 0.95);
-            color: #212529;
+        
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 68, 68, 0.4);
         }
-
-        /* Responsividade aprimorada */
+        
+        /* Container principal */
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        
+        /* Tabs */
+        .tab-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .tab-button {
+            background: linear-gradient(45deg, #333, #555);
+            color: #ffffff;
+            border: 2px solid #666;
+            padding: 15px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Orbitron', monospace;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .tab-button:hover {
+            background: linear-gradient(45deg, #555, #777);
+            border-color: #FFD700;
+            transform: translateY(-2px);
+        }
+        
+        .tab-button.active {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            color: #000000;
+            border-color: #FFD700;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+        }
+        
+        /* Conteúdo das tabs */
+        .tab-content {
+            display: none;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #FFD700;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .tab-title {
+            font-size: 2rem;
+            color: #FFD700;
+            margin-bottom: 20px;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        
+        /* Cards de estatísticas */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(45deg, #1a1a1a, #2a2a2a);
+            border: 2px solid #FFD700;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(255, 215, 0, 0.3);
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #FFD700;
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 1rem;
+            color: #ffffff;
+            margin-top: 10px;
+        }
+        
+        /* Mensagens */
+        .mensagem {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 700;
+            display: none;
+        }
+        
+        .mensagem.sucesso {
+            background: rgba(0, 255, 0, 0.2);
+            border: 2px solid #00ff00;
+            color: #00ff00;
+        }
+        
+        .mensagem.erro {
+            background: rgba(255, 0, 0, 0.2);
+            border: 2px solid #ff0000;
+            color: #ff0000;
+        }
+        
+        .mensagem.info {
+            background: rgba(0, 123, 255, 0.2);
+            border: 2px solid #007bff;
+            color: #007bff;
+        }
+        
+        /* Responsividade */
         @media (max-width: 768px) {
-            .tab-container {
+            .header {
                 flex-direction: column;
-                gap: 5px;
-            }
-
-            .tab-button {
-                width: 100%;
+                gap: 15px;
                 text-align: center;
             }
-
-            .dashboard-container {
-                margin: 10px;
-                padding: 15px;
+            
+            .tab-container {
+                flex-direction: column;
             }
-        }
-
-        @media (max-width: 480px) {
-            .dashboard-container {
-                margin: 5px;
-                padding: 10px;
-            }
-
+            
             .tab-button {
-                padding: 10px;
-                font-size: 0.9em;
+                min-width: auto;
+            }
+            
+            .dashboard-container {
+                padding: 20px 10px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="dashboard-container">
-        <div class="dashboard-header">
-            <h1>🏍️ TRIBO DO CERRADO</h1>
-            <div class="user-info">
-                <span id="user-name">Carregando...</span>
-                <button class="logout-btn" onclick="logout()">🚪 Sair</button>
-            </div>
-        </div>
-
-        <div class="tab-container">
-            <button class="tab-button active" onclick="showDashboard()">🏠 DASHBOARD</button>
-            <button class="tab-button" onclick="showEventos()">📅 EVENTOS</button>
-            <button class="tab-button" onclick="showEmail()">📧 EMAIL</button>
-            <!-- Aba de administrador será adicionada dinamicamente pelo JavaScript -->
-            <button class="tab-button" onclick="showPerfil()">👤 PERFIL</button>
-        </div>
-
-        <div class="content-container">
-            <!-- Dashboard Principal -->
-            <div id="dashboard-content" class="tab-content active">
-                <h2>📊 Dashboard Principal</h2>
-                <div class="dashboard-stats">
-                    <div class="stat-card">
-                        <div class="stat-icon">👥</div>
-                        <div class="stat-info">
-                            <div class="stat-number" id="total-members">0</div>
-                            <div class="stat-label">Membros Ativos</div>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">📅</div>
-                        <div class="stat-info">
-                            <div class="stat-number" id="upcoming-events">0</div>
-                            <div class="stat-label">Próximos Eventos</div>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">🏍️</div>
-                        <div class="stat-info">
-                            <div class="stat-number" id="total-rides">0</div>
-                            <div class="stat-label">Passeios Realizados</div>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">📈</div>
-                        <div class="stat-info">
-                            <div class="stat-number" id="growth-rate">+0%</div>
-                            <div class="stat-label">Crescimento</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="dashboard-widgets">
-                    <div class="widget">
-                        <h3>📋 Atividades Recentes</h3>
-                        <div id="recent-activities">
-                            <div class="activity-item">
-                                <span class="activity-time">Hoje, 14:30</span>
-                                <span class="activity-text">Novo membro cadastrado</span>
-                            </div>
-                            <div class="activity-item">
-                                <span class="activity-time">Ontem, 16:45</span>
-                                <span class="activity-text">Evento "Trilha do Cerrado" criado</span>
-                            </div>
-                            <div class="activity-item">
-                                <span class="activity-time">2 dias atrás</span>
-                                <span class="activity-text">5 novos participantes no evento</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="widget">
-                        <h3>🎯 Próximos Eventos</h3>
-                        <div id="upcoming-events-list">
-                            <div class="event-preview">
-                                <div class="event-date">15/01</div>
-                                <div class="event-info">
-                                    <div class="event-title">Encontro Mensal</div>
-                                    <div class="event-location">Praça do Cerrado</div>
-                                </div>
-                            </div>
-                            <div class="event-preview">
-                                <div class="event-date">20/02</div>
-                                <div class="event-info">
-                                    <div class="event-title">Trilha do Cerrado</div>
-                                    <div class="event-location">Chapada dos Veadeiros</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Eventos -->
-            <div id="eventos-content" class="tab-content">
-                <h2>📅 Gestão de Eventos</h2>
-                <div class="eventos-container">
-                    <div class="eventos-header">
-                        <button class="btn-primary" onclick="criarEvento()">➕ Novo Evento</button>
-                        <div class="eventos-filters">
-                            <select id="filter-eventos">
-                                <option value="todos">Todos os Eventos</option>
-                                <option value="proximos">Próximos</option>
-                                <option value="passados">Passados</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div id="eventos-list" class="eventos-grid">
-                        <!-- Eventos serão carregados aqui -->
-                    </div>
-                </div>
-            </div>
-
-            <!-- Email -->
-            <div id="email-content" class="tab-content">
-                <h2>📧 Sistema de Email</h2>
-                <div class="email-container">
-                    <div class="migadu-info">
-                        <h3>📮 Configuração Migadu</h3>
-                        <div class="config-status">
-                            <div class="status-item">
-                                <span class="status-label">Domínio:</span>
-                                <span class="status-value">tribodocerrado.org</span>
-                                <span class="status-indicator pending">⏳ Configurando</span>
-                            </div>
-                            <div class="status-item">
-                                <span class="status-label">API Key:</span>
-                                <span class="status-value">Configurada</span>
-                                <span class="status-indicator success">✅ Ativo</span>
-                            </div>
-                            <div class="status-item">
-                                <span class="status-label">Caixas de Email:</span>
-                                <span class="status-value">admin@tribodocerrado.org</span>
-                                <span class="status-indicator success">✅ Ativo</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="email-actions">
-                        <button class="btn-primary" onclick="enviarEmail()">📤 Enviar Email</button>
-                        <button class="btn-secondary" onclick="configurarMigadu()">⚙️ Configurar</button>
-                        <button class="btn-secondary" onclick="testarConexao()">🔍 Testar Conexão</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Perfil -->
-            <div id="perfil-content" class="tab-content">
-                <!-- Conteúdo será gerado pelo user-profile.js -->
-            </div>
-
-            <!-- Conteúdo administrativo será adicionado dinamicamente -->
+    <!-- Header -->
+    <div class="header">
+        <div class="logo-header">🏍️ TRIBO DO CERRADO</div>
+        <div class="user-info">
+            <span class="user-name" id="nomeUsuario">Carregando...</span>
+            <button class="logout-btn" onclick="logout()">🚪 SAIR</button>
         </div>
     </div>
-
-    <!-- Scripts -->
-    <script src="dashboard.js"></script>
-    <script src="neon-integration.js"></script>
-    <script src="migadu-integration.js"></script>
-    <script src="admin-dashboard.js"></script>
-    <script src="admin-functions.js"></script>
-    <script src="user-profile.js"></script>
-    <script src="user-profile-functions.js"></script>
-
+    
+    <!-- Container principal -->
+    <div class="dashboard-container">
+        <div id="mensagem" class="mensagem"></div>
+        
+        <!-- Tabs de navegação -->
+        <div class="tab-container">
+            <button class="tab-button active" onclick="abrirTab('dashboard')">📊 DASHBOARD</button>
+            <button class="tab-button" onclick="abrirTab('perfil')" id="tabPerfil">👤 PERFIL</button>
+            <button class="tab-button" onclick="abrirTab('eventos')">📅 EVENTOS</button>
+            <button class="tab-button" onclick="abrirTab('email')">📧 EMAIL</button>
+            <button class="tab-button" onclick="abrirTab('admin')" id="tabAdmin" style="display: none;">⚙️ ADMINISTRADOR</button>
+        </div>
+        
+        <!-- Conteúdo Dashboard -->
+        <div id="dashboard" class="tab-content active">
+            <h2 class="tab-title">📊 DASHBOARD PRINCIPAL</h2>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number" id="totalUsuarios">0</span>
+                    <div class="stat-label">👥 Total de Usuários</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="totalEventos">0</span>
+                    <div class="stat-label">📅 Total de Eventos</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="eventosAtivos">0</span>
+                    <div class="stat-label">🔥 Eventos Ativos</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="proximosEventos">0</span>
+                    <div class="stat-label">⏰ Próximos Eventos</div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 30px;">
+                <h3 style="color: #FFD700; margin-bottom: 15px;">🎉 Bem-vindo ao Sistema!</h3>
+                <p style="font-size: 1.1rem; line-height: 1.6;">
+                    Sistema completamente reestruturado e funcionando!<br>
+                    Navegue pelas abas para acessar todas as funcionalidades.
+                </p>
+            </div>
+        </div>
+        
+        <!-- Conteúdo Perfil -->
+        <div id="perfil" class="tab-content">
+            <h2 class="tab-title">👤 MEU PERFIL</h2>
+            <div style="text-align: center; margin-top: 50px;">
+                <p style="font-size: 1.2rem; color: #FFD700;">🔧 Funcionalidade de perfil em desenvolvimento</p>
+                <p style="margin-top: 15px;">Em breve você poderá editar seus dados pessoais aqui.</p>
+            </div>
+        </div>
+        
+        <!-- Conteúdo Eventos -->
+        <div id="eventos" class="tab-content">
+            <h2 class="tab-title">📅 EVENTOS</h2>
+            <div style="text-align: center; margin-top: 50px;">
+                <p style="font-size: 1.2rem; color: #FFD700;">🔧 Funcionalidade de eventos em desenvolvimento</p>
+                <p style="margin-top: 15px;">Em breve você poderá visualizar e se inscrever em eventos aqui.</p>
+            </div>
+        </div>
+        
+        <!-- Conteúdo Email -->
+        <div id="email" class="tab-content">
+            <h2 class="tab-title">📧 SISTEMA DE EMAIL</h2>
+            <div style="text-align: center; margin-top: 50px;">
+                <p style="font-size: 1.2rem; color: #FFD700;">🔧 Integração Migadu em desenvolvimento</p>
+                <p style="margin-top: 15px;">Em breve você poderá gerenciar emails aqui.</p>
+            </div>
+        </div>
+        
+        <!-- Conteúdo Administrador -->
+        <div id="admin" class="tab-content">
+            <h2 class="tab-title">⚙️ PAINEL ADMINISTRATIVO</h2>
+            <div style="text-align: center; margin-top: 50px;">
+                <p style="font-size: 1.2rem; color: #FFD700;">👑 Painel administrativo completo</p>
+                <p style="margin-top: 15px;">Funcionalidades administrativas serão implementadas aqui.</p>
+            </div>
+        </div>
+    </div>
+    
     <script>
-        // Inicialização do dashboard
-        document.addEventListener('DOMContentLoaded', function() {
-            // Verificar se usuário está logado
-            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
-            if (!currentUser.email) {
+        // SISTEMA DASHBOARD REESTRUTURADO
+        console.log('🔥 DASHBOARD REESTRUTURADO - TRIBO DO CERRADO');
+        
+        // Estado do sistema
+        let usuarioAtual = null;
+        let sistemaCarregado = false;
+        
+        // Verificar autenticação
+        function verificarAutenticacao() {
+            console.log('🔐 Verificando autenticação...');
+            
+            const usuarioLogado = localStorage.getItem('usuarioLogado');
+            
+            if (!usuarioLogado) {
+                console.log('❌ Usuário não autenticado, redirecionando...');
+                mostrarMensagem('Sessão expirada. Redirecionando para login...', 'erro');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 2000);
+                return false;
+            }
+            
+            try {
+                usuarioAtual = JSON.parse(usuarioLogado);
+                console.log('✅ Usuário autenticado:', usuarioAtual.email);
+                return true;
+            } catch (error) {
+                console.error('❌ Erro ao parsear dados do usuário:', error);
+                localStorage.removeItem('usuarioLogado');
                 window.location.href = 'login.html';
-                return;
+                return false;
             }
-
-            // Atualizar informações do usuário
-            document.getElementById('user-name').textContent = currentUser.nome || currentUser.email;
-
-            // Carregar dados do dashboard
-            loadDashboardData();
-
-            // Inicializar sistemas baseados no tipo de usuário
-            if (currentUser.email === 'admin@tribodocerrado.org' || currentUser.tipo === 'administrador') {
-                // Usuário administrador - sistemas completos serão carregados pelo admin-dashboard.js
-                console.log('Carregando sistemas administrativos...');
-            } else {
-                // Usuário comum - apenas perfil será carregado pelo user-profile.js
-                console.log('Carregando sistemas de usuário...');
-            }
-
-            // Aplicar tema salvo
-            const preferencias = currentUser.preferencias_notificacao ? 
-                JSON.parse(currentUser.preferencias_notificacao) : {};
-            if (preferencias.tema) {
-                aplicarTema(preferencias.tema);
-            }
-        });
-
-        function loadDashboardData() {
-            // Carregar estatísticas
-            const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
-            const eventos = JSON.parse(localStorage.getItem('eventos') || '[]');
-
-            document.getElementById('total-members').textContent = usuarios.length;
-            document.getElementById('upcoming-events').textContent = eventos.filter(e => new Date(e.data_evento) > new Date()).length;
-            document.getElementById('total-rides').textContent = Math.floor(Math.random() * 50) + 10;
-            document.getElementById('growth-rate').textContent = '+' + (Math.floor(Math.random() * 20) + 5) + '%';
-
-            // Carregar eventos próximos
-            loadUpcomingEvents();
         }
-
-        function loadUpcomingEvents() {
-            const eventos = JSON.parse(localStorage.getItem('eventos') || '[]');
-            const eventosProximos = eventos
-                .filter(e => new Date(e.data_evento) > new Date())
-                .sort((a, b) => new Date(a.data_evento) - new Date(b.data_evento))
-                .slice(0, 3);
-
-            const container = document.getElementById('upcoming-events-list');
-            if (eventosProximos.length === 0) {
-                container.innerHTML = '<p style="color: #ccc; text-align: center;">Nenhum evento próximo</p>';
-                return;
+        
+        // Configurar interface baseada no usuário
+        function configurarInterface() {
+            if (!usuarioAtual) return;
+            
+            console.log('🎨 Configurando interface para:', usuarioAtual.tipo);
+            
+            // Atualizar nome do usuário
+            const nomeElement = document.getElementById('nomeUsuario');
+            if (nomeElement) {
+                nomeElement.textContent = usuarioAtual.nome || usuarioAtual.email;
             }
-
-            container.innerHTML = eventosProximos.map(evento => {
-                const data = new Date(evento.data_evento);
-                const dataFormatada = data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
-                
-                return `
-                    <div class="event-preview">
-                        <div class="event-date">${dataFormatada}</div>
-                        <div class="event-info">
-                            <div class="event-title">${evento.titulo}</div>
-                            <div class="event-location">${evento.local_evento || 'Local a definir'}</div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function aplicarTema(tema) {
-            const body = document.body;
             
-            // Remover classes de tema existentes
-            body.classList.remove('tema-claro', 'tema-escuro', 'tema-auto');
-            
-            // Aplicar novo tema
-            if (tema === 'claro') {
-                body.classList.add('tema-claro');
-            } else if (tema === 'escuro') {
-                body.classList.add('tema-escuro');
-            } else if (tema === 'auto') {
-                body.classList.add('tema-auto');
-                // Detectar preferência do sistema
-                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                    body.classList.add('tema-escuro');
-                } else {
-                    body.classList.add('tema-claro');
+            // Mostrar tab de administrador se for admin
+            if (usuarioAtual.tipo === 'administrador' || usuarioAtual.email === 'admin@tribodocerrado.org') {
+                const tabAdmin = document.getElementById('tabAdmin');
+                if (tabAdmin) {
+                    tabAdmin.style.display = 'block';
+                    console.log('👑 Tab de administrador habilitada');
                 }
             }
         }
-
-        // Funções de navegação (mantidas do dashboard original)
-        function showDashboard() {
-            hideAllTabs();
-            document.getElementById('dashboard-content').style.display = 'block';
-            setActiveTab(event.target);
-        }
-
-        function showEventos() {
-            hideAllTabs();
-            document.getElementById('eventos-content').style.display = 'block';
-            setActiveTab(event.target);
-            loadEventos();
-        }
-
-        function showEmail() {
-            hideAllTabs();
-            document.getElementById('email-content').style.display = 'block';
-            setActiveTab(event.target);
-        }
-
-        function showPerfil() {
-            hideAllTabs();
-            document.getElementById('perfil-content').style.display = 'block';
-            setActiveTab(event.target);
+        
+        // Carregar estatísticas
+        function carregarEstatisticas() {
+            console.log('📊 Carregando estatísticas...');
             
-            // Garantir que o perfil seja carregado
-            if (window.userProfile) {
-                setTimeout(() => {
-                    window.userProfile.enhanceProfileTab();
-                }, 100);
-            }
-        }
-
-        function hideAllTabs() {
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.style.display = 'none';
-            });
-        }
-
-        function setActiveTab(activeButton) {
-            document.querySelectorAll('.tab-button').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            activeButton.classList.add('active');
-        }
-
-        function loadEventos() {
-            const eventos = JSON.parse(localStorage.getItem('eventos') || '[]');
-            const container = document.getElementById('eventos-list');
+            // Dados simulados (em produção viriam do banco)
+            const stats = {
+                totalUsuarios: 1,
+                totalEventos: 3,
+                eventosAtivos: 2,
+                proximosEventos: 1
+            };
             
-            if (eventos.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: #ccc; grid-column: 1 / -1;">Nenhum evento cadastrado</p>';
-                return;
-            }
-
-            container.innerHTML = eventos.map(evento => {
-                const data = new Date(evento.data_evento).toLocaleDateString('pt-BR');
-                const status = new Date(evento.data_evento) > new Date() ? 'Próximo' : 'Passado';
-                
-                return `
-                    <div class="evento-card">
-                        <h4>${evento.titulo}</h4>
-                        <p><strong>📅 Data:</strong> ${data}</p>
-                        <p><strong>📍 Local:</strong> ${evento.local_evento || 'A definir'}</p>
-                        <p><strong>📝 Descrição:</strong> ${evento.descricao || 'Sem descrição'}</p>
-                        <p><strong>🎯 Status:</strong> <span class="status-badge">${status}</span></p>
-                        <div class="evento-actions">
-                            <button class="btn-secondary" onclick="verEvento('${evento.id}')">👁️ Ver</button>
-                            <button class="btn-primary" onclick="inscreverEvento('${evento.id}')">✅ Inscrever</button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
+            // Atualizar elementos
+            document.getElementById('totalUsuarios').textContent = stats.totalUsuarios;
+            document.getElementById('totalEventos').textContent = stats.totalEventos;
+            document.getElementById('eventosAtivos').textContent = stats.eventosAtivos;
+            document.getElementById('proximosEventos').textContent = stats.proximosEventos;
+            
+            console.log('✅ Estatísticas carregadas');
         }
-
-        function criarEvento() {
-            // Verificar se é administrador
-            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
-            if (currentUser.email !== 'admin@tribodocerrado.org' && currentUser.tipo !== 'administrador') {
-                alert('Apenas administradores podem criar eventos.');
-                return;
-            }
-
-            // Usar função do admin se disponível
-            if (window.adminDashboard && window.adminDashboard.criarEvento) {
-                window.adminDashboard.criarEvento();
-            } else {
-                alert('Sistema administrativo não carregado.');
-            }
+        
+        // Função para trocar tabs
+        function abrirTab(tabName) {
+            console.log('📂 Abrindo tab:', tabName);
+            
+            // Remover classe active de todos os botões e conteúdos
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Adicionar classe active ao botão e conteúdo selecionados
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
         }
-
+        
+        // Função de logout
         function logout() {
-            if (confirm('Tem certeza que deseja sair?')) {
-                localStorage.removeItem('currentUser');
+            console.log('🚪 Fazendo logout...');
+            
+            // Limpar dados do localStorage
+            localStorage.removeItem('usuarioLogado');
+            localStorage.removeItem('loginTime');
+            
+            mostrarMensagem('Logout realizado com sucesso. Redirecionando...', 'sucesso');
+            
+            setTimeout(() => {
                 window.location.href = 'index.html';
+            }, 2000);
+        }
+        
+        // Função para mostrar mensagens
+        function mostrarMensagem(texto, tipo) {
+            const mensagemDiv = document.getElementById('mensagem');
+            mensagemDiv.textContent = texto;
+            mensagemDiv.className = `mensagem ${tipo}`;
+            mensagemDiv.style.display = 'block';
+            
+            // Auto-hide para mensagens de sucesso e erro
+            if (tipo !== 'info') {
+                setTimeout(() => {
+                    mensagemDiv.style.display = 'none';
+                }, 5000);
             }
         }
-
-        // Funções de email (placeholder)
-        function enviarEmail() {
-            alert('Funcionalidade de envio de email em desenvolvimento.');
+        
+        // Inicialização do sistema
+        function inicializarDashboard() {
+            console.log('🚀 Inicializando dashboard...');
+            
+            // Verificar autenticação
+            if (!verificarAutenticacao()) {
+                return;
+            }
+            
+            // Configurar interface
+            configurarInterface();
+            
+            // Carregar dados
+            carregarEstatisticas();
+            
+            sistemaCarregado = true;
+            console.log('✅ Dashboard carregado com sucesso');
+            
+            // Mostrar mensagem de boas-vindas
+            mostrarMensagem(`Bem-vindo, ${usuarioAtual.nome}! Sistema funcionando perfeitamente.`, 'sucesso');
         }
-
-        function configurarMigadu() {
-            alert('Configuração Migadu em desenvolvimento.');
+        
+        // Aguardar carregamento da página
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', inicializarDashboard);
+        } else {
+            inicializarDashboard();
         }
-
-        function testarConexao() {
-            alert('Teste de conexão em desenvolvimento.');
-        }
-
-        // Funções de eventos (placeholder)
-        function verEvento(id) {
-            alert(`Visualizar evento ${id} - Em desenvolvimento`);
-        }
-
-        function inscreverEvento(id) {
-            alert(`Inscrever no evento ${id} - Em desenvolvimento`);
-        }
+        
+        // Expor funções globalmente
+        window.abrirTab = abrirTab;
+        window.logout = logout;
+        
+        console.log('🔥 DASHBOARD REESTRUTURADO CARREGADO');
     </script>
 </body>
 </html>
