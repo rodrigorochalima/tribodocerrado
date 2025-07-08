@@ -22,94 +22,96 @@
             background: #000000;
             color: #ffffff;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
             overflow: hidden;
         }
         
-        /* Container principal */
-        .container-principal {
-            width: 100%;
+        /* SISTEMA GRID 3x3 (JOGO DA VELHA) */
+        .grid-container {
+            width: 100vw;
             height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr; /* 3 colunas iguais */
+            grid-template-rows: 1fr 1fr 1fr;    /* 3 linhas iguais */
+            position: relative;
+        }
+        
+        /* Posições do grid (1-9) */
+        .grid-1 { grid-area: 1 / 1 / 2 / 2; } /* Superior esquerda */
+        .grid-2 { grid-area: 1 / 2 / 2 / 3; } /* Superior centro */
+        .grid-3 { grid-area: 1 / 3 / 2 / 4; } /* Superior direita */
+        .grid-4 { grid-area: 2 / 1 / 3 / 2; } /* Meio esquerda */
+        .grid-5 { grid-area: 2 / 2 / 3 / 3; } /* Centro (logo) */
+        .grid-6 { grid-area: 2 / 3 / 3 / 4; } /* Meio direita */
+        .grid-7 { grid-area: 3 / 1 / 4 / 2; } /* Inferior esquerda */
+        .grid-8 { grid-area: 3 / 2 / 4 / 3; } /* Inferior centro (DESTINO) */
+        .grid-9 { grid-area: 3 / 3 / 4 / 4; } /* Inferior direita */
+        
+        /* Imagem de fundo centralizada na posição 5 (centro) */
+        .fundo-imagem {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .fundo-imagem img {
+            max-width: 90%;
+            max-height: 90%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+        }
+        
+        /* POSIÇÃO 8 - Inferior Centro (DESTINO DOS ELEMENTOS) */
+        .posicao-8 {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            position: relative;
+            gap: 20px;
+            padding: 20px;
         }
         
-        /* Imagem de fundo centralizada */
-        .fundo-imagem {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            max-width: 90%;
-            max-height: 70%;
-            width: auto;
-            height: auto;
-            z-index: 1;
-            opacity: 0.8;
+        /* Botão ENTRAR na posição 8 */
+        .botao-entrar {
+            /* Usando o estilo metal-button existente */
         }
         
-        /* Container do conteúdo */
-        .conteudo {
-            position: relative;
-            z-index: 2;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 30px;
-            margin-top: 200px; /* Mais espaço para não cortar a imagem */
-        }
-        
-        /* Texto MOTOCLUBE DE GOIÂNIA - Posicionado abaixo do botão */
+        /* Texto MOTOCLUBE DE GOIÂNIA na posição 8 */
         .titulo-motoclube {
-            font-size: 2.8rem; /* Exatamente 2x o tamanho do botão (1.4rem * 2) */
+            font-size: 2.2rem;
             font-weight: 900;
             text-align: center;
-            margin-top: 25px;
             
-            /* Dourado 30% MAIS CLARO e mais forte */
+            /* Dourado metalizado */
             background: linear-gradient(45deg, 
-                #F4D03F 0%,    /* Dourado mais claro */
-                #F7DC6F 10%,   /* Dourado claro */
-                #F9E79F 20%,   /* Amarelo dourado claro */
-                #FCF3CF 30%,   /* Creme dourado */
-                #FFFEF7 40%,   /* Quase branco dourado */
-                #FFFFFF 50%,   /* Branco puro */
-                #FFFEF7 60%,   /* Quase branco dourado */
-                #FCF3CF 70%,   /* Creme dourado */
-                #F9E79F 80%,   /* Amarelo dourado claro */
-                #F7DC6F 90%,   /* Dourado claro */
-                #F4D03F 100%   /* Dourado mais claro */
+                #F4D03F 0%,    
+                #F7DC6F 25%,   
+                #FCF3CF 50%,   
+                #F7DC6F 75%,   
+                #F4D03F 100%   
             );
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             
-            /* Sombra 3D metalizada mais forte */
+            /* Sombra 3D metalizada */
             text-shadow: 
                 2px 2px 0px #D4AC0D,
                 4px 4px 0px #B7950B,
-                6px 6px 0px #9A7D0A,
-                8px 8px 15px rgba(212, 172, 13, 0.7);
+                6px 6px 15px rgba(212, 172, 13, 0.7);
             
-            filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.8));
-            
-            /* Efeito 3D no texto */
-            transform: perspective(400px) rotateX(5deg);
+            filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.6));
         }
         
-        /* Rodapé */
+        /* Rodapé fixo */
         .rodape {
             position: fixed;
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            z-index: 2;
+            z-index: 10;
             color: rgba(255, 255, 255, 0.7);
             font-size: 0.9rem;
             text-align: center;
@@ -117,34 +119,19 @@
         
         /* Responsividade */
         @media (max-width: 768px) {
-            .fundo-imagem {
-                max-width: 95%;
-                max-height: 60%;
-            }
-            
-            .conteudo {
-                margin-top: 80px;
-                gap: 30px;
-            }
-            
             .titulo-motoclube {
-                font-size: 2.2rem; /* Mantém proporção 2x */
+                font-size: 1.8rem;
             }
         }
         
         @media (max-width: 480px) {
-            .fundo-imagem {
-                max-width: 98%;
-                max-height: 50%;
-            }
-            
-            .conteudo {
-                margin-top: 60px;
-                gap: 25px;
-            }
-            
             .titulo-motoclube {
-                font-size: 2rem; /* Mantém proporção 2x */
+                font-size: 1.5rem;
+            }
+            
+            .posicao-8 {
+                gap: 15px;
+                padding: 15px;
             }
             
             .rodape {
@@ -153,7 +140,7 @@
             }
         }
         
-        /* Animação de entrada */
+        /* Animações */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -165,7 +152,7 @@
             }
         }
         
-        .metal-button, .titulo-motoclube {
+        .botao-entrar, .titulo-motoclube {
             animation: fadeInUp 1s ease-out;
         }
         
@@ -175,27 +162,54 @@
     </style>
 </head>
 <body>
-    <div class="container-principal">
-        <!-- Imagem de fundo centralizada -->
-        <img src="FundoSIte.png" alt="Fundo Tribo do Cerrado" class="fundo-imagem">
+    <div class="grid-container">
+        <!-- POSIÇÃO 1 - Superior Esquerda (vazia) -->
+        <div class="grid-1"></div>
         
-        <!-- Conteúdo principal -->
-        <div class="conteudo">
-            <!-- Botão ENTRAR com novo padrão metalizado -->
-            <a href="acesso.html" class="metal-button primary large">
-                ENTRAR
-            </a>
-            
-            <!-- Título MOTOCLUBE DE GOIÂNIA (posicionado abaixo) -->
-            <h1 class="titulo-motoclube">
-                MOTOCLUBE DE GOIÂNIA
-            </h1>
+        <!-- POSIÇÃO 2 - Superior Centro (vazia) -->
+        <div class="grid-2"></div>
+        
+        <!-- POSIÇÃO 3 - Superior Direita (vazia) -->
+        <div class="grid-3"></div>
+        
+        <!-- POSIÇÃO 4 - Meio Esquerda (vazia) -->
+        <div class="grid-4"></div>
+        
+        <!-- POSIÇÃO 5 - Centro (LOGO/IMAGEM DE FUNDO) -->
+        <div class="grid-5">
+            <div class="fundo-imagem">
+                <img src="FundoSIte.png" alt="Tribo do Cerrado Logo">
+            </div>
         </div>
         
-        <!-- Rodapé -->
-        <div class="rodape">
-            © 2025 Tribo do Cerrado Motoclube - Goiânia, GO
+        <!-- POSIÇÃO 6 - Meio Direita (vazia) -->
+        <div class="grid-6"></div>
+        
+        <!-- POSIÇÃO 7 - Inferior Esquerda (vazia) -->
+        <div class="grid-7"></div>
+        
+        <!-- POSIÇÃO 8 - Inferior Centro (BOTÃO + TEXTO) -->
+        <div class="grid-8">
+            <div class="posicao-8">
+                <!-- Botão ENTRAR -->
+                <a href="acesso.html" class="metal-button primary large botao-entrar">
+                    ENTRAR
+                </a>
+                
+                <!-- Título MOTOCLUBE DE GOIÂNIA -->
+                <h1 class="titulo-motoclube">
+                    MOTOCLUBE DE GOIÂNIA
+                </h1>
+            </div>
         </div>
+        
+        <!-- POSIÇÃO 9 - Inferior Direita (vazia) -->
+        <div class="grid-9"></div>
+    </div>
+    
+    <!-- Rodapé fixo -->
+    <div class="rodape">
+        © 2025 Tribo do Cerrado Motoclube - Goiânia, GO
     </div>
 </body>
 </html>
