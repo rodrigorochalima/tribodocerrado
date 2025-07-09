@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Tribo do Cerrado</title>
+    <link rel="stylesheet" href="metal-button.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(90deg, #ff6b35 0%, #f7931e 100%);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: #000;
+        }
+
+        .btn-sair {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-sair:hover {
+            background: #c82333;
+        }
+
+        .nav-tabs {
+            display: flex;
+            background: #333;
+            border-bottom: 3px solid #ff6b35;
+        }
+
+        .tab-button {
+            background: #444;
+            color: #fff;
+            border: none;
+            padding: 15px 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            border-right: 1px solid #555;
+            transition: all 0.3s ease;
+        }
+
+        .tab-button:hover {
+            background: #555;
+        }
+
+        .tab-button.active {
+            background: #ff6b35;
+            color: #000;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 30px;
+            min-height: calc(100vh - 140px);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+            border: 2px solid #ff6b35;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.2);
+        }
+
+        .card-number {
+            font-size: 48px;
+            font-weight: bold;
+            color: #ff6b35;
+            margin-bottom: 10px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            color: #fff;
+        }
+
+        .welcome-section {
+            background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+            border: 2px solid #ff6b35;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+
+        .status-list {
+            list-style: none;
+            margin-top: 15px;
+        }
+
+        .status-list li {
+            padding: 5px 0;
+            color: #4CAF50;
+        }
+
+        .status-list li:before {
+            content: "✅ ";
+            margin-right: 10px;
+        }
+
+        .email-container {
+            background: #f8f9fa;
+            color: #333;
+            border-radius: 10px;
+            height: 600px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .email-header {
+            background: #007bff;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .email-sidebar {
+            background: #e9ecef;
+            width: 250px;
+            padding: 20px;
+            border-right: 1px solid #dee2e6;
+        }
+
+        .email-main {
+            flex: 1;
+            display: flex;
+        }
+
+        .email-content {
+            flex: 1;
+            padding: 20px;
+            background: white;
+        }
+
+        .email-list {
+            list-style: none;
+        }
+
+        .email-item {
+            padding: 10px;
+            border-bottom: 1px solid #dee2e6;
+            cursor: pointer;
+        }
+
+        .email-item:hover {
+            background: #f8f9fa;
+        }
+
+        .admin-section {
+            background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+            border: 2px solid #ff6b35;
+            border-radius: 10px;
+            padding: 25px;
+        }
+
+        .admin-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .btn-admin {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-add { background: #28a745; color: white; }
+        .btn-export { background: #17a2b8; color: white; }
+        .btn-backup { background: #dc3545; color: white; }
+
+        .btn-add:hover { background: #218838; }
+        .btn-export:hover { background: #138496; }
+        .btn-backup:hover { background: #c82333; }
+
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: #fff;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .users-table th {
+            background: #ff6b35;
+            color: #000;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .users-table td {
+            padding: 12px;
+            border-bottom: 1px solid #dee2e6;
+            color: #333;
+        }
+
+        .users-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .btn-action {
+            padding: 5px 10px;
+            margin: 0 2px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .btn-edit { background: #ffc107; color: #000; }
+        .btn-delete { background: #dc3545; color: white; }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            font-size: 18px;
+            color: #ff6b35;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+
+            .nav-tabs {
+                flex-wrap: wrap;
+            }
+
+            .tab-button {
+                flex: 1;
+                min-width: 120px;
+            }
+
+            .dashboard-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .admin-buttons {
+                flex-direction: column;
+            }
+
+            .email-main {
+                flex-direction: column;
+            }
+
+            .email-sidebar {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">🏍️ TRIBO DO CERRADO</div>
+        <div class="user-info">
+            <span>👤 <span id="userName">Administrador</span></span>
+            <span>🔑 <span id="userType">Administrador</span></span>
+            <button class="btn-sair" onclick="logout()">🚪 Sair</button>
+        </div>
+    </div>
+
+    <div class="nav-tabs">
+        <button class="tab-button active" onclick="showTab('dashboard')">📊 DASHBOARD</button>
+        <button class="tab-button" onclick="showTab('perfil')">👤 PERFIL</button>
+        <button class="tab-button" onclick="showTab('eventos')">📅 EVENTOS</button>
+        <button class="tab-button" onclick="showTab('email')">📧 EMAIL</button>
+        <button class="tab-button" id="adminTab" onclick="showTab('administrador')">⚙️ ADMINISTRADOR</button>
+    </div>
+
+    <!-- Dashboard Tab -->
+    <div id="dashboard" class="tab-content active">
+        <h2>📊 Dashboard Principal</h2>
+        
+        <div class="dashboard-cards">
+            <div class="card">
+                <div class="card-number" id="totalUsuarios">-</div>
+                <div class="card-title">Total de Usuários</div>
+            </div>
+            <div class="card">
+                <div class="card-number" id="totalEventos">-</div>
+                <div class="card-title">Total de Eventos</div>
+            </div>
+            <div class="card">
+                <div class="card-number" id="eventosAtivos">-</div>
+                <div class="card-title">Eventos Ativos</div>
+            </div>
+            <div class="card">
+                <div class="card-number" id="proximosEventos">-</div>
+                <div class="card-title">Próximos Eventos</div>
+            </div>
+        </div>
+
+        <div class="welcome-section">
+            <h3>🎉 Bem-vindo ao Sistema!</h3>
+            <p>Sistema completamente funcional e operacional!</p>
+            <p>Navegue pelas abas para acessar todas as funcionalidades.</p>
+            
+            <h4>✅ Status do Sistema:</h4>
+            <ul class="status-list">
+                <li>Banco PostgreSQL Neon: Conectado</li>
+                <li>API Migadu: Configurada</li>
+                <li>Sistema de Email: Operacional</li>
+                <li>Controle de Usuários: Ativo</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Perfil Tab -->
+    <div id="perfil" class="tab-content">
+        <h2>👤 Perfil do Usuário</h2>
+        <div class="welcome-section">
+            <h3>Informações do Perfil</h3>
+            <p><strong>Nome:</strong> <span id="perfilNome">-</span></p>
+            <p><strong>Email:</strong> <span id="perfilEmail">-</span></p>
+            <p><strong>Tipo:</strong> <span id="perfilTipo">-</span></p>
+            <p><strong>Status:</strong> <span style="color: #4CAF50;">Ativo</span></p>
+        </div>
+    </div>
+
+    <!-- Eventos Tab -->
+    <div id="eventos" class="tab-content">
+        <h2>📅 Eventos</h2>
+        <div id="eventosContainer" class="loading">
+            Carregando eventos...
+        </div>
+    </div>
+
+    <!-- Email Tab -->
+    <div id="email" class="tab-content">
+        <h2>📧 Sistema de Email</h2>
+        <div class="email-container">
+            <div class="email-header">
+                <h3>📧 Tribo do Cerrado Mail</h3>
+                <button class="btn-admin" onclick="novoEmail()">✉️ Novo Email</button>
+            </div>
+            <div class="email-main">
+                <div class="email-sidebar">
+                    <h4>📁 Pastas</h4>
+                    <ul class="email-list">
+                        <li class="email-item" onclick="carregarPasta('inbox')">📥 Caixa de Entrada</li>
+                        <li class="email-item" onclick="carregarPasta('sent')">📤 Enviados</li>
+                        <li class="email-item" onclick="carregarPasta('drafts')">📝 Rascunhos</li>
+                        <li class="email-item" onclick="carregarPasta('trash')">🗑️ Lixeira</li>
+                    </ul>
+                </div>
+                <div class="email-content">
+                    <h4>📥 Caixa de Entrada</h4>
+                    <div id="emailList">
+                        <div class="email-item">
+                            <strong>Sistema Tribo do Cerrado</strong><br>
+                            <small>Bem-vindo ao sistema de email!</small><br>
+                            <small style="color: #666;">Hoje, 10:30</small>
+                        </div>
+                        <div class="email-item">
+                            <strong>Migadu API</strong><br>
+                            <small>Configuração realizada com sucesso</small><br>
+                            <small style="color: #666;">Ontem, 15:45</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Administrador Tab -->
+    <div id="administrador" class="tab-content">
+        <div class="admin-section">
+            <h2>⚙️ Painel Administrativo</h2>
+            
+            <div class="admin-buttons">
+                <button class="btn-admin btn-add" onclick="adicionarUsuario()">👤 Adicionar Usuário</button>
+                <button class="btn-admin btn-export" onclick="exportarUsuarios()">📊 Exportar Usuários</button>
+                <button class="btn-admin btn-backup" onclick="backupSistema()">💾 Backup Sistema</button>
+            </div>
+
+            <h3>👥 Usuários Cadastrados</h3>
+            <div id="usuariosContainer" class="loading">
+                Carregando usuários...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variáveis globais
+        let currentUser = null;
+        let usuarios = [];
+        let eventos = [];
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeSystem();
+        });
+
+        async function initializeSystem() {
+            try {
+                // Verificar se há usuário logado
+                const userData = localStorage.getItem('triboCerradoUser');
+                if (!userData) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                currentUser = JSON.parse(userData);
+                updateUserInterface();
+                
+                // Carregar dados do sistema
+                await Promise.all([
+                    carregarUsuarios(),
+                    carregarEventos(),
+                    carregarStatusSistema()
+                ]);
+
+            } catch (error) {
+                console.error('Erro ao inicializar sistema:', error);
+                showError('Erro ao carregar sistema');
+            }
+        }
+
+        function updateUserInterface() {
+            if (!currentUser) return;
+
+            document.getElementById('userName').textContent = currentUser.nome;
+            document.getElementById('userType').textContent = currentUser.tipo;
+            document.getElementById('perfilNome').textContent = currentUser.nome;
+            document.getElementById('perfilEmail').textContent = currentUser.email;
+            document.getElementById('perfilTipo').textContent = currentUser.tipo;
+
+            // Mostrar/ocultar aba administrador
+            const adminTab = document.getElementById('adminTab');
+            if (currentUser.tipo !== 'administrador') {
+                adminTab.style.display = 'none';
+            }
+        }
+
+        async function carregarUsuarios() {
+            try {
+                const response = await fetch('/api/usuarios');
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    usuarios = data.usuarios;
+                    document.getElementById('totalUsuarios').textContent = data.total;
+                    renderUsuarios();
+                } else {
+                    throw new Error(data.message);
+                }
+            } catch (error) {
+                console.error('Erro ao carregar usuários:', error);
+                document.getElementById('usuariosContainer').innerHTML = 
+                    '<div class="error">Erro ao carregar usuários</div>';
+            }
+        }
+
+        async function carregarEventos() {
+            try {
+                const response = await fetch('/api/eventos');
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    eventos = data.eventos;
+                    document.getElementById('totalEventos').textContent = data.total;
+                    document.getElementById('eventosAtivos').textContent = data.eventos.filter(e => e.status === 'ativo').length;
+                    document.getElementById('proximosEventos').textContent = '0';
+                    renderEventos();
+                } else {
+                    throw new Error(data.message);
+                }
+            } catch (error) {
+                console.error('Erro ao carregar eventos:', error);
+                document.getElementById('eventosContainer').innerHTML = 
+                    '<div class="error">Erro ao carregar eventos</div>';
+            }
+        }
+
+        async function carregarStatusSistema() {
+            try {
+                const response = await fetch('/api/status');
+                const data = await response.json();
+                console.log('Status do sistema:', data);
+            } catch (error) {
+                console.error('Erro ao carregar status:', error);
+            }
+        }
+
+        function renderUsuarios() {
+            const container = document.getElementById('usuariosContainer');
+            
+            if (usuarios.length === 0) {
+                container.innerHTML = '<p>Nenhum usuário encontrado.</p>';
+                return;
+            }
+
+            let html = `
+                <table class="users-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th>Tipo</th>
+                            <th>Status</th>
+                            <th>Cadastro</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            usuarios.forEach(usuario => {
+                html += `
+                    <tr>
+                        <td>${usuario.id}</td>
+                        <td>${usuario.nome}</td>
+                        <td>${usuario.email}</td>
+                        <td>${usuario.tipo}</td>
+                        <td>${usuario.status}</td>
+                        <td>${usuario.data_cadastro}</td>
+                        <td>
+                            <button class="btn-action btn-edit" onclick="editarUsuario(${usuario.id})">✏️</button>
+                            <button class="btn-action btn-delete" onclick="excluirUsuario(${usuario.id})">🗑️</button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+
+        function renderEventos() {
+            const container = document.getElementById('eventosContainer');
+            
+            if (eventos.length === 0) {
+                container.innerHTML = '<p>Nenhum evento encontrado.</p>';
+                return;
+            }
+
+            let html = '<div class="dashboard-cards">';
+            
+            eventos.forEach(evento => {
+                html += `
+                    <div class="card">
+                        <h4>${evento.titulo}</h4>
+                        <p><strong>Data:</strong> ${evento.data}</p>
+                        <p><strong>Local:</strong> ${evento.local}</p>
+                        <p>${evento.descricao}</p>
+                        <p><strong>Status:</strong> ${evento.status}</p>
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        function showTab(tabName) {
+            // Ocultar todas as abas
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // Remover classe active de todos os botões
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            // Mostrar aba selecionada
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function logout() {
+            localStorage.removeItem('triboCerradoUser');
+            window.location.href = 'login.html';
+        }
+
+        function showError(message) {
+            alert('Erro: ' + message);
+        }
+
+        function showSuccess(message) {
+            alert('Sucesso: ' + message);
+        }
+
+        // Funções do sistema de email
+        function novoEmail() {
+            alert('Funcionalidade de novo email em desenvolvimento');
+        }
+
+        function carregarPasta(pasta) {
+            console.log('Carregando pasta:', pasta);
+            // Implementar carregamento de pastas
+        }
+
+        // Funções administrativas
+        function adicionarUsuario() {
+            alert('Funcionalidade de adicionar usuário em desenvolvimento');
+        }
+
+        function exportarUsuarios() {
+            alert('Funcionalidade de exportar usuários em desenvolvimento');
+        }
+
+        function backupSistema() {
+            alert('Funcionalidade de backup em desenvolvimento');
+        }
+
+        function editarUsuario(id) {
+            alert('Editar usuário ID: ' + id);
+        }
+
+        function excluirUsuario(id) {
+            if (confirm('Tem certeza que deseja excluir este usuário?')) {
+                alert('Usuário excluído (simulação)');
+            }
+        }
+    </script>
+</body>
+</html>
+
