@@ -4,481 +4,257 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Tribo do Cerrado</title>
-    
-    <!-- Importar CSS do botão metalizado -->
-    <link rel="stylesheet" href="metal-button.css">
-    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
-        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: 'Orbitron', monospace;
-            background: #000000;
-            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
             min-height: 100vh;
             display: flex;
-            justify-content: center;
             align-items: center;
-            position: relative;
-            overflow-x: hidden;
+            justify-content: center;
+            color: #fff;
         }
-        
-        /* Imagem de fundo centralizada */
-        .fundo-imagem {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            max-width: 80%;
-            max-height: 70%;
-            width: auto;
-            height: auto;
-            z-index: -1;
-            opacity: 0.3;
-        }
-        
-        .container {
-            background: rgba(0, 0, 0, 0.95);
-            border: 3px solid #FFD700;
+
+        .login-container {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #ffd700;
             border-radius: 15px;
-            padding: 40px 30px;
-            box-shadow: 
-                0 0 30px rgba(255, 215, 0, 0.3),
-                inset 0 0 20px rgba(255, 215, 0, 0.1);
-            max-width: 450px;
-            width: 90%;
-            position: relative;
-            z-index: 10;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
         }
-        
-        .titulo-login {
+
+        .login-title {
             text-align: center;
-            font-size: 2.5rem;
-            font-weight: 900;
-            color: #FFD700;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            font-size: 2.5em;
+            color: #ffd700;
             margin-bottom: 30px;
-            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
-        
+
         .form-group {
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
-        
-        .form-label {
+
+        .form-group label {
             display: block;
             margin-bottom: 8px;
-            font-weight: 700;
-            color: #FFD700;
-            font-size: 1.1rem;
+            color: #ffd700;
+            font-weight: bold;
         }
-        
-        .form-input {
+
+        .form-group input {
             width: 100%;
-            padding: 15px;
-            border: 2px solid #444;
+            padding: 12px;
+            border: 2px solid #555;
             border-radius: 8px;
             background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-            font-size: 1rem;
-            font-family: 'Orbitron', monospace;
+            color: #fff;
+            font-size: 16px;
             transition: all 0.3s ease;
         }
-        
-        .form-input:focus {
+
+        .form-group input:focus {
             outline: none;
-            border-color: #FFD700;
+            border-color: #ffd700;
             box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
-            background: rgba(255, 255, 255, 0.15);
         }
-        
-        .form-input::placeholder {
-            color: rgba(255, 255, 255, 0.6);
+
+        .btn-login {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
         }
-        
-        .password-container {
+
+        .btn-login:hover {
+            background: linear-gradient(45deg, #ffed4e, #ffd700);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+        }
+
+        .links {
+            text-align: center;
+        }
+
+        .links a {
+            color: #ffd700;
+            text-decoration: none;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+        }
+
+        .links a:hover {
+            color: #ffed4e;
+        }
+
+        .message {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .message.success {
+            background: rgba(0, 255, 0, 0.2);
+            border: 1px solid #00ff00;
+            color: #00ff00;
+        }
+
+        .message.error {
+            background: rgba(255, 0, 0, 0.2);
+            border: 1px solid #ff0000;
+            color: #ff0000;
+        }
+
+        .password-toggle {
             position: relative;
         }
-        
-        .toggle-password {
+
+        .password-toggle button {
             position: absolute;
-            right: 15px;
+            right: 10px;
             top: 50%;
             transform: translateY(-50%);
             background: none;
             border: none;
-            color: #FFD700;
+            color: #ffd700;
             cursor: pointer;
-            font-size: 1.2rem;
-            padding: 5px;
-            border-radius: 3px;
-            transition: all 0.3s ease;
-        }
-        
-        .toggle-password:hover {
-            background: rgba(255, 215, 0, 0.2);
-        }
-        
-        .mensagem {
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            text-align: center;
-            font-weight: 700;
-            display: none;
-        }
-        
-        .mensagem.sucesso {
-            background: rgba(0, 255, 0, 0.2);
-            border: 2px solid #00ff00;
-            color: #00ff00;
-        }
-        
-        .mensagem.erro {
-            background: rgba(255, 0, 0, 0.2);
-            border: 2px solid #ff0000;
-            color: #ff0000;
-        }
-        
-        .links-auxiliares {
-            display: flex;
-            justify-content: space-between;
-            margin: 25px 0;
-            gap: 15px;
-        }
-        
-        .link-auxiliar {
-            color: #FFD700;
-            text-decoration: none;
-            font-weight: 600;
-            padding: 10px 15px;
-            border: 1px solid #FFD700;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-            text-align: center;
-            flex: 1;
-        }
-        
-        .link-auxiliar:hover {
-            background: rgba(255, 215, 0, 0.2);
-            transform: translateY(-2px);
-        }
-        
-        /* Responsividade */
-        @media (max-width: 768px) {
-            .fundo-imagem {
-                max-width: 90%;
-                max-height: 60%;
-            }
-            
-            .container {
-                padding: 30px 20px;
-                margin: 20px;
-            }
-            
-            .links-auxiliares {
-                flex-direction: column;
-                text-align: center;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .fundo-imagem {
-                max-width: 98%;
-                max-height: 50%;
-            }
-            
-            .container {
-                padding: 25px 15px;
-            }
-            
-            .titulo-login {
-                font-size: 2rem;
-            }
-            
-            .form-input {
-                padding: 12px;
-            }
+            font-size: 18px;
         }
     </style>
 </head>
 <body>
-    <!-- Imagem de fundo centralizada -->
-    <img src="FundoSIte.png" alt="Fundo Tribo do Cerrado" class="fundo-imagem">
-    
-    <div class="container">
-        <h1 class="titulo-login">LOGIN</h1>
+    <div class="login-container">
+        <h1 class="login-title">LOGIN</h1>
         
-        <div id="mensagem" class="mensagem"></div>
+        <div id="message" class="message" style="display: none;"></div>
         
-        <form id="formLogin">
+        <form id="loginForm">
             <div class="form-group">
-                <label for="email" class="form-label">📧 Email:</label>
-                <input 
-                    type="email" 
-                    id="email" 
-                    name="email" 
-                    class="form-input" 
-                    placeholder="seu@email.com"
-                    required
-                >
+                <label for="email">📧 Email:</label>
+                <input type="email" id="email" name="email" placeholder="seu@email.com" required>
             </div>
             
             <div class="form-group">
-                <label for="senha" class="form-label">🔒 Senha:</label>
-                <div class="password-container">
-                    <input 
-                        type="password" 
-                        id="senha" 
-                        name="senha" 
-                        class="form-input" 
-                        placeholder="Sua senha"
-                        required
-                    >
-                    <button type="button" class="toggle-password" onclick="togglePassword()">
-                        👁️
-                    </button>
+                <label for="senha">🔒 Senha:</label>
+                <div class="password-toggle">
+                    <input type="password" id="senha" name="senha" placeholder="Sua senha" required>
+                    <button type="button" onclick="togglePassword()">👁️</button>
                 </div>
             </div>
             
-            <!-- Botão LOGIN -->
-            <button type="submit" class="metal-button primary full-width" id="btnLogin">
-                🔐 ENTRAR
-            </button>
+            <button type="submit" class="btn-login">🔐 ENTRAR</button>
         </form>
         
-        <div class="links-auxiliares">
-            <a href="cadastro.html" class="link-auxiliar">📝 Criar Conta</a>
-            <a href="#" class="link-auxiliar" onclick="esqueceuSenha()">❓ Esqueci a Senha</a>
+        <div class="links">
+            <a href="cadastro.html">📝 Criar Conta</a>
+            <a href="#" onclick="alert('Funcionalidade em desenvolvimento')">❓ Esqueci a Senha</a>
         </div>
         
-        <!-- Botão VOLTAR -->
-        <a href="acesso.html" class="metal-button secondary full-width">
-            ⬅️ VOLTAR
-        </a>
+        <div class="links" style="margin-top: 20px;">
+            <a href="acesso.html">⬅️ VOLTAR</a>
+        </div>
     </div>
-    
+
     <script>
-        // SISTEMA DE LOGIN REESTRUTURADO DO ZERO
-        console.log('🔥 SISTEMA DE LOGIN REESTRUTURADO - TRIBO DO CERRADO');
-        
-        // Configurações
-        const CONFIG = {
-            ADMIN_EMAIL: 'admin@tribodocerrado.org',
-            ADMIN_SENHA: '123456',
-            REDIRECT_DELAY: 2000
-        };
-        
-        // Estado do sistema
-        let sistemaCarregado = false;
-        
-        // Função para mostrar/ocultar senha
+        // Usuários simulados (funcionando sem backend)
+        const usuarios = [
+            {
+                id: 1,
+                nome: "Administrador",
+                email: "admin@tribodocerrado.org",
+                senha: "123456",
+                tipo: "administrador"
+            },
+            {
+                id: 2,
+                nome: "Rocha Lima",
+                email: "rochalima@tribodocerrado.org",
+                senha: "MinhaSenh@123!",
+                tipo: "usuario"
+            }
+        ];
+
         function togglePassword() {
             const senhaInput = document.getElementById('senha');
-            const toggleBtn = document.querySelector('.toggle-password');
-            
-            if (senhaInput.type === 'password') {
-                senhaInput.type = 'text';
-                toggleBtn.textContent = '🙈';
-            } else {
-                senhaInput.type = 'password';
-                toggleBtn.textContent = '👁️';
-            }
+            const type = senhaInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            senhaInput.setAttribute('type', type);
         }
-        
-        // Função para mostrar mensagens
-        function mostrarMensagem(texto, tipo) {
-            const mensagemDiv = document.getElementById('mensagem');
-            mensagemDiv.textContent = texto;
-            mensagemDiv.className = `mensagem ${tipo}`;
-            mensagemDiv.style.display = 'block';
+
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.display = 'block';
             
-            // Scroll para o topo
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            
-            // Auto-hide para mensagens de erro
-            if (tipo === 'erro') {
-                setTimeout(() => {
-                    mensagemDiv.style.display = 'none';
-                }, 5000);
-            }
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
         }
-        
-        // Função principal de login
-        async function processarLogin(email, senha) {
-            console.log('🔐 Processando login para:', email);
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
             
-            // Verificar admin primeiro
-            if (email === CONFIG.ADMIN_EMAIL && senha === CONFIG.ADMIN_SENHA) {
-                console.log('👑 Login de administrador detectado');
-                
-                const adminUser = {
-                    id: 'admin',
-                    email: CONFIG.ADMIN_EMAIL,
-                    nome: 'Administrador',
-                    apelido: 'Admin',
-                    tipo: 'administrador',
-                    status: 'ativo',
-                    loginTime: new Date().toISOString()
-                };
-                
-                // Salvar no localStorage
-                localStorage.setItem('usuarioLogado', JSON.stringify(adminUser));
-                localStorage.setItem('loginTime', new Date().toISOString());
-                
-                console.log('✅ Usuário admin salvo no localStorage');
-                
-                mostrarMensagem('Login de administrador realizado com sucesso! Redirecionando...', 'sucesso');
-                
-                // Redirecionamento com delay
-                setTimeout(() => {
-                    console.log('🚀 Redirecionando para dashboard...');
-                    window.location.href = 'dashboard.html';
-                }, CONFIG.REDIRECT_DELAY);
-                
-                return true;
-            }
-            
-            // Verificar outros usuários (localStorage como backup)
-            try {
-                const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
-                const usuario = usuarios.find(u => u.email === email && u.senha === senha);
-                
-                if (usuario) {
-                    console.log('✅ Usuário encontrado no localStorage:', usuario.email);
-                    
-                    // Atualizar dados do usuário
-                    usuario.loginTime = new Date().toISOString();
-                    localStorage.setItem('usuarioLogado', JSON.stringify(usuario));
-                    localStorage.setItem('loginTime', new Date().toISOString());
-                    
-                    mostrarMensagem('Login realizado com sucesso! Redirecionando...', 'sucesso');
-                    
-                    setTimeout(() => {
-                        window.location.href = 'dashboard.html';
-                    }, CONFIG.REDIRECT_DELAY);
-                    
-                    return true;
-                }
-            } catch (error) {
-                console.error('❌ Erro ao verificar localStorage:', error);
-            }
-            
-            // Login falhou
-            console.log('❌ Login falhou para:', email);
-            mostrarMensagem('Email ou senha incorretos. Verifique seus dados e tente novamente.', 'erro');
-            return false;
-        }
-        
-        // Event listener do formulário
-        function handleFormSubmit(event) {
-            event.preventDefault();
-            
-            const email = document.getElementById('email').value.trim();
+            const email = document.getElementById('email').value.toLowerCase().trim();
             const senha = document.getElementById('senha').value;
-            const btnLogin = document.getElementById('btnLogin');
             
-            // Validação básica
             if (!email || !senha) {
-                mostrarMensagem('Por favor, preencha todos os campos.', 'erro');
+                showMessage('Por favor, preencha todos os campos', 'error');
                 return;
             }
             
-            // Desabilitar botão durante processamento
-            btnLogin.disabled = true;
-            btnLogin.textContent = '⏳ ENTRANDO...';
+            // Buscar usuário
+            const usuario = usuarios.find(u => 
+                u.email.toLowerCase() === email && u.senha === senha
+            );
             
-            // Processar login
-            processarLogin(email, senha).finally(() => {
-                // Reabilitar botão
-                btnLogin.disabled = false;
-                btnLogin.innerHTML = '🔐 ENTRAR';
-            });
-        }
-        
-        // Função esqueceu senha
-        function esqueceuSenha() {
-            const email = prompt('📧 Digite seu email para recuperar a senha:');
-            
-            if (!email) return;
-            
-            if (email === CONFIG.ADMIN_EMAIL) {
-                alert(`🔑 RECUPERAÇÃO DE SENHA - ADMINISTRADOR
-                
-Email: ${CONFIG.ADMIN_EMAIL}
-Senha: ${CONFIG.ADMIN_SENHA}
-
-✅ Use estes dados para fazer login.`);
+            if (!usuario) {
+                showMessage('Email ou senha incorretos', 'error');
                 return;
             }
             
-            // Verificar outros usuários
-            try {
-                const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
-                const usuario = usuarios.find(u => u.email === email);
-                
-                if (usuario) {
-                    alert(`🔑 RECUPERAÇÃO DE SENHA
-                    
-Email: ${usuario.email}
-Sua senha é: ${usuario.senha}
-
-💡 DICA: Anote sua senha em local seguro!
-
-✅ Agora você pode fazer login normalmente.`);
+            // Login bem-sucedido
+            showMessage('Login realizado com sucesso! Redirecionando...', 'success');
+            
+            // Salvar dados do usuário
+            localStorage.setItem('usuario_logado', JSON.stringify(usuario));
+            
+            // Redirecionar baseado no tipo de usuário
+            setTimeout(() => {
+                if (usuario.tipo === 'administrador') {
+                    window.location.href = 'dashboard.html';
                 } else {
-                    alert('❌ Email não encontrado! Verifique se você digitou corretamente ou crie uma nova conta.');
+                    window.location.href = 'dashboard.html';
                 }
-            } catch (error) {
-                console.error('❌ Erro ao recuperar senha:', error);
-                alert('❌ Erro ao recuperar senha. Tente novamente.');
-            }
-        }
-        
-        // Inicialização do sistema
-        function inicializarSistema() {
-            console.log('🚀 Inicializando sistema de login...');
-            
-            // Verificar se já está logado (mas não redirecionar automaticamente)
-            const usuarioLogado = localStorage.getItem('usuarioLogado');
+            }, 2000);
+        });
+
+        // Verificar se já está logado
+        window.addEventListener('load', function() {
+            const usuarioLogado = localStorage.getItem('usuario_logado');
             if (usuarioLogado) {
-                console.log('ℹ️ Usuário já logado detectado (não redirecionando automaticamente)');
+                const usuario = JSON.parse(usuarioLogado);
+                showMessage(`Bem-vindo de volta, ${usuario.nome}! Redirecionando...`, 'success');
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 2000);
             }
-            
-            // Configurar event listeners
-            const form = document.getElementById('formLogin');
-            if (form) {
-                form.addEventListener('submit', handleFormSubmit);
-                console.log('✅ Event listener do formulário configurado');
-            }
-            
-            sistemaCarregado = true;
-            console.log('✅ Sistema de login carregado com sucesso');
-            
-            // Debug info
-            console.log('🎯 DADOS DE TESTE:');
-            console.log('Email:', CONFIG.ADMIN_EMAIL);
-            console.log('Senha:', CONFIG.ADMIN_SENHA);
-        }
-        
-        // Aguardar carregamento completo da página
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', inicializarSistema);
-        } else {
-            inicializarSistema();
-        }
-        
-        // Expor funções globalmente para compatibilidade
-        window.togglePassword = togglePassword;
-        window.esqueceuSenha = esqueceuSenha;
-        
-        console.log('🔥 SISTEMA DE LOGIN REESTRUTURADO CARREGADO');
+        });
     </script>
 </body>
 </html>
