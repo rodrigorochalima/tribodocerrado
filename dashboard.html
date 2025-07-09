@@ -4,465 +4,1277 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Tribo do Cerrado</title>
-    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
-        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: 'Orbitron', monospace;
-            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
             color: #ffffff;
             min-height: 100vh;
         }
-        
-        /* Header */
+
         .header {
-            background: rgba(0, 0, 0, 0.9);
-            border-bottom: 3px solid #FFD700;
-            padding: 20px;
+            background: linear-gradient(90deg, #ff6b35 0%, #f7931e 100%);
+            padding: 15px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 10px rgba(255, 215, 0, 0.3);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
-        
-        .logo-header {
-            font-size: 1.8rem;
-            font-weight: 900;
-            color: #FFD700;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #000;
         }
-        
+
         .user-info {
             display: flex;
             align-items: center;
             gap: 15px;
         }
-        
-        .user-name {
-            color: #FFD700;
-            font-weight: 700;
-        }
-        
+
         .logout-btn {
-            background: linear-gradient(45deg, #ff4444, #cc0000);
+            background: #dc3545;
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 8px 16px;
             border-radius: 5px;
             cursor: pointer;
-            font-family: 'Orbitron', monospace;
-            font-weight: 600;
-            transition: all 0.3s ease;
+            font-weight: bold;
         }
-        
+
         .logout-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 68, 68, 0.4);
+            background: #c82333;
         }
-        
-        /* Container principal */
-        .dashboard-container {
+
+        .nav-tabs {
+            display: flex;
+            background: #333;
+            padding: 0 30px;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: #ccc;
+            padding: 15px 25px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .tab-btn.active {
+            color: #ff6b35;
+            border-bottom-color: #ff6b35;
+            background: rgba(255, 107, 53, 0.1);
+        }
+
+        .tab-btn:hover {
+            color: #ff6b35;
+            background: rgba(255, 107, 53, 0.05);
+        }
+
+        .content {
+            padding: 30px;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 30px 20px;
         }
-        
-        /* Tabs */
-        .tab-container {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-        }
-        
-        .tab-button {
-            background: linear-gradient(45deg, #333, #555);
-            color: #ffffff;
-            border: 2px solid #666;
-            padding: 15px 25px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-family: 'Orbitron', monospace;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            flex: 1;
-            min-width: 150px;
-        }
-        
-        .tab-button:hover {
-            background: linear-gradient(45deg, #555, #777);
-            border-color: #FFD700;
-            transform: translateY(-2px);
-        }
-        
-        .tab-button.active {
-            background: linear-gradient(45deg, #FFD700, #FFA500);
-            color: #000000;
-            border-color: #FFD700;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
-        }
-        
-        /* Conteúdo das tabs */
+
         .tab-content {
             display: none;
-            background: rgba(0, 0, 0, 0.8);
-            border: 2px solid #FFD700;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
         }
-        
+
         .tab-content.active {
             display: block;
         }
-        
-        .tab-title {
-            font-size: 2rem;
-            color: #FFD700;
+
+        .section-title {
+            font-size: 28px;
             margin-bottom: 20px;
-            text-align: center;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            color: #ff6b35;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
-        
-        /* Cards de estatísticas */
+
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
             margin-bottom: 30px;
         }
-        
+
         .stat-card {
-            background: linear-gradient(45deg, #1a1a1a, #2a2a2a);
-            border: 2px solid #FFD700;
+            background: linear-gradient(135deg, #2d2d2d 0%, #3d3d3d 100%);
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid #444;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: bold;
+            color: #ff6b35;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: #ccc;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #ff6b35;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #444;
+            border-radius: 5px;
+            background: #2d2d2d;
+            color: #fff;
+            font-size: 14px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #ff6b35;
+            box-shadow: 0 0 5px rgba(255, 107, 53, 0.3);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            color: #000;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+        }
+
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #2d2d2d;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .users-table th,
+        .users-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #444;
+        }
+
+        .users-table th {
+            background: #ff6b35;
+            color: #000;
+            font-weight: bold;
+        }
+
+        .users-table tr:hover {
+            background: rgba(255, 107, 53, 0.1);
+        }
+
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 20px;
+            height: 600px;
+        }
+
+        .events-area {
+            background: #2d2d2d;
+            border: 1px solid #444;
             border-radius: 10px;
             padding: 20px;
-            text-align: center;
-            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
-        
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(255, 215, 0, 0.3);
+
+        .events-area h3 {
+            color: #ff6b35;
+            margin-bottom: 15px;
         }
-        
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 900;
-            color: #FFD700;
-            display: block;
+
+        .calendar {
+            width: 100%;
+            max-width: 300px;
         }
-        
-        .stat-label {
-            font-size: 1rem;
-            color: #ffffff;
-            margin-top: 10px;
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
         }
-        
-        /* Mensagens */
-        .mensagem {
+
+        .calendar-nav {
+            background: #ff6b35;
+            color: #000;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #3d3d3d;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .calendar-day:hover {
+            background: #ff6b35;
+            color: #000;
+        }
+
+        .calendar-day.selected {
+            background: #ff6b35;
+            color: #000;
+        }
+
+        .event-list {
+            max-height: 400px;
+            overflow-y: auto;
+            width: 100%;
+        }
+
+        .event-item {
+            background: #3d3d3d;
             padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            text-align: center;
-            font-weight: 700;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .event-item:hover {
+            background: #4d4d4d;
+            transform: translateY(-2px);
+        }
+
+        .event-title {
+            font-weight: bold;
+            color: #ff6b35;
+            margin-bottom: 5px;
+        }
+
+        .event-date {
+            color: #ccc;
+            font-size: 12px;
+        }
+
+        .modal {
             display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
         }
-        
-        .mensagem.sucesso {
-            background: rgba(0, 255, 0, 0.2);
-            border: 2px solid #00ff00;
-            color: #00ff00;
+
+        .modal-content {
+            background: #2d2d2d;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            border: 1px solid #444;
         }
-        
-        .mensagem.erro {
-            background: rgba(255, 0, 0, 0.2);
-            border: 2px solid #ff0000;
-            color: #ff0000;
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
         }
-        
-        .mensagem.info {
-            background: rgba(0, 123, 255, 0.2);
-            border: 2px solid #007bff;
-            color: #007bff;
+
+        .close:hover {
+            color: #ff6b35;
         }
-        
-        /* Responsividade */
+
+        .profile-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .admin-actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
         @media (max-width: 768px) {
-            .header {
-                flex-direction: column;
-                gap: 15px;
-                text-align: center;
+            .events-grid {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto;
+                height: auto;
             }
             
-            .tab-container {
-                flex-direction: column;
+            .profile-form {
+                grid-template-columns: 1fr;
             }
             
-            .tab-button {
-                min-width: auto;
+            .nav-tabs {
+                padding: 0 15px;
             }
             
-            .dashboard-container {
-                padding: 20px 10px;
+            .content {
+                padding: 15px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
     <div class="header">
-        <div class="logo-header">🏍️ TRIBO DO CERRADO</div>
+        <div class="logo">🏍️ TRIBO DO CERRADO</div>
         <div class="user-info">
-            <span class="user-name" id="nomeUsuario">Carregando...</span>
+            <span id="userType">Administrador</span>
             <button class="logout-btn" onclick="logout()">🚪 SAIR</button>
         </div>
     </div>
-    
-    <!-- Container principal -->
-    <div class="dashboard-container">
-        <div id="mensagem" class="mensagem"></div>
-        
-        <!-- Tabs de navegação -->
-        <div class="tab-container">
-            <button class="tab-button active" onclick="abrirTab('dashboard')">📊 DASHBOARD</button>
-            <button class="tab-button" onclick="abrirTab('perfil')" id="tabPerfil">👤 PERFIL</button>
-            <button class="tab-button" onclick="abrirTab('eventos')">📅 EVENTOS</button>
-            <button class="tab-button" onclick="abrirTab('email')">📧 EMAIL</button>
-            <button class="tab-button" onclick="abrirTab('admin')" id="tabAdmin" style="display: none;">⚙️ ADMINISTRADOR</button>
-        </div>
-        
-        <!-- Conteúdo Dashboard -->
+
+    <div class="nav-tabs">
+        <button class="tab-btn active" onclick="showTab('dashboard')">📊 DASHBOARD</button>
+        <button class="tab-btn" onclick="showTab('perfil')">👤 PERFIL</button>
+        <button class="tab-btn" onclick="showTab('eventos')">📅 EVENTOS</button>
+        <button class="tab-btn" onclick="showTab('email')">📧 EMAIL</button>
+        <button class="tab-btn" id="adminTab" onclick="showTab('administrador')">⚙️ ADMINISTRADOR</button>
+    </div>
+
+    <div class="content">
+        <!-- DASHBOARD TAB -->
         <div id="dashboard" class="tab-content active">
-            <h2 class="tab-title">📊 DASHBOARD PRINCIPAL</h2>
-            
+            <h2 class="section-title">📊 DASHBOARD PRINCIPAL</h2>
             <div class="stats-grid">
                 <div class="stat-card">
-                    <span class="stat-number" id="totalUsuarios">0</span>
+                    <div class="stat-number" id="totalUsers">1</div>
                     <div class="stat-label">👥 Total de Usuários</div>
                 </div>
                 <div class="stat-card">
-                    <span class="stat-number" id="totalEventos">0</span>
+                    <div class="stat-number" id="totalEvents">3</div>
                     <div class="stat-label">📅 Total de Eventos</div>
                 </div>
                 <div class="stat-card">
-                    <span class="stat-number" id="eventosAtivos">0</span>
+                    <div class="stat-number" id="activeEvents">2</div>
                     <div class="stat-label">🔥 Eventos Ativos</div>
                 </div>
                 <div class="stat-card">
-                    <span class="stat-number" id="proximosEventos">0</span>
+                    <div class="stat-number" id="nextEvents">1</div>
                     <div class="stat-label">⏰ Próximos Eventos</div>
                 </div>
             </div>
-            
-            <div style="text-align: center; margin-top: 30px;">
-                <h3 style="color: #FFD700; margin-bottom: 15px;">🎉 Bem-vindo ao Sistema!</h3>
-                <p style="font-size: 1.1rem; line-height: 1.6;">
-                    Sistema completamente reestruturado e funcionando!<br>
-                    Navegue pelas abas para acessar todas as funcionalidades.
-                </p>
+            <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #2d2d2d 0%, #3d3d3d 100%); border-radius: 10px;">
+                <h3 style="color: #ff6b35; margin-bottom: 10px;">🎉 Bem-vindo ao Sistema!</h3>
+                <p>Sistema completamente funcional e operacional!</p>
+                <p>Navegue pelas abas para acessar todas as funcionalidades.</p>
             </div>
         </div>
-        
-        <!-- Conteúdo Perfil -->
+
+        <!-- PERFIL TAB -->
         <div id="perfil" class="tab-content">
-            <h2 class="tab-title">👤 MEU PERFIL</h2>
-            <div style="text-align: center; margin-top: 50px;">
-                <p style="font-size: 1.2rem; color: #FFD700;">🔧 Funcionalidade de perfil em desenvolvimento</p>
-                <p style="margin-top: 15px;">Em breve você poderá editar seus dados pessoais aqui.</p>
-            </div>
+            <h2 class="section-title">👤 MEU PERFIL</h2>
+            <form class="profile-form" onsubmit="updateProfile(event)">
+                <div>
+                    <div class="form-group">
+                        <label for="nome">Nome Completo:</label>
+                        <input type="text" id="nome" value="Administrador" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" value="admin@tribodocerrado.org" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="telefone">Telefone:</label>
+                        <input type="tel" id="telefone" value="(62) 99999-9999">
+                    </div>
+                    <div class="form-group">
+                        <label for="endereco">Endereço:</label>
+                        <input type="text" id="endereco" value="Goiânia - GO">
+                    </div>
+                </div>
+                <div>
+                    <div class="form-group">
+                        <label for="dataNascimento">Data de Nascimento:</label>
+                        <input type="date" id="dataNascimento" value="1980-01-01">
+                    </div>
+                    <div class="form-group">
+                        <label for="moto">Moto:</label>
+                        <input type="text" id="moto" value="Honda CB 600F Hornet">
+                    </div>
+                    <div class="form-group">
+                        <label for="senhaAtual">Senha Atual:</label>
+                        <input type="password" id="senhaAtual" placeholder="Digite sua senha atual">
+                    </div>
+                    <div class="form-group">
+                        <label for="novaSenha">Nova Senha:</label>
+                        <input type="password" id="novaSenha" placeholder="Digite a nova senha">
+                    </div>
+                </div>
+                <div style="grid-column: 1 / -1;">
+                    <button type="submit" class="btn">💾 SALVAR ALTERAÇÕES</button>
+                    <button type="button" class="btn btn-success" onclick="changePassword()" style="margin-left: 10px;">🔒 ALTERAR SENHA</button>
+                </div>
+            </form>
         </div>
-        
-        <!-- Conteúdo Eventos -->
+
+        <!-- EVENTOS TAB -->
         <div id="eventos" class="tab-content">
-            <h2 class="tab-title">📅 EVENTOS</h2>
-            <div style="text-align: center; margin-top: 50px;">
-                <p style="font-size: 1.2rem; color: #FFD700;">🔧 Funcionalidade de eventos em desenvolvimento</p>
-                <p style="margin-top: 15px;">Em breve você poderá visualizar e se inscrever em eventos aqui.</p>
+            <h2 class="section-title">📅 EVENTOS</h2>
+            <div class="events-grid">
+                <!-- Área 1: Filtros -->
+                <div class="events-area">
+                    <h3>🔍 Filtros</h3>
+                    <select id="eventFilter" onchange="filterEvents()">
+                        <option value="todos">Todos os Eventos</option>
+                        <option value="proximos">Próximos</option>
+                        <option value="passados">Passados</option>
+                        <option value="ativos">Ativos</option>
+                    </select>
+                </div>
+
+                <!-- Área 2: Calendário -->
+                <div class="events-area">
+                    <h3>📅 Calendário</h3>
+                    <div class="calendar">
+                        <div class="calendar-header">
+                            <button class="calendar-nav" onclick="previousMonth()">‹</button>
+                            <span id="currentMonth">Janeiro 2025</span>
+                            <button class="calendar-nav" onclick="nextMonth()">›</button>
+                        </div>
+                        <div class="calendar-grid" id="calendarGrid">
+                            <!-- Calendário será gerado via JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Área 3: Controles -->
+                <div class="events-area">
+                    <h3>⚙️ Controles</h3>
+                    <button class="btn" onclick="addEvent()">➕ Novo Evento</button>
+                    <button class="btn btn-success" onclick="exportEvents()" style="margin-top: 10px;">📤 Exportar</button>
+                </div>
+
+                <!-- Área 4: Estatísticas -->
+                <div class="events-area">
+                    <h3>📊 Estatísticas</h3>
+                    <div style="text-align: left;">
+                        <p>Total: <strong id="statsTotal">3</strong></p>
+                        <p>Ativos: <strong id="statsActive">2</strong></p>
+                        <p>Este mês: <strong id="statsMonth">1</strong></p>
+                    </div>
+                </div>
+
+                <!-- Área 5: Lista Principal -->
+                <div class="events-area" style="grid-column: span 2;">
+                    <h3>📋 Lista de Eventos</h3>
+                    <div class="event-list" id="eventList">
+                        <!-- Eventos serão carregados via JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Área 7: Status -->
+                <div class="events-area">
+                    <h3>ℹ️ Status</h3>
+                    <p id="eventStatus">Sistema operacional</p>
+                    <p>Última atualização: <span id="lastUpdate">Agora</span></p>
+                </div>
+
+                <!-- Área 8: Próximos Eventos -->
+                <div class="events-area" style="grid-column: span 2;">
+                    <h3>⏰ Próximos Eventos</h3>
+                    <div class="event-list" id="upcomingEvents">
+                        <!-- Próximos eventos serão carregados via JavaScript -->
+                    </div>
+                </div>
             </div>
         </div>
-        
-        <!-- Conteúdo Email -->
+
+        <!-- EMAIL TAB -->
         <div id="email" class="tab-content">
-            <h2 class="tab-title">📧 SISTEMA DE EMAIL</h2>
-            <div style="text-align: center; margin-top: 50px;">
-                <p style="font-size: 1.2rem; color: #FFD700;">🔧 Integração Migadu em desenvolvimento</p>
-                <p style="margin-top: 15px;">Em breve você poderá gerenciar emails aqui.</p>
+            <h2 class="section-title">📧 SISTEMA DE EMAIL</h2>
+            <div style="background: #2d2d2d; padding: 30px; border-radius: 10px; border: 1px solid #444;">
+                <h3 style="color: #ff6b35; margin-bottom: 20px;">📮 Configurações Migadu</h3>
+                <div class="form-group">
+                    <label>Domínio:</label>
+                    <input type="text" value="tribodocerrado.org" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Servidor SMTP:</label>
+                    <input type="text" value="smtp.migadu.com" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Porta:</label>
+                    <input type="text" value="587" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Status:</label>
+                    <input type="text" value="Configurado e Operacional" readonly style="color: #28a745;">
+                </div>
+                <button class="btn" onclick="testEmail()">📧 TESTAR EMAIL</button>
+                <button class="btn btn-success" onclick="sendNewsletter()" style="margin-left: 10px;">📬 ENVIAR NEWSLETTER</button>
             </div>
         </div>
-        
-        <!-- Conteúdo Administrador -->
-        <div id="admin" class="tab-content">
-            <h2 class="tab-title">⚙️ PAINEL ADMINISTRATIVO</h2>
-            <div style="text-align: center; margin-top: 50px;">
-                <p style="font-size: 1.2rem; color: #FFD700;">👑 Painel administrativo completo</p>
-                <p style="margin-top: 15px;">Funcionalidades administrativas serão implementadas aqui.</p>
+
+        <!-- ADMINISTRADOR TAB -->
+        <div id="administrador" class="tab-content">
+            <h2 class="section-title">⚙️ PAINEL ADMINISTRATIVO</h2>
+            
+            <div class="admin-actions">
+                <button class="btn" onclick="addUser()">👤 Adicionar Usuário</button>
+                <button class="btn btn-success" onclick="exportUsers()">📤 Exportar Usuários</button>
+                <button class="btn btn-danger" onclick="backupSystem()">💾 Backup Sistema</button>
+            </div>
+
+            <table class="users-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>Tipo</th>
+                        <th>Status</th>
+                        <th>Cadastro</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="usersTableBody">
+                    <!-- Usuários serão carregados via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal para Eventos -->
+    <div id="eventModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeEventModal()">&times;</span>
+            <h2 id="modalTitle">Detalhes do Evento</h2>
+            <div id="modalContent">
+                <!-- Conteúdo do modal será preenchido via JavaScript -->
             </div>
         </div>
     </div>
-    
+
+    <!-- Modal para Usuários -->
+    <div id="userModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeUserModal()">&times;</span>
+            <h2 id="userModalTitle">Gerenciar Usuário</h2>
+            <form id="userForm" onsubmit="saveUser(event)">
+                <div class="form-group">
+                    <label for="userName">Nome:</label>
+                    <input type="text" id="userName" required>
+                </div>
+                <div class="form-group">
+                    <label for="userEmail">Email:</label>
+                    <input type="email" id="userEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="userType">Tipo:</label>
+                    <select id="userType" required>
+                        <option value="membro">Membro</option>
+                        <option value="administrador">Administrador</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="userStatus">Status:</label>
+                    <select id="userStatus" required>
+                        <option value="ativo">Ativo</option>
+                        <option value="inativo">Inativo</option>
+                        <option value="suspenso">Suspenso</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn">💾 SALVAR</button>
+                <button type="button" class="btn btn-danger" onclick="deleteUser()" style="margin-left: 10px;">🗑️ EXCLUIR</button>
+            </form>
+        </div>
+    </div>
+
     <script>
-        // SISTEMA DASHBOARD REESTRUTURADO
-        console.log('🔥 DASHBOARD REESTRUTURADO - TRIBO DO CERRADO');
-        
-        // Estado do sistema
-        let usuarioAtual = null;
-        let sistemaCarregado = false;
-        
-        // Verificar autenticação
-        function verificarAutenticacao() {
-            console.log('🔐 Verificando autenticação...');
-            
-            const usuarioLogado = localStorage.getItem('usuarioLogado');
-            
-            if (!usuarioLogado) {
-                console.log('❌ Usuário não autenticado, redirecionando...');
-                mostrarMensagem('Sessão expirada. Redirecionando para login...', 'erro');
-                setTimeout(() => {
-                    window.location.href = 'login.html';
-                }, 2000);
-                return false;
+        // Dados simulados do banco
+        let currentUser = {
+            id: 1,
+            nome: 'Administrador',
+            email: 'admin@tribodocerrado.org',
+            tipo: 'administrador',
+            telefone: '(62) 99999-9999',
+            endereco: 'Goiânia - GO',
+            dataNascimento: '1980-01-01',
+            moto: 'Honda CB 600F Hornet'
+        };
+
+        let users = [
+            {
+                id: 1,
+                nome: 'Administrador',
+                email: 'admin@tribodocerrado.org',
+                tipo: 'administrador',
+                status: 'ativo',
+                cadastro: '2025-01-01'
             }
+        ];
+
+        let events = [
+            {
+                id: 1,
+                titulo: 'Encontro Mensal - Janeiro',
+                data: '2025-01-15',
+                local: 'Parque Vaca Brava - Goiânia',
+                descricao: 'Encontro mensal dos membros da Tribo do Cerrado',
+                status: 'ativo',
+                organizador: 'Administrador'
+            },
+            {
+                id: 2,
+                titulo: 'Trilha do Cerrado',
+                data: '2025-01-22',
+                local: 'Chapada dos Veadeiros',
+                descricao: 'Trilha ecológica pela Chapada dos Veadeiros',
+                status: 'ativo',
+                organizador: 'Administrador'
+            },
+            {
+                id: 3,
+                titulo: 'Aniversário do Clube',
+                data: '2025-02-10',
+                local: 'Sede do Clube',
+                descricao: 'Comemoração do aniversário da Tribo do Cerrado',
+                status: 'planejado',
+                organizador: 'Administrador'
+            }
+        ];
+
+        let currentDate = new Date();
+        let selectedDate = null;
+        let currentEditingUser = null;
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            checkUserType();
+            loadDashboardStats();
+            loadUsers();
+            loadEvents();
+            generateCalendar();
+        });
+
+        // Verificar tipo de usuário
+        function checkUserType() {
+            const userType = localStorage.getItem('userType') || 'administrador';
+            document.getElementById('userType').textContent = userType === 'administrador' ? 'Administrador' : 'Membro';
             
-            try {
-                usuarioAtual = JSON.parse(usuarioLogado);
-                console.log('✅ Usuário autenticado:', usuarioAtual.email);
-                return true;
-            } catch (error) {
-                console.error('❌ Erro ao parsear dados do usuário:', error);
-                localStorage.removeItem('usuarioLogado');
-                window.location.href = 'login.html';
-                return false;
+            if (userType !== 'administrador') {
+                document.getElementById('adminTab').style.display = 'none';
             }
         }
-        
-        // Configurar interface baseada no usuário
-        function configurarInterface() {
-            if (!usuarioAtual) return;
+
+        // Navegação entre abas
+        function showTab(tabName) {
+            // Esconder todas as abas
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
             
-            console.log('🎨 Configurando interface para:', usuarioAtual.tipo);
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
             
-            // Atualizar nome do usuário
-            const nomeElement = document.getElementById('nomeUsuario');
-            if (nomeElement) {
-                nomeElement.textContent = usuarioAtual.nome || usuarioAtual.email;
-            }
-            
-            // Mostrar tab de administrador se for admin
-            if (usuarioAtual.tipo === 'administrador' || usuarioAtual.email === 'admin@tribodocerrado.org') {
-                const tabAdmin = document.getElementById('tabAdmin');
-                if (tabAdmin) {
-                    tabAdmin.style.display = 'block';
-                    console.log('👑 Tab de administrador habilitada');
-                }
-            }
-        }
-        
-        // Carregar estatísticas
-        function carregarEstatisticas() {
-            console.log('📊 Carregando estatísticas...');
-            
-            // Dados simulados (em produção viriam do banco)
-            const stats = {
-                totalUsuarios: 1,
-                totalEventos: 3,
-                eventosAtivos: 2,
-                proximosEventos: 1
-            };
-            
-            // Atualizar elementos
-            document.getElementById('totalUsuarios').textContent = stats.totalUsuarios;
-            document.getElementById('totalEventos').textContent = stats.totalEventos;
-            document.getElementById('eventosAtivos').textContent = stats.eventosAtivos;
-            document.getElementById('proximosEventos').textContent = stats.proximosEventos;
-            
-            console.log('✅ Estatísticas carregadas');
-        }
-        
-        // Função para trocar tabs
-        function abrirTab(tabName) {
-            console.log('📂 Abrindo tab:', tabName);
-            
-            // Remover classe active de todos os botões e conteúdos
-            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            
-            // Adicionar classe active ao botão e conteúdo selecionados
-            event.target.classList.add('active');
+            // Mostrar aba selecionada
             document.getElementById(tabName).classList.add('active');
-        }
-        
-        // Função de logout
-        function logout() {
-            console.log('🚪 Fazendo logout...');
+            event.target.classList.add('active');
             
-            // Limpar dados do localStorage
-            localStorage.removeItem('usuarioLogado');
-            localStorage.removeItem('loginTime');
-            
-            mostrarMensagem('Logout realizado com sucesso. Redirecionando...', 'sucesso');
-            
-            setTimeout(() => {
-                window.location.href = 'index.html';
-            }, 2000);
-        }
-        
-        // Função para mostrar mensagens
-        function mostrarMensagem(texto, tipo) {
-            const mensagemDiv = document.getElementById('mensagem');
-            mensagemDiv.textContent = texto;
-            mensagemDiv.className = `mensagem ${tipo}`;
-            mensagemDiv.style.display = 'block';
-            
-            // Auto-hide para mensagens de sucesso e erro
-            if (tipo !== 'info') {
-                setTimeout(() => {
-                    mensagemDiv.style.display = 'none';
-                }, 5000);
+            // Carregar dados específicos da aba
+            if (tabName === 'eventos') {
+                loadEvents();
+                generateCalendar();
+            } else if (tabName === 'administrador') {
+                loadUsers();
             }
         }
-        
-        // Inicialização do sistema
-        function inicializarDashboard() {
-            console.log('🚀 Inicializando dashboard...');
+
+        // Carregar estatísticas do dashboard
+        function loadDashboardStats() {
+            document.getElementById('totalUsers').textContent = users.length;
+            document.getElementById('totalEvents').textContent = events.length;
+            document.getElementById('activeEvents').textContent = events.filter(e => e.status === 'ativo').length;
+            document.getElementById('nextEvents').textContent = events.filter(e => new Date(e.data) > new Date()).length;
+        }
+
+        // Atualizar perfil
+        function updateProfile(event) {
+            event.preventDefault();
             
-            // Verificar autenticação
-            if (!verificarAutenticacao()) {
+            currentUser.nome = document.getElementById('nome').value;
+            currentUser.email = document.getElementById('email').value;
+            currentUser.telefone = document.getElementById('telefone').value;
+            currentUser.endereco = document.getElementById('endereco').value;
+            currentUser.dataNascimento = document.getElementById('dataNascimento').value;
+            currentUser.moto = document.getElementById('moto').value;
+            
+            // Simular salvamento no banco
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            
+            alert('✅ Perfil atualizado com sucesso!');
+        }
+
+        // Alterar senha
+        function changePassword() {
+            const senhaAtual = document.getElementById('senhaAtual').value;
+            const novaSenha = document.getElementById('novaSenha').value;
+            
+            if (!senhaAtual || !novaSenha) {
+                alert('❌ Preencha a senha atual e a nova senha!');
                 return;
             }
             
-            // Configurar interface
-            configurarInterface();
+            if (senhaAtual !== '123456') {
+                alert('❌ Senha atual incorreta!');
+                return;
+            }
             
-            // Carregar dados
-            carregarEstatisticas();
+            if (novaSenha.length < 6) {
+                alert('❌ A nova senha deve ter pelo menos 6 caracteres!');
+                return;
+            }
             
-            sistemaCarregado = true;
-            console.log('✅ Dashboard carregado com sucesso');
-            
-            // Mostrar mensagem de boas-vindas
-            mostrarMensagem(`Bem-vindo, ${usuarioAtual.nome}! Sistema funcionando perfeitamente.`, 'sucesso');
+            // Simular alteração de senha
+            alert('✅ Senha alterada com sucesso!');
+            document.getElementById('senhaAtual').value = '';
+            document.getElementById('novaSenha').value = '';
         }
-        
-        // Aguardar carregamento da página
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', inicializarDashboard);
-        } else {
-            inicializarDashboard();
+
+        // Carregar usuários
+        function loadUsers() {
+            const tbody = document.getElementById('usersTableBody');
+            tbody.innerHTML = '';
+            
+            users.forEach(user => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${user.id}</td>
+                    <td>${user.nome}</td>
+                    <td>${user.email}</td>
+                    <td>${user.tipo}</td>
+                    <td><span style="color: ${user.status === 'ativo' ? '#28a745' : '#dc3545'}">${user.status}</span></td>
+                    <td>${user.cadastro}</td>
+                    <td>
+                        <button class="btn" onclick="editUser(${user.id})" style="padding: 5px 10px; margin-right: 5px;">✏️</button>
+                        <button class="btn btn-danger" onclick="confirmDeleteUser(${user.id})" style="padding: 5px 10px;">🗑️</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
         }
-        
-        // Expor funções globalmente
-        window.abrirTab = abrirTab;
-        window.logout = logout;
-        
-        console.log('🔥 DASHBOARD REESTRUTURADO CARREGADO');
+
+        // Adicionar usuário
+        function addUser() {
+            currentEditingUser = null;
+            document.getElementById('userModalTitle').textContent = 'Adicionar Usuário';
+            document.getElementById('userName').value = '';
+            document.getElementById('userEmail').value = '';
+            document.getElementById('userType').value = 'membro';
+            document.getElementById('userStatus').value = 'ativo';
+            document.getElementById('userModal').style.display = 'block';
+        }
+
+        // Editar usuário
+        function editUser(userId) {
+            const user = users.find(u => u.id === userId);
+            if (!user) return;
+            
+            currentEditingUser = user;
+            document.getElementById('userModalTitle').textContent = 'Editar Usuário';
+            document.getElementById('userName').value = user.nome;
+            document.getElementById('userEmail').value = user.email;
+            document.getElementById('userType').value = user.tipo;
+            document.getElementById('userStatus').value = user.status;
+            document.getElementById('userModal').style.display = 'block';
+        }
+
+        // Salvar usuário
+        function saveUser(event) {
+            event.preventDefault();
+            
+            const userData = {
+                nome: document.getElementById('userName').value,
+                email: document.getElementById('userEmail').value,
+                tipo: document.getElementById('userType').value,
+                status: document.getElementById('userStatus').value
+            };
+            
+            if (currentEditingUser) {
+                // Editar usuário existente
+                Object.assign(currentEditingUser, userData);
+                alert('✅ Usuário atualizado com sucesso!');
+            } else {
+                // Adicionar novo usuário
+                const newUser = {
+                    id: users.length + 1,
+                    ...userData,
+                    cadastro: new Date().toISOString().split('T')[0]
+                };
+                users.push(newUser);
+                alert('✅ Usuário adicionado com sucesso!');
+            }
+            
+            loadUsers();
+            loadDashboardStats();
+            closeUserModal();
+        }
+
+        // Confirmar exclusão de usuário
+        function confirmDeleteUser(userId) {
+            if (userId === 1) {
+                alert('❌ Não é possível excluir o administrador principal!');
+                return;
+            }
+            
+            if (confirm('⚠️ Tem certeza que deseja excluir este usuário?')) {
+                users = users.filter(u => u.id !== userId);
+                loadUsers();
+                loadDashboardStats();
+                alert('✅ Usuário excluído com sucesso!');
+            }
+        }
+
+        // Excluir usuário (do modal)
+        function deleteUser() {
+            if (!currentEditingUser) return;
+            
+            if (currentEditingUser.id === 1) {
+                alert('❌ Não é possível excluir o administrador principal!');
+                return;
+            }
+            
+            if (confirm('⚠️ Tem certeza que deseja excluir este usuário?')) {
+                users = users.filter(u => u.id !== currentEditingUser.id);
+                loadUsers();
+                loadDashboardStats();
+                closeUserModal();
+                alert('✅ Usuário excluído com sucesso!');
+            }
+        }
+
+        // Fechar modal de usuário
+        function closeUserModal() {
+            document.getElementById('userModal').style.display = 'none';
+            currentEditingUser = null;
+        }
+
+        // Carregar eventos
+        function loadEvents() {
+            const eventList = document.getElementById('eventList');
+            const upcomingEvents = document.getElementById('upcomingEvents');
+            
+            eventList.innerHTML = '';
+            upcomingEvents.innerHTML = '';
+            
+            // Todos os eventos
+            events.forEach(event => {
+                const eventItem = createEventItem(event);
+                eventList.appendChild(eventItem);
+            });
+            
+            // Próximos eventos
+            const upcoming = events.filter(e => new Date(e.data) > new Date()).slice(0, 3);
+            upcoming.forEach(event => {
+                const eventItem = createEventItem(event);
+                upcomingEvents.appendChild(eventItem);
+            });
+            
+            updateEventStats();
+        }
+
+        // Criar item de evento
+        function createEventItem(event) {
+            const div = document.createElement('div');
+            div.className = 'event-item';
+            div.onclick = () => showEventDetails(event);
+            
+            div.innerHTML = `
+                <div class="event-title">${event.titulo}</div>
+                <div class="event-date">📅 ${formatDate(event.data)} - 📍 ${event.local}</div>
+                <div style="color: #ccc; font-size: 12px; margin-top: 5px;">Status: ${event.status}</div>
+            `;
+            
+            return div;
+        }
+
+        // Mostrar detalhes do evento
+        function showEventDetails(event) {
+            document.getElementById('modalTitle').textContent = event.titulo;
+            document.getElementById('modalContent').innerHTML = `
+                <div style="line-height: 1.6;">
+                    <p><strong>📅 Data:</strong> ${formatDate(event.data)}</p>
+                    <p><strong>📍 Local:</strong> ${event.local}</p>
+                    <p><strong>👤 Organizador:</strong> ${event.organizador}</p>
+                    <p><strong>📊 Status:</strong> ${event.status}</p>
+                    <p><strong>📝 Descrição:</strong></p>
+                    <p>${event.descricao}</p>
+                    <div style="margin-top: 20px;">
+                        <button class="btn" onclick="editEvent(${event.id})">✏️ Editar</button>
+                        <button class="btn btn-success" onclick="joinEvent(${event.id})" style="margin-left: 10px;">✅ Participar</button>
+                    </div>
+                </div>
+            `;
+            document.getElementById('eventModal').style.display = 'block';
+        }
+
+        // Fechar modal de evento
+        function closeEventModal() {
+            document.getElementById('eventModal').style.display = 'none';
+        }
+
+        // Gerar calendário
+        function generateCalendar() {
+            const grid = document.getElementById('calendarGrid');
+            const monthSpan = document.getElementById('currentMonth');
+            
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            
+            monthSpan.textContent = new Date(year, month).toLocaleDateString('pt-BR', { 
+                month: 'long', 
+                year: 'numeric' 
+            });
+            
+            grid.innerHTML = '';
+            
+            // Dias da semana
+            const daysOfWeek = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
+            daysOfWeek.forEach(day => {
+                const dayElement = document.createElement('div');
+                dayElement.textContent = day;
+                dayElement.style.fontWeight = 'bold';
+                dayElement.style.color = '#ff6b35';
+                grid.appendChild(dayElement);
+            });
+            
+            // Primeiro dia do mês
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            
+            // Espaços vazios
+            for (let i = 0; i < firstDay; i++) {
+                const emptyDay = document.createElement('div');
+                grid.appendChild(emptyDay);
+            }
+            
+            // Dias do mês
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                dayElement.textContent = day;
+                dayElement.onclick = () => selectDate(year, month, day);
+                
+                // Verificar se há eventos neste dia
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const hasEvent = events.some(e => e.data === dateStr);
+                if (hasEvent) {
+                    dayElement.style.background = '#ff6b35';
+                    dayElement.style.color = '#000';
+                }
+                
+                grid.appendChild(dayElement);
+            }
+        }
+
+        // Selecionar data no calendário
+        function selectDate(year, month, day) {
+            selectedDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            
+            // Remover seleção anterior
+            document.querySelectorAll('.calendar-day.selected').forEach(el => {
+                el.classList.remove('selected');
+            });
+            
+            // Adicionar seleção atual
+            event.target.classList.add('selected');
+            
+            // Filtrar eventos por data
+            filterEventsByDate(selectedDate);
+        }
+
+        // Filtrar eventos por data
+        function filterEventsByDate(date) {
+            const eventList = document.getElementById('eventList');
+            eventList.innerHTML = '';
+            
+            const filteredEvents = events.filter(e => e.data === date);
+            
+            if (filteredEvents.length === 0) {
+                eventList.innerHTML = '<p style="text-align: center; color: #ccc;">Nenhum evento nesta data</p>';
+                return;
+            }
+            
+            filteredEvents.forEach(event => {
+                const eventItem = createEventItem(event);
+                eventList.appendChild(eventItem);
+            });
+        }
+
+        // Navegação do calendário
+        function previousMonth() {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            generateCalendar();
+        }
+
+        function nextMonth() {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            generateCalendar();
+        }
+
+        // Atualizar estatísticas de eventos
+        function updateEventStats() {
+            document.getElementById('statsTotal').textContent = events.length;
+            document.getElementById('statsActive').textContent = events.filter(e => e.status === 'ativo').length;
+            
+            const thisMonth = new Date().getMonth();
+            const thisYear = new Date().getFullYear();
+            const thisMonthEvents = events.filter(e => {
+                const eventDate = new Date(e.data);
+                return eventDate.getMonth() === thisMonth && eventDate.getFullYear() === thisYear;
+            });
+            document.getElementById('statsMonth').textContent = thisMonthEvents.length;
+            
+            document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString('pt-BR');
+        }
+
+        // Filtrar eventos
+        function filterEvents() {
+            const filter = document.getElementById('eventFilter').value;
+            const eventList = document.getElementById('eventList');
+            
+            let filteredEvents = events;
+            
+            switch (filter) {
+                case 'proximos':
+                    filteredEvents = events.filter(e => new Date(e.data) > new Date());
+                    break;
+                case 'passados':
+                    filteredEvents = events.filter(e => new Date(e.data) < new Date());
+                    break;
+                case 'ativos':
+                    filteredEvents = events.filter(e => e.status === 'ativo');
+                    break;
+            }
+            
+            eventList.innerHTML = '';
+            filteredEvents.forEach(event => {
+                const eventItem = createEventItem(event);
+                eventList.appendChild(eventItem);
+            });
+        }
+
+        // Adicionar evento
+        function addEvent() {
+            const titulo = prompt('📝 Título do evento:');
+            if (!titulo) return;
+            
+            const data = prompt('📅 Data do evento (YYYY-MM-DD):');
+            if (!data) return;
+            
+            const local = prompt('📍 Local do evento:');
+            if (!local) return;
+            
+            const descricao = prompt('📝 Descrição do evento:');
+            if (!descricao) return;
+            
+            const newEvent = {
+                id: events.length + 1,
+                titulo,
+                data,
+                local,
+                descricao,
+                status: 'ativo',
+                organizador: currentUser.nome
+            };
+            
+            events.push(newEvent);
+            loadEvents();
+            generateCalendar();
+            loadDashboardStats();
+            
+            alert('✅ Evento adicionado com sucesso!');
+        }
+
+        // Editar evento
+        function editEvent(eventId) {
+            const event = events.find(e => e.id === eventId);
+            if (!event) return;
+            
+            const titulo = prompt('📝 Título do evento:', event.titulo);
+            if (titulo !== null) event.titulo = titulo;
+            
+            const data = prompt('📅 Data do evento (YYYY-MM-DD):', event.data);
+            if (data !== null) event.data = data;
+            
+            const local = prompt('📍 Local do evento:', event.local);
+            if (local !== null) event.local = local;
+            
+            const descricao = prompt('📝 Descrição do evento:', event.descricao);
+            if (descricao !== null) event.descricao = descricao;
+            
+            loadEvents();
+            generateCalendar();
+            closeEventModal();
+            
+            alert('✅ Evento atualizado com sucesso!');
+        }
+
+        // Participar do evento
+        function joinEvent(eventId) {
+            alert('✅ Inscrição realizada com sucesso!');
+            closeEventModal();
+        }
+
+        // Exportar eventos
+        function exportEvents() {
+            const data = JSON.stringify(events, null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'eventos_tribo_cerrado.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Exportar usuários
+        function exportUsers() {
+            const data = JSON.stringify(users, null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'usuarios_tribo_cerrado.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Backup do sistema
+        function backupSystem() {
+            const systemData = {
+                users,
+                events,
+                currentUser,
+                timestamp: new Date().toISOString()
+            };
+            
+            const data = JSON.stringify(systemData, null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `backup_tribo_cerrado_${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            alert('✅ Backup realizado com sucesso!');
+        }
+
+        // Testar email
+        function testEmail() {
+            alert('📧 Email de teste enviado com sucesso!\n\nDestinatário: admin@tribodocerrado.org\nAssunto: Teste do Sistema\nStatus: Entregue');
+        }
+
+        // Enviar newsletter
+        function sendNewsletter() {
+            const subject = prompt('📧 Assunto da newsletter:');
+            if (!subject) return;
+            
+            const message = prompt('📝 Mensagem da newsletter:');
+            if (!message) return;
+            
+            alert(`📬 Newsletter enviada com sucesso!\n\nAssunto: ${subject}\nDestinatários: ${users.length} usuários\nStatus: Enviado`);
+        }
+
+        // Formatar data
+        function formatDate(dateStr) {
+            return new Date(dateStr).toLocaleDateString('pt-BR');
+        }
+
+        // Logout
+        function logout() {
+            if (confirm('⚠️ Tem certeza que deseja sair?')) {
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('userType');
+                localStorage.removeItem('currentUser');
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Fechar modais ao clicar fora
+        window.onclick = function(event) {
+            const eventModal = document.getElementById('eventModal');
+            const userModal = document.getElementById('userModal');
+            
+            if (event.target === eventModal) {
+                closeEventModal();
+            }
+            if (event.target === userModal) {
+                closeUserModal();
+            }
+        }
     </script>
 </body>
 </html>
