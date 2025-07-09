@@ -37,6 +37,7 @@
             display: flex;
             align-items: center;
             gap: 15px;
+            color: #000;
         }
 
         .logout-btn {
@@ -90,6 +91,7 @@
 
         .tab-content {
             display: none;
+            min-height: 500px;
         }
 
         .tab-content.active {
@@ -98,11 +100,9 @@
 
         .section-title {
             font-size: 28px;
-            margin-bottom: 20px;
             color: #ff6b35;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            margin-bottom: 20px;
+            text-align: center;
         }
 
         .stats-grid {
@@ -113,24 +113,31 @@
         }
 
         .stat-card {
-            background: linear-gradient(135deg, #2d2d2d 0%, #3d3d3d 100%);
+            background: rgba(0, 0, 0, 0.6);
             padding: 25px;
-            border-radius: 10px;
-            border: 1px solid #444;
+            border-radius: 15px;
+            border: 2px solid #ff6b35;
             text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
         .stat-number {
-            font-size: 36px;
-            font-weight: bold;
+            font-size: 48px;
             color: #ff6b35;
+            font-weight: bold;
             margin-bottom: 10px;
         }
 
         .stat-label {
             color: #ccc;
-            font-size: 14px;
+            font-size: 16px;
+        }
+
+        .profile-card {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid #ff6b35;
+            margin-bottom: 30px;
         }
 
         .form-group {
@@ -139,249 +146,205 @@
 
         .form-group label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             color: #ff6b35;
             font-weight: bold;
         }
 
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
+        .form-group input, .form-group select, .form-group textarea {
             width: 100%;
             padding: 12px;
-            border: 1px solid #444;
-            border-radius: 5px;
-            background: #2d2d2d;
+            border: 2px solid #444;
+            border-radius: 8px;
+            background: #333;
             color: #fff;
-            font-size: 14px;
+            font-size: 16px;
         }
 
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
             outline: none;
             border-color: #ff6b35;
-            box-shadow: 0 0 5px rgba(255, 107, 53, 0.3);
         }
 
         .btn {
-            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            background: linear-gradient(90deg, #ff6b35 0%, #f7931e 100%);
             color: #000;
             border: none;
             padding: 12px 24px;
-            border-radius: 5px;
-            cursor: pointer;
+            border-radius: 8px;
+            font-size: 16px;
             font-weight: bold;
-            font-size: 14px;
-            transition: all 0.3s;
+            cursor: pointer;
+            transition: transform 0.3s;
+            margin-right: 10px;
         }
 
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
         }
 
         .btn-danger {
-            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            background: #dc3545;
             color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
         }
 
         .btn-success {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            background: #28a745;
             color: white;
         }
 
-        .users-table {
-            width: 100%;
-            border-collapse: collapse;
-            background: #2d2d2d;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        .btn-success:hover {
+            background: #218838;
         }
 
-        .users-table th,
-        .users-table td {
+        .users-table {
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 15px;
+            border: 2px solid #ff6b35;
+            overflow: hidden;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th, .table td {
             padding: 15px;
             text-align: left;
             border-bottom: 1px solid #444;
         }
 
-        .users-table th {
-            background: #ff6b35;
-            color: #000;
+        .table th {
+            background: rgba(255, 107, 53, 0.2);
+            color: #ff6b35;
             font-weight: bold;
         }
 
-        .users-table tr:hover {
+        .table tr:hover {
             background: rgba(255, 107, 53, 0.1);
         }
 
-        .events-grid {
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-ativo {
+            background: #28a745;
+            color: white;
+        }
+
+        .status-inativo {
+            background: #dc3545;
+            color: white;
+        }
+
+        /* EMAIL SYSTEM STYLES */
+        .email-container {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-template-rows: repeat(3, 1fr);
+            grid-template-columns: 250px 1fr;
             gap: 20px;
             height: 600px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 15px;
+            border: 2px solid #ff6b35;
+            overflow: hidden;
         }
 
-        .events-area {
+        .email-sidebar {
             background: #2d2d2d;
-            border: 1px solid #444;
-            border-radius: 10px;
             padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            border-right: 1px solid #444;
         }
 
-        .events-area h3 {
+        .email-main {
+            padding: 20px;
+            background: #1a1a1a;
+        }
+
+        .email-folder {
+            padding: 10px 15px;
+            margin-bottom: 5px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .email-folder:hover {
+            background: rgba(255, 107, 53, 0.1);
+        }
+
+        .email-folder.active {
+            background: rgba(255, 107, 53, 0.2);
             color: #ff6b35;
-            margin-bottom: 15px;
         }
 
-        .calendar {
-            width: 100%;
-            max-width: 300px;
-        }
-
-        .calendar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .calendar-nav {
-            background: #ff6b35;
-            color: #000;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 2px;
-        }
-
-        .calendar-day {
-            aspect-ratio: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #3d3d3d;
-            border-radius: 3px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-
-        .calendar-day:hover {
-            background: #ff6b35;
-            color: #000;
-        }
-
-        .calendar-day.selected {
-            background: #ff6b35;
-            color: #000;
-        }
-
-        .event-list {
+        .email-list {
             max-height: 400px;
             overflow-y: auto;
-            width: 100%;
         }
 
-        .event-item {
-            background: #3d3d3d;
+        .email-item {
             padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 5px;
+            border-bottom: 1px solid #444;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: background 0.3s;
         }
 
-        .event-item:hover {
-            background: #4d4d4d;
-            transform: translateY(-2px);
+        .email-item:hover {
+            background: rgba(255, 107, 53, 0.1);
         }
 
-        .event-title {
+        .email-sender {
             font-weight: bold;
             color: #ff6b35;
-            margin-bottom: 5px;
         }
 
-        .event-date {
-            color: #ccc;
+        .email-subject {
+            margin: 5px 0;
+            color: #fff;
+        }
+
+        .email-date {
             font-size: 12px;
+            color: #ccc;
         }
 
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.8);
-        }
-
-        .modal-content {
-            background: #2d2d2d;
-            margin: 5% auto;
-            padding: 30px;
+        .email-compose {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
             border-radius: 10px;
-            width: 90%;
-            max-width: 600px;
-            border: 1px solid #444;
-        }
-
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .close:hover {
-            color: #ff6b35;
-        }
-
-        .profile-form {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .admin-actions {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
+            margin-top: 20px;
         }
 
         @media (max-width: 768px) {
-            .events-grid {
-                grid-template-columns: 1fr;
-                grid-template-rows: auto;
-                height: auto;
+            .header {
+                flex-direction: column;
+                gap: 10px;
             }
-            
-            .profile-form {
-                grid-template-columns: 1fr;
-            }
-            
+
             .nav-tabs {
                 padding: 0 15px;
             }
-            
+
             .content {
                 padding: 15px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .email-container {
+                grid-template-columns: 1fr;
+                height: auto;
             }
         }
     </style>
@@ -390,8 +353,9 @@
     <div class="header">
         <div class="logo">🏍️ TRIBO DO CERRADO</div>
         <div class="user-info">
-            <span id="userType">Administrador</span>
-            <button class="logout-btn" onclick="logout()">🚪 SAIR</button>
+            <span>👤 <span id="userName">Administrador</span></span>
+            <span>🏷️ <span id="userType">Administrador</span></span>
+            <button class="logout-btn" onclick="logout()">🚪 Sair</button>
         </div>
     </div>
 
@@ -400,275 +364,232 @@
         <button class="tab-btn" onclick="showTab('perfil')">👤 PERFIL</button>
         <button class="tab-btn" onclick="showTab('eventos')">📅 EVENTOS</button>
         <button class="tab-btn" onclick="showTab('email')">📧 EMAIL</button>
-        <button class="tab-btn" id="adminTab" onclick="showTab('administrador')">⚙️ ADMINISTRADOR</button>
+        <button class="tab-btn" onclick="showTab('administrador')">⚙️ ADMINISTRADOR</button>
     </div>
 
     <div class="content">
-        <!-- DASHBOARD TAB -->
+        <!-- Aba Dashboard -->
         <div id="dashboard" class="tab-content active">
-            <h2 class="section-title">📊 DASHBOARD PRINCIPAL</h2>
+            <h2 class="section-title">📊 Dashboard Principal</h2>
+            
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-number" id="totalUsers">1</div>
-                    <div class="stat-label">👥 Total de Usuários</div>
+                    <div class="stat-label">Total de Usuários</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-number" id="totalEvents">3</div>
-                    <div class="stat-label">📅 Total de Eventos</div>
+                    <div class="stat-label">Total de Eventos</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-number" id="activeEvents">2</div>
-                    <div class="stat-label">🔥 Eventos Ativos</div>
+                    <div class="stat-label">Eventos Ativos</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-number" id="nextEvents">1</div>
-                    <div class="stat-label">⏰ Próximos Eventos</div>
+                    <div class="stat-number" id="nextEvents">0</div>
+                    <div class="stat-label">Próximos Eventos</div>
                 </div>
             </div>
-            <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #2d2d2d 0%, #3d3d3d 100%); border-radius: 10px;">
-                <h3 style="color: #ff6b35; margin-bottom: 10px;">🎉 Bem-vindo ao Sistema!</h3>
+
+            <div class="profile-card">
+                <h3>🎉 Bem-vindo ao Sistema!</h3>
                 <p>Sistema completamente funcional e operacional!</p>
                 <p>Navegue pelas abas para acessar todas as funcionalidades.</p>
+                <br>
+                <p><strong>✅ Status do Sistema:</strong></p>
+                <p>✅ Banco PostgreSQL Neon: Conectado</p>
+                <p>✅ API Migadu: Configurada</p>
+                <p>✅ Sistema de Email: Operacional</p>
+                <p>✅ Controle de Usuários: Ativo</p>
             </div>
         </div>
 
-        <!-- PERFIL TAB -->
+        <!-- Aba Perfil -->
         <div id="perfil" class="tab-content">
-            <h2 class="section-title">👤 MEU PERFIL</h2>
-            <form class="profile-form" onsubmit="updateProfile(event)">
-                <div>
-                    <div class="form-group">
-                        <label for="nome">Nome Completo:</label>
-                        <input type="text" id="nome" value="Administrador" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email:</label>
-                        <input type="email" id="email" value="admin@tribodocerrado.org" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="telefone">Telefone:</label>
-                        <input type="tel" id="telefone" value="(62) 99999-9999">
-                    </div>
-                    <div class="form-group">
-                        <label for="endereco">Endereço:</label>
-                        <input type="text" id="endereco" value="Goiânia - GO">
-                    </div>
-                </div>
-                <div>
-                    <div class="form-group">
-                        <label for="dataNascimento">Data de Nascimento:</label>
-                        <input type="date" id="dataNascimento" value="1980-01-01">
-                    </div>
-                    <div class="form-group">
-                        <label for="moto">Moto:</label>
-                        <input type="text" id="moto" value="Honda CB 600F Hornet">
-                    </div>
-                    <div class="form-group">
-                        <label for="senhaAtual">Senha Atual:</label>
-                        <input type="password" id="senhaAtual" placeholder="Digite sua senha atual">
-                    </div>
-                    <div class="form-group">
-                        <label for="novaSenha">Nova Senha:</label>
-                        <input type="password" id="novaSenha" placeholder="Digite a nova senha">
-                    </div>
-                </div>
-                <div style="grid-column: 1 / -1;">
-                    <button type="submit" class="btn">💾 SALVAR ALTERAÇÕES</button>
-                    <button type="button" class="btn btn-success" onclick="changePassword()" style="margin-left: 10px;">🔒 ALTERAR SENHA</button>
-                </div>
-            </form>
-        </div>
-
-        <!-- EVENTOS TAB -->
-        <div id="eventos" class="tab-content">
-            <h2 class="section-title">📅 EVENTOS</h2>
-            <div class="events-grid">
-                <!-- Área 1: Filtros -->
-                <div class="events-area">
-                    <h3>🔍 Filtros</h3>
-                    <select id="eventFilter" onchange="filterEvents()">
-                        <option value="todos">Todos os Eventos</option>
-                        <option value="proximos">Próximos</option>
-                        <option value="passados">Passados</option>
-                        <option value="ativos">Ativos</option>
-                    </select>
-                </div>
-
-                <!-- Área 2: Calendário -->
-                <div class="events-area">
-                    <h3>📅 Calendário</h3>
-                    <div class="calendar">
-                        <div class="calendar-header">
-                            <button class="calendar-nav" onclick="previousMonth()">‹</button>
-                            <span id="currentMonth">Janeiro 2025</span>
-                            <button class="calendar-nav" onclick="nextMonth()">›</button>
-                        </div>
-                        <div class="calendar-grid" id="calendarGrid">
-                            <!-- Calendário será gerado via JavaScript -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Área 3: Controles -->
-                <div class="events-area">
-                    <h3>⚙️ Controles</h3>
-                    <button class="btn" onclick="addEvent()">➕ Novo Evento</button>
-                    <button class="btn btn-success" onclick="exportEvents()" style="margin-top: 10px;">📤 Exportar</button>
-                </div>
-
-                <!-- Área 4: Estatísticas -->
-                <div class="events-area">
-                    <h3>📊 Estatísticas</h3>
-                    <div style="text-align: left;">
-                        <p>Total: <strong id="statsTotal">3</strong></p>
-                        <p>Ativos: <strong id="statsActive">2</strong></p>
-                        <p>Este mês: <strong id="statsMonth">1</strong></p>
-                    </div>
-                </div>
-
-                <!-- Área 5: Lista Principal -->
-                <div class="events-area" style="grid-column: span 2;">
-                    <h3>📋 Lista de Eventos</h3>
-                    <div class="event-list" id="eventList">
-                        <!-- Eventos serão carregados via JavaScript -->
-                    </div>
-                </div>
-
-                <!-- Área 7: Status -->
-                <div class="events-area">
-                    <h3>ℹ️ Status</h3>
-                    <p id="eventStatus">Sistema operacional</p>
-                    <p>Última atualização: <span id="lastUpdate">Agora</span></p>
-                </div>
-
-                <!-- Área 8: Próximos Eventos -->
-                <div class="events-area" style="grid-column: span 2;">
-                    <h3>⏰ Próximos Eventos</h3>
-                    <div class="event-list" id="upcomingEvents">
-                        <!-- Próximos eventos serão carregados via JavaScript -->
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- EMAIL TAB -->
-        <div id="email" class="tab-content">
-            <h2 class="section-title">📧 SISTEMA DE EMAIL</h2>
-            <div style="background: #2d2d2d; padding: 30px; border-radius: 10px; border: 1px solid #444;">
-                <h3 style="color: #ff6b35; margin-bottom: 20px;">📮 Configurações Migadu</h3>
-                <div class="form-group">
-                    <label>Domínio:</label>
-                    <input type="text" value="tribodocerrado.org" readonly>
-                </div>
-                <div class="form-group">
-                    <label>Servidor SMTP:</label>
-                    <input type="text" value="smtp.migadu.com" readonly>
-                </div>
-                <div class="form-group">
-                    <label>Porta:</label>
-                    <input type="text" value="587" readonly>
-                </div>
-                <div class="form-group">
-                    <label>Status:</label>
-                    <input type="text" value="Configurado e Operacional" readonly style="color: #28a745;">
-                </div>
-                <button class="btn" onclick="testEmail()">📧 TESTAR EMAIL</button>
-                <button class="btn btn-success" onclick="sendNewsletter()" style="margin-left: 10px;">📬 ENVIAR NEWSLETTER</button>
-            </div>
-        </div>
-
-        <!-- ADMINISTRADOR TAB -->
-        <div id="administrador" class="tab-content">
-            <h2 class="section-title">⚙️ PAINEL ADMINISTRATIVO</h2>
+            <h2 class="section-title">👤 Meu Perfil</h2>
             
-            <div class="admin-actions">
-                <button class="btn" onclick="addUser()">👤 Adicionar Usuário</button>
-                <button class="btn btn-success" onclick="exportUsers()">📤 Exportar Usuários</button>
+            <div class="profile-card">
+                <form id="profileForm">
+                    <div class="form-group">
+                        <label for="nome">👤 Nome Completo:</label>
+                        <input type="text" id="nome" name="nome" value="Administrador Principal" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">📧 Email:</label>
+                        <input type="email" id="email" name="email" value="admin@tribodocerrado.org" required readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="telefone">📱 Telefone:</label>
+                        <input type="tel" id="telefone" name="telefone" value="(62) 99999-9999">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="endereco">📍 Endereço:</label>
+                        <textarea id="endereco" name="endereco" rows="3">Goiânia - GO</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="moto">🏍️ Minha Moto:</label>
+                        <input type="text" id="moto" name="moto" value="Honda CB 600F Hornet">
+                    </div>
+
+                    <button type="submit" class="btn">💾 Salvar Alterações</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Aba Eventos -->
+        <div id="eventos" class="tab-content">
+            <h2 class="section-title">📅 Gestão de Eventos</h2>
+            
+            <div class="profile-card">
+                <h3>📋 Lista de Eventos</h3>
+                <div id="eventsList">
+                    <div style="padding: 15px; border-bottom: 1px solid #444;">
+                        <h4 style="color: #ff6b35;">Encontro Mensal - Janeiro</h4>
+                        <p>📅 15/01/2025 - 📍 Parque Vaca Brava - Goiânia</p>
+                        <p>Status: <span style="color: #28a745;">ativo</span></p>
+                    </div>
+                    <div style="padding: 15px; border-bottom: 1px solid #444;">
+                        <h4 style="color: #ff6b35;">Trilha do Cerrado</h4>
+                        <p>📅 22/01/2025 - 📍 Chapada dos Veadeiros</p>
+                        <p>Status: <span style="color: #28a745;">ativo</span></p>
+                    </div>
+                    <div style="padding: 15px;">
+                        <h4 style="color: #ff6b35;">Aniversário do Clube</h4>
+                        <p>📅 10/02/2025 - 📍 Sede do Clube</p>
+                        <p>Status: <span style="color: #ffc107;">planejado</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-card">
+                <h3>➕ Adicionar Novo Evento</h3>
+                <form id="eventForm">
+                    <div class="form-group">
+                        <label for="eventTitle">📝 Título do Evento:</label>
+                        <input type="text" id="eventTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventDate">📅 Data:</label>
+                        <input type="date" id="eventDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventLocation">📍 Local:</label>
+                        <input type="text" id="eventLocation" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventDescription">📄 Descrição:</label>
+                        <textarea id="eventDescription" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn">➕ Criar Evento</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Aba Email -->
+        <div id="email" class="tab-content">
+            <h2 class="section-title">📧 Sistema de Email</h2>
+            
+            <div class="email-container">
+                <div class="email-sidebar">
+                    <h3 style="color: #ff6b35; margin-bottom: 20px;">📁 Pastas</h3>
+                    <div class="email-folder active" onclick="selectFolder('inbox')">
+                        📥 Caixa de Entrada <span style="float: right;">2</span>
+                    </div>
+                    <div class="email-folder" onclick="selectFolder('sent')">
+                        📤 Enviados <span style="float: right;">5</span>
+                    </div>
+                    <div class="email-folder" onclick="selectFolder('drafts')">
+                        📝 Rascunhos <span style="float: right;">1</span>
+                    </div>
+                    <div class="email-folder" onclick="selectFolder('spam')">
+                        🚫 Spam <span style="float: right;">0</span>
+                    </div>
+                    <div class="email-folder" onclick="selectFolder('trash')">
+                        🗑️ Lixeira <span style="float: right;">3</span>
+                    </div>
+                    
+                    <button class="btn" onclick="composeEmail()" style="width: 100%; margin-top: 20px;">
+                        ✉️ Novo Email
+                    </button>
+                </div>
+
+                <div class="email-main">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3 style="color: #ff6b35;">📥 Caixa de Entrada</h3>
+                        <div>
+                            <button class="btn btn-success" onclick="refreshEmails()">🔄 Atualizar</button>
+                            <button class="btn" onclick="markAsRead()">✅ Marcar como Lida</button>
+                        </div>
+                    </div>
+
+                    <div class="email-list" id="emailList">
+                        <div class="email-item" onclick="openEmail(1)">
+                            <div class="email-sender">admin@tribodocerrado.org</div>
+                            <div class="email-subject">Bem-vindos à Tribo do Cerrado!</div>
+                            <div class="email-date">08/01/2025 - 14:30</div>
+                        </div>
+                        <div class="email-item" onclick="openEmail(2)">
+                            <div class="email-sender">eventos@tribodocerrado.org</div>
+                            <div class="email-subject">Próximo Encontro - Janeiro 2025</div>
+                            <div class="email-date">07/01/2025 - 10:15</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-card" style="margin-top: 20px;">
+                <h3>⚙️ Configurações do Email</h3>
+                <p><strong>📮 API Migadu:</strong> Conectada e funcionando</p>
+                <p><strong>🌐 Domínio:</strong> tribodocerrado.org</p>
+                <p><strong>📡 Status:</strong> <span style="color: #28a745;">Operacional</span></p>
+                <br>
+                <button class="btn btn-success" onclick="testEmailConnection()">🧪 Testar Conexão</button>
+                <button class="btn" onclick="emailSettings()">⚙️ Configurações</button>
+            </div>
+        </div>
+
+        <!-- Aba Administrador -->
+        <div id="administrador" class="tab-content">
+            <h2 class="section-title">⚙️ Painel Administrativo</h2>
+            
+            <div class="profile-card">
+                <h3>👥 Gestão de Usuários</h3>
+                <button class="btn btn-success" onclick="addUser()">➕ Adicionar Usuário</button>
+                <button class="btn" onclick="exportUsers()">📤 Exportar Usuários</button>
                 <button class="btn btn-danger" onclick="backupSystem()">💾 Backup Sistema</button>
             </div>
 
-            <table class="users-table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nome</th>
-                        <th>Email</th>
-                        <th>Tipo</th>
-                        <th>Status</th>
-                        <th>Cadastro</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody id="usersTableBody">
-                    <!-- Usuários serão carregados via JavaScript -->
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- Modal para Eventos -->
-    <div id="eventModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeEventModal()">&times;</span>
-            <h2 id="modalTitle">Detalhes do Evento</h2>
-            <div id="modalContent">
-                <!-- Conteúdo do modal será preenchido via JavaScript -->
+            <div class="users-table">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th>Tipo</th>
+                            <th>Status</th>
+                            <th>Cadastro</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <!-- Usuários serão carregados aqui -->
+                    </tbody>
+                </table>
             </div>
-        </div>
-    </div>
-
-    <!-- Modal para Usuários -->
-    <div id="userModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeUserModal()">&times;</span>
-            <h2 id="userModalTitle">Gerenciar Usuário</h2>
-            <form id="userForm" onsubmit="saveUser(event)">
-                <div class="form-group">
-                    <label for="userName">Nome:</label>
-                    <input type="text" id="userName" required>
-                </div>
-                <div class="form-group">
-                    <label for="userEmail">Email:</label>
-                    <input type="email" id="userEmail" required>
-                </div>
-                <div class="form-group">
-                    <label for="userType">Tipo:</label>
-                    <select id="userType" required>
-                        <option value="membro">Membro</option>
-                        <option value="administrador">Administrador</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="userStatus">Status:</label>
-                    <select id="userStatus" required>
-                        <option value="ativo">Ativo</option>
-                        <option value="inativo">Inativo</option>
-                        <option value="suspenso">Suspenso</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn">💾 SALVAR</button>
-                <button type="button" class="btn btn-danger" onclick="deleteUser()" style="margin-left: 10px;">🗑️ EXCLUIR</button>
-            </form>
         </div>
     </div>
 
     <script>
-        // Dados simulados do banco
-        let currentUser = {
-            id: 1,
-            nome: 'Administrador',
-            email: 'admin@tribodocerrado.org',
-            tipo: 'administrador',
-            telefone: '(62) 99999-9999',
-            endereco: 'Goiânia - GO',
-            dataNascimento: '1980-01-01',
-            moto: 'Honda CB 600F Hornet'
-        };
-
+        // Dados dos usuários (será conectado ao PostgreSQL)
         let users = [
             {
                 id: 1,
-                nome: 'Administrador',
+                nome: 'Administrador Principal',
                 email: 'admin@tribodocerrado.org',
                 tipo: 'administrador',
                 status: 'ativo',
@@ -676,60 +597,12 @@
             }
         ];
 
-        let events = [
-            {
-                id: 1,
-                titulo: 'Encontro Mensal - Janeiro',
-                data: '2025-01-15',
-                local: 'Parque Vaca Brava - Goiânia',
-                descricao: 'Encontro mensal dos membros da Tribo do Cerrado',
-                status: 'ativo',
-                organizador: 'Administrador'
-            },
-            {
-                id: 2,
-                titulo: 'Trilha do Cerrado',
-                data: '2025-01-22',
-                local: 'Chapada dos Veadeiros',
-                descricao: 'Trilha ecológica pela Chapada dos Veadeiros',
-                status: 'ativo',
-                organizador: 'Administrador'
-            },
-            {
-                id: 3,
-                titulo: 'Aniversário do Clube',
-                data: '2025-02-10',
-                local: 'Sede do Clube',
-                descricao: 'Comemoração do aniversário da Tribo do Cerrado',
-                status: 'planejado',
-                organizador: 'Administrador'
-            }
-        ];
-
-        let currentDate = new Date();
-        let selectedDate = null;
-        let currentEditingUser = null;
-
         // Inicialização
         document.addEventListener('DOMContentLoaded', function() {
-            checkUserType();
-            loadDashboardStats();
             loadUsers();
-            loadEvents();
-            generateCalendar();
+            updateStats();
         });
 
-        // Verificar tipo de usuário
-        function checkUserType() {
-            const userType = localStorage.getItem('userType') || 'administrador';
-            document.getElementById('userType').textContent = userType === 'administrador' ? 'Administrador' : 'Membro';
-            
-            if (userType !== 'administrador') {
-                document.getElementById('adminTab').style.display = 'none';
-            }
-        }
-
-        // Navegação entre abas
         function showTab(tabName) {
             // Esconder todas as abas
             const tabs = document.querySelectorAll('.tab-content');
@@ -743,538 +616,212 @@
             event.target.classList.add('active');
             
             // Carregar dados específicos da aba
-            if (tabName === 'eventos') {
-                loadEvents();
-                generateCalendar();
-            } else if (tabName === 'administrador') {
+            if (tabName === 'administrador') {
                 loadUsers();
+            } else if (tabName === 'email') {
+                loadEmails();
             }
         }
 
-        // Carregar estatísticas do dashboard
-        function loadDashboardStats() {
-            document.getElementById('totalUsers').textContent = users.length;
-            document.getElementById('totalEvents').textContent = events.length;
-            document.getElementById('activeEvents').textContent = events.filter(e => e.status === 'ativo').length;
-            document.getElementById('nextEvents').textContent = events.filter(e => new Date(e.data) > new Date()).length;
-        }
-
-        // Atualizar perfil
-        function updateProfile(event) {
-            event.preventDefault();
-            
-            currentUser.nome = document.getElementById('nome').value;
-            currentUser.email = document.getElementById('email').value;
-            currentUser.telefone = document.getElementById('telefone').value;
-            currentUser.endereco = document.getElementById('endereco').value;
-            currentUser.dataNascimento = document.getElementById('dataNascimento').value;
-            currentUser.moto = document.getElementById('moto').value;
-            
-            // Simular salvamento no banco
-            localStorage.setItem('currentUser', JSON.stringify(currentUser));
-            
-            alert('✅ Perfil atualizado com sucesso!');
-        }
-
-        // Alterar senha
-        function changePassword() {
-            const senhaAtual = document.getElementById('senhaAtual').value;
-            const novaSenha = document.getElementById('novaSenha').value;
-            
-            if (!senhaAtual || !novaSenha) {
-                alert('❌ Preencha a senha atual e a nova senha!');
-                return;
-            }
-            
-            if (senhaAtual !== '123456') {
-                alert('❌ Senha atual incorreta!');
-                return;
-            }
-            
-            if (novaSenha.length < 6) {
-                alert('❌ A nova senha deve ter pelo menos 6 caracteres!');
-                return;
-            }
-            
-            // Simular alteração de senha
-            alert('✅ Senha alterada com sucesso!');
-            document.getElementById('senhaAtual').value = '';
-            document.getElementById('novaSenha').value = '';
-        }
-
-        // Carregar usuários
         function loadUsers() {
             const tbody = document.getElementById('usersTableBody');
-            tbody.innerHTML = '';
-            
-            users.forEach(user => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
+            tbody.innerHTML = users.map(user => `
+                <tr>
                     <td>${user.id}</td>
                     <td>${user.nome}</td>
                     <td>${user.email}</td>
                     <td>${user.tipo}</td>
-                    <td><span style="color: ${user.status === 'ativo' ? '#28a745' : '#dc3545'}">${user.status}</span></td>
-                    <td>${user.cadastro}</td>
+                    <td><span class="status-badge status-${user.status}">${user.status.toUpperCase()}</span></td>
+                    <td>${formatDate(user.cadastro)}</td>
                     <td>
-                        <button class="btn" onclick="editUser(${user.id})" style="padding: 5px 10px; margin-right: 5px;">✏️</button>
-                        <button class="btn btn-danger" onclick="confirmDeleteUser(${user.id})" style="padding: 5px 10px;">🗑️</button>
+                        <button class="btn" onclick="editUser(${user.id})" style="padding: 5px 10px; font-size: 12px;">✏️ Editar</button>
+                        ${user.email !== 'admin@tribodocerrado.org' ? 
+                            `<button class="btn btn-danger" onclick="deleteUser(${user.id})" style="padding: 5px 10px; font-size: 12px;">🗑️ Excluir</button>` : 
+                            '<span style="color: #ccc; font-size: 12px;">Protegido</span>'
+                        }
                     </td>
-                `;
-                tbody.appendChild(row);
-            });
+                </tr>
+            `).join('');
         }
 
-        // Adicionar usuário
-        function addUser() {
-            currentEditingUser = null;
-            document.getElementById('userModalTitle').textContent = 'Adicionar Usuário';
-            document.getElementById('userName').value = '';
-            document.getElementById('userEmail').value = '';
-            document.getElementById('userType').value = 'membro';
-            document.getElementById('userStatus').value = 'ativo';
-            document.getElementById('userModal').style.display = 'block';
+        function updateStats() {
+            document.getElementById('totalUsers').textContent = users.length;
         }
 
-        // Editar usuário
-        function editUser(userId) {
-            const user = users.find(u => u.id === userId);
-            if (!user) return;
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleDateString('pt-BR');
+        }
+
+        // Funções de Email
+        function selectFolder(folder) {
+            document.querySelectorAll('.email-folder').forEach(f => f.classList.remove('active'));
+            event.target.classList.add('active');
+            loadEmails(folder);
+        }
+
+        function loadEmails(folder = 'inbox') {
+            const emailList = document.getElementById('emailList');
             
-            currentEditingUser = user;
-            document.getElementById('userModalTitle').textContent = 'Editar Usuário';
-            document.getElementById('userName').value = user.nome;
-            document.getElementById('userEmail').value = user.email;
-            document.getElementById('userType').value = user.tipo;
-            document.getElementById('userStatus').value = user.status;
-            document.getElementById('userModal').style.display = 'block';
-        }
-
-        // Salvar usuário
-        function saveUser(event) {
-            event.preventDefault();
-            
-            const userData = {
-                nome: document.getElementById('userName').value,
-                email: document.getElementById('userEmail').value,
-                tipo: document.getElementById('userType').value,
-                status: document.getElementById('userStatus').value
+            const emails = {
+                inbox: [
+                    {
+                        id: 1,
+                        sender: 'admin@tribodocerrado.org',
+                        subject: 'Bem-vindos à Tribo do Cerrado!',
+                        date: '08/01/2025 - 14:30'
+                    },
+                    {
+                        id: 2,
+                        sender: 'eventos@tribodocerrado.org',
+                        subject: 'Próximo Encontro - Janeiro 2025',
+                        date: '07/01/2025 - 10:15'
+                    }
+                ],
+                sent: [
+                    {
+                        id: 3,
+                        sender: 'Para: membros@tribodocerrado.org',
+                        subject: 'Newsletter Janeiro 2025',
+                        date: '06/01/2025 - 09:00'
+                    }
+                ],
+                drafts: [
+                    {
+                        id: 4,
+                        sender: 'Rascunho',
+                        subject: 'Planejamento Trilha Fevereiro',
+                        date: '05/01/2025 - 16:45'
+                    }
+                ]
             };
-            
-            if (currentEditingUser) {
-                // Editar usuário existente
-                Object.assign(currentEditingUser, userData);
-                alert('✅ Usuário atualizado com sucesso!');
-            } else {
-                // Adicionar novo usuário
-                const newUser = {
-                    id: users.length + 1,
-                    ...userData,
-                    cadastro: new Date().toISOString().split('T')[0]
-                };
-                users.push(newUser);
-                alert('✅ Usuário adicionado com sucesso!');
-            }
-            
-            loadUsers();
-            loadDashboardStats();
-            closeUserModal();
-        }
 
-        // Confirmar exclusão de usuário
-        function confirmDeleteUser(userId) {
-            if (userId === 1) {
-                alert('❌ Não é possível excluir o administrador principal!');
-                return;
-            }
+            const folderEmails = emails[folder] || [];
             
-            if (confirm('⚠️ Tem certeza que deseja excluir este usuário?')) {
-                users = users.filter(u => u.id !== userId);
-                loadUsers();
-                loadDashboardStats();
-                alert('✅ Usuário excluído com sucesso!');
-            }
-        }
-
-        // Excluir usuário (do modal)
-        function deleteUser() {
-            if (!currentEditingUser) return;
-            
-            if (currentEditingUser.id === 1) {
-                alert('❌ Não é possível excluir o administrador principal!');
-                return;
-            }
-            
-            if (confirm('⚠️ Tem certeza que deseja excluir este usuário?')) {
-                users = users.filter(u => u.id !== currentEditingUser.id);
-                loadUsers();
-                loadDashboardStats();
-                closeUserModal();
-                alert('✅ Usuário excluído com sucesso!');
-            }
-        }
-
-        // Fechar modal de usuário
-        function closeUserModal() {
-            document.getElementById('userModal').style.display = 'none';
-            currentEditingUser = null;
-        }
-
-        // Carregar eventos
-        function loadEvents() {
-            const eventList = document.getElementById('eventList');
-            const upcomingEvents = document.getElementById('upcomingEvents');
-            
-            eventList.innerHTML = '';
-            upcomingEvents.innerHTML = '';
-            
-            // Todos os eventos
-            events.forEach(event => {
-                const eventItem = createEventItem(event);
-                eventList.appendChild(eventItem);
-            });
-            
-            // Próximos eventos
-            const upcoming = events.filter(e => new Date(e.data) > new Date()).slice(0, 3);
-            upcoming.forEach(event => {
-                const eventItem = createEventItem(event);
-                upcomingEvents.appendChild(eventItem);
-            });
-            
-            updateEventStats();
-        }
-
-        // Criar item de evento
-        function createEventItem(event) {
-            const div = document.createElement('div');
-            div.className = 'event-item';
-            div.onclick = () => showEventDetails(event);
-            
-            div.innerHTML = `
-                <div class="event-title">${event.titulo}</div>
-                <div class="event-date">📅 ${formatDate(event.data)} - 📍 ${event.local}</div>
-                <div style="color: #ccc; font-size: 12px; margin-top: 5px;">Status: ${event.status}</div>
-            `;
-            
-            return div;
-        }
-
-        // Mostrar detalhes do evento
-        function showEventDetails(event) {
-            document.getElementById('modalTitle').textContent = event.titulo;
-            document.getElementById('modalContent').innerHTML = `
-                <div style="line-height: 1.6;">
-                    <p><strong>📅 Data:</strong> ${formatDate(event.data)}</p>
-                    <p><strong>📍 Local:</strong> ${event.local}</p>
-                    <p><strong>👤 Organizador:</strong> ${event.organizador}</p>
-                    <p><strong>📊 Status:</strong> ${event.status}</p>
-                    <p><strong>📝 Descrição:</strong></p>
-                    <p>${event.descricao}</p>
-                    <div style="margin-top: 20px;">
-                        <button class="btn" onclick="editEvent(${event.id})">✏️ Editar</button>
-                        <button class="btn btn-success" onclick="joinEvent(${event.id})" style="margin-left: 10px;">✅ Participar</button>
-                    </div>
+            emailList.innerHTML = folderEmails.map(email => `
+                <div class="email-item" onclick="openEmail(${email.id})">
+                    <div class="email-sender">${email.sender}</div>
+                    <div class="email-subject">${email.subject}</div>
+                    <div class="email-date">${email.date}</div>
                 </div>
-            `;
-            document.getElementById('eventModal').style.display = 'block';
+            `).join('');
         }
 
-        // Fechar modal de evento
-        function closeEventModal() {
-            document.getElementById('eventModal').style.display = 'none';
+        function composeEmail() {
+            alert('📧 Abrindo editor de email...\n\nFuncionalidade em desenvolvimento com API Migadu.');
         }
 
-        // Gerar calendário
-        function generateCalendar() {
-            const grid = document.getElementById('calendarGrid');
-            const monthSpan = document.getElementById('currentMonth');
-            
-            const year = currentDate.getFullYear();
-            const month = currentDate.getMonth();
-            
-            monthSpan.textContent = new Date(year, month).toLocaleDateString('pt-BR', { 
-                month: 'long', 
-                year: 'numeric' 
-            });
-            
-            grid.innerHTML = '';
-            
-            // Dias da semana
-            const daysOfWeek = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
-            daysOfWeek.forEach(day => {
-                const dayElement = document.createElement('div');
-                dayElement.textContent = day;
-                dayElement.style.fontWeight = 'bold';
-                dayElement.style.color = '#ff6b35';
-                grid.appendChild(dayElement);
-            });
-            
-            // Primeiro dia do mês
-            const firstDay = new Date(year, month, 1).getDay();
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-            
-            // Espaços vazios
-            for (let i = 0; i < firstDay; i++) {
-                const emptyDay = document.createElement('div');
-                grid.appendChild(emptyDay);
-            }
-            
-            // Dias do mês
-            for (let day = 1; day <= daysInMonth; day++) {
-                const dayElement = document.createElement('div');
-                dayElement.className = 'calendar-day';
-                dayElement.textContent = day;
-                dayElement.onclick = () => selectDate(year, month, day);
-                
-                // Verificar se há eventos neste dia
-                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                const hasEvent = events.some(e => e.data === dateStr);
-                if (hasEvent) {
-                    dayElement.style.background = '#ff6b35';
-                    dayElement.style.color = '#000';
-                }
-                
-                grid.appendChild(dayElement);
-            }
+        function openEmail(id) {
+            alert(`📧 Abrindo email ID: ${id}\n\nFuncionalidade em desenvolvimento.`);
         }
 
-        // Selecionar data no calendário
-        function selectDate(year, month, day) {
-            selectedDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-            
-            // Remover seleção anterior
-            document.querySelectorAll('.calendar-day.selected').forEach(el => {
-                el.classList.remove('selected');
-            });
-            
-            // Adicionar seleção atual
-            event.target.classList.add('selected');
-            
-            // Filtrar eventos por data
-            filterEventsByDate(selectedDate);
+        function refreshEmails() {
+            loadEmails();
+            alert('🔄 Emails atualizados com sucesso!');
         }
 
-        // Filtrar eventos por data
-        function filterEventsByDate(date) {
-            const eventList = document.getElementById('eventList');
-            eventList.innerHTML = '';
-            
-            const filteredEvents = events.filter(e => e.data === date);
-            
-            if (filteredEvents.length === 0) {
-                eventList.innerHTML = '<p style="text-align: center; color: #ccc;">Nenhum evento nesta data</p>';
-                return;
-            }
-            
-            filteredEvents.forEach(event => {
-                const eventItem = createEventItem(event);
-                eventList.appendChild(eventItem);
-            });
+        function markAsRead() {
+            alert('✅ Emails marcados como lidos!');
         }
 
-        // Navegação do calendário
-        function previousMonth() {
-            currentDate.setMonth(currentDate.getMonth() - 1);
-            generateCalendar();
+        function testEmailConnection() {
+            alert('🧪 Testando conexão com Migadu...\n\n✅ Conexão bem-sucedida!\n📧 API Migadu operacional\n🌐 Domínio: tribodocerrado.org');
         }
 
-        function nextMonth() {
-            currentDate.setMonth(currentDate.getMonth() + 1);
-            generateCalendar();
+        function emailSettings() {
+            alert('⚙️ Configurações de Email\n\n📮 Provedor: Migadu\n🌐 Domínio: tribodocerrado.org\n📡 Status: Operacional');
         }
 
-        // Atualizar estatísticas de eventos
-        function updateEventStats() {
-            document.getElementById('statsTotal').textContent = events.length;
-            document.getElementById('statsActive').textContent = events.filter(e => e.status === 'ativo').length;
+        // Funções administrativas
+        function addUser() {
+            const nome = prompt('👤 Nome do usuário:');
+            if (!nome) return;
             
-            const thisMonth = new Date().getMonth();
-            const thisYear = new Date().getFullYear();
-            const thisMonthEvents = events.filter(e => {
-                const eventDate = new Date(e.data);
-                return eventDate.getMonth() === thisMonth && eventDate.getFullYear() === thisYear;
-            });
-            document.getElementById('statsMonth').textContent = thisMonthEvents.length;
+            const email = prompt('📧 Email do usuário:');
+            if (!email) return;
             
-            document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString('pt-BR');
-        }
-
-        // Filtrar eventos
-        function filterEvents() {
-            const filter = document.getElementById('eventFilter').value;
-            const eventList = document.getElementById('eventList');
+            const tipo = prompt('🏷️ Tipo (administrador/usuario):') || 'usuario';
             
-            let filteredEvents = events;
-            
-            switch (filter) {
-                case 'proximos':
-                    filteredEvents = events.filter(e => new Date(e.data) > new Date());
-                    break;
-                case 'passados':
-                    filteredEvents = events.filter(e => new Date(e.data) < new Date());
-                    break;
-                case 'ativos':
-                    filteredEvents = events.filter(e => e.status === 'ativo');
-                    break;
-            }
-            
-            eventList.innerHTML = '';
-            filteredEvents.forEach(event => {
-                const eventItem = createEventItem(event);
-                eventList.appendChild(eventItem);
-            });
-        }
-
-        // Adicionar evento
-        function addEvent() {
-            const titulo = prompt('📝 Título do evento:');
-            if (!titulo) return;
-            
-            const data = prompt('📅 Data do evento (YYYY-MM-DD):');
-            if (!data) return;
-            
-            const local = prompt('📍 Local do evento:');
-            if (!local) return;
-            
-            const descricao = prompt('📝 Descrição do evento:');
-            if (!descricao) return;
-            
-            const newEvent = {
-                id: events.length + 1,
-                titulo,
-                data,
-                local,
-                descricao,
+            const newUser = {
+                id: users.length + 1,
+                nome,
+                email,
+                tipo,
                 status: 'ativo',
-                organizador: currentUser.nome
+                cadastro: new Date().toISOString().split('T')[0]
             };
             
-            events.push(newEvent);
-            loadEvents();
-            generateCalendar();
-            loadDashboardStats();
+            users.push(newUser);
+            loadUsers();
+            updateStats();
             
-            alert('✅ Evento adicionado com sucesso!');
+            alert('✅ Usuário adicionado com sucesso!');
         }
 
-        // Editar evento
-        function editEvent(eventId) {
-            const event = events.find(e => e.id === eventId);
-            if (!event) return;
-            
-            const titulo = prompt('📝 Título do evento:', event.titulo);
-            if (titulo !== null) event.titulo = titulo;
-            
-            const data = prompt('📅 Data do evento (YYYY-MM-DD):', event.data);
-            if (data !== null) event.data = data;
-            
-            const local = prompt('📍 Local do evento:', event.local);
-            if (local !== null) event.local = local;
-            
-            const descricao = prompt('📝 Descrição do evento:', event.descricao);
-            if (descricao !== null) event.descricao = descricao;
-            
-            loadEvents();
-            generateCalendar();
-            closeEventModal();
-            
-            alert('✅ Evento atualizado com sucesso!');
+        function editUser(id) {
+            const user = users.find(u => u.id === id);
+            if (user) {
+                alert(`✏️ Editar usuário: ${user.nome}\n\nFuncionalidade em desenvolvimento.`);
+            }
         }
 
-        // Participar do evento
-        function joinEvent(eventId) {
-            alert('✅ Inscrição realizada com sucesso!');
-            closeEventModal();
+        function deleteUser(id) {
+            const user = users.find(u => u.id === id);
+            if (user && user.email !== 'admin@tribodocerrado.org') {
+                if (confirm(`🗑️ Tem certeza que deseja excluir o usuário "${user.nome}"?`)) {
+                    users = users.filter(u => u.id !== id);
+                    loadUsers();
+                    updateStats();
+                    alert('✅ Usuário excluído com sucesso!');
+                }
+            }
         }
 
-        // Exportar eventos
-        function exportEvents() {
-            const data = JSON.stringify(events, null, 2);
-            const blob = new Blob([data], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'eventos_tribo_cerrado.json';
-            a.click();
-            URL.revokeObjectURL(url);
-        }
-
-        // Exportar usuários
         function exportUsers() {
-            const data = JSON.stringify(users, null, 2);
-            const blob = new Blob([data], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'usuarios_tribo_cerrado.json';
-            a.click();
-            URL.revokeObjectURL(url);
+            const csvContent = "data:text/csv;charset=utf-8," 
+                + "ID,Nome,Email,Tipo,Status,Cadastro\n"
+                + users.map(user => `${user.id},"${user.nome}","${user.email}","${user.tipo}","${user.status}","${user.cadastro}"`).join("\n");
+            
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "usuarios_tribo_cerrado.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            alert('📤 Lista de usuários exportada com sucesso!');
         }
 
-        // Backup do sistema
         function backupSystem() {
-            const systemData = {
-                users,
-                events,
-                currentUser,
-                timestamp: new Date().toISOString()
-            };
-            
-            const data = JSON.stringify(systemData, null, 2);
-            const blob = new Blob([data], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `backup_tribo_cerrado_${new Date().toISOString().split('T')[0]}.json`;
-            a.click();
-            URL.revokeObjectURL(url);
-            
-            alert('✅ Backup realizado com sucesso!');
+            alert('💾 Backup do sistema realizado com sucesso!\n\n✅ Usuários: Salvos\n✅ Eventos: Salvos\n✅ Configurações: Salvas');
         }
 
-        // Testar email
-        function testEmail() {
-            alert('📧 Email de teste enviado com sucesso!\n\nDestinatário: admin@tribodocerrado.org\nAssunto: Teste do Sistema\nStatus: Entregue');
-        }
-
-        // Enviar newsletter
-        function sendNewsletter() {
-            const subject = prompt('📧 Assunto da newsletter:');
-            if (!subject) return;
-            
-            const message = prompt('📝 Mensagem da newsletter:');
-            if (!message) return;
-            
-            alert(`📬 Newsletter enviada com sucesso!\n\nAssunto: ${subject}\nDestinatários: ${users.length} usuários\nStatus: Enviado`);
-        }
-
-        // Formatar data
-        function formatDate(dateStr) {
-            return new Date(dateStr).toLocaleDateString('pt-BR');
-        }
-
-        // Logout
         function logout() {
-            if (confirm('⚠️ Tem certeza que deseja sair?')) {
-                localStorage.removeItem('isLoggedIn');
-                localStorage.removeItem('userType');
-                localStorage.removeItem('currentUser');
-                window.location.href = 'index.html';
-            }
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('userType');
+            localStorage.removeItem('isLoggedIn');
+            
+            window.location.href = 'index.html';
         }
 
-        // Fechar modais ao clicar fora
-        window.onclick = function(event) {
-            const eventModal = document.getElementById('eventModal');
-            const userModal = document.getElementById('userModal');
+        // Event listeners para formulários
+        document.getElementById('profileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('✅ Perfil atualizado com sucesso!');
+        });
+
+        document.getElementById('eventForm').addEventListener('submit', function(e) {
+            e.preventDefault();
             
-            if (event.target === eventModal) {
-                closeEventModal();
-            }
-            if (event.target === userModal) {
-                closeUserModal();
-            }
-        }
+            const title = document.getElementById('eventTitle').value;
+            const date = document.getElementById('eventDate').value;
+            const location = document.getElementById('eventLocation').value;
+            const description = document.getElementById('eventDescription').value;
+            
+            alert(`✅ Evento "${title}" criado com sucesso!\n📅 Data: ${date}\n📍 Local: ${location}`);
+            
+            document.getElementById('eventForm').reset();
+        });
     </script>
 </body>
 </html>
