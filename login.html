@@ -176,7 +176,7 @@
     </div>
 
     <script>
-        console.log('🔥 SISTEMA DE LOGIN CORRIGIDO - TRIBO DO CERRADO');
+        console.log('🔥 SISTEMA DE LOGIN CORRIGIDO - VERCEL FUNCIONANDO');
         
         // Usuários simulados (funcionando sem backend)
         const usuarios = [
@@ -213,67 +213,66 @@
             }, 5000);
         }
 
+        function fazerLogin() {
+            const email = document.getElementById('email').value.toLowerCase().trim();
+            const senha = document.getElementById('senha').value;
+            
+            console.log('🔐 Tentativa de login:', email);
+            
+            if (!email || !senha) {
+                showMessage('Por favor, preencha todos os campos', 'error');
+                return false;
+            }
+            
+            // Buscar usuário
+            const usuario = usuarios.find(u => 
+                u.email.toLowerCase() === email && u.senha === senha
+            );
+            
+            if (!usuario) {
+                showMessage('Email ou senha incorretos', 'error');
+                return false;
+            }
+            
+            // Login bem-sucedido
+            console.log('✅ Login bem-sucedido para:', usuario.nome);
+            showMessage('Login realizado com sucesso! Redirecionando...', 'success');
+            
+            // Salvar dados do usuário
+            localStorage.setItem('usuario_logado', JSON.stringify(usuario));
+            console.log('💾 Usuário salvo no localStorage');
+            
+            // Redirecionar usando replace (mais confiável)
+            setTimeout(() => {
+                console.log('🚀 Redirecionando para dashboard...');
+                window.location.replace('dashboard.html');
+            }, 1000);
+            
+            return false;
+        }
+
         // Event listener para o formulário
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('✅ DOM carregado, configurando event listeners...');
+            console.log('✅ DOM carregado, configurando sistema...');
             
             const loginForm = document.getElementById('loginForm');
             if (loginForm) {
                 loginForm.addEventListener('submit', function(e) {
                     e.preventDefault();
-                    console.log('🔐 Formulário de login submetido');
-                    
-                    const email = document.getElementById('email').value.toLowerCase().trim();
-                    const senha = document.getElementById('senha').value;
-                    
-                    console.log('📧 Email:', email);
-                    console.log('🔒 Senha:', senha ? '***' : 'vazia');
-                    
-                    if (!email || !senha) {
-                        showMessage('Por favor, preencha todos os campos', 'error');
-                        return;
-                    }
-                    
-                    // Buscar usuário
-                    const usuario = usuarios.find(u => 
-                        u.email.toLowerCase() === email && u.senha === senha
-                    );
-                    
-                    if (!usuario) {
-                        showMessage('Email ou senha incorretos', 'error');
-                        return;
-                    }
-                    
-                    // Login bem-sucedido
-                    console.log('✅ Login bem-sucedido para:', usuario.nome);
-                    showMessage('Login realizado com sucesso! Redirecionando...', 'success');
-                    
-                    // Salvar dados do usuário
-                    localStorage.setItem('usuario_logado', JSON.stringify(usuario));
-                    console.log('💾 Usuário salvo no localStorage');
-                    
-                    // Redirecionar baseado no tipo de usuário
-                    setTimeout(() => {
-                        console.log('🚀 Redirecionando para dashboard...');
-                        window.location.href = 'dashboard.html';
-                    }, 1500);
+                    fazerLogin();
                 });
-                console.log('✅ Event listener configurado com sucesso');
-            } else {
-                console.error('❌ Formulário de login não encontrado');
+                console.log('✅ Event listener configurado');
             }
-        });
-
-        // Verificar se já está logado
-        window.addEventListener('load', function() {
+            
+            // Verificar se já está logado
             const usuarioLogado = localStorage.getItem('usuario_logado');
             if (usuarioLogado) {
                 const usuario = JSON.parse(usuarioLogado);
                 console.log('👤 Usuário já logado:', usuario.nome);
                 showMessage(`Bem-vindo de volta, ${usuario.nome}! Redirecionando...`, 'success');
                 setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 1500);
+                    window.location.replace('dashboard.html');
+                }, 1000);
             }
         });
     </script>
