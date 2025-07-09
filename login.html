@@ -14,26 +14,28 @@
         body {
             font-family: 'Arial', sans-serif;
             background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: #ffffff;
             min-height: 100vh;
             display: flex;
-            align-items: center;
             justify-content: center;
-            color: #fff;
+            align-items: center;
+            padding: 20px;
         }
 
         .login-container {
             background: rgba(0, 0, 0, 0.8);
-            border: 2px solid #ffd700;
+            border: 3px solid #ffd700;
             border-radius: 15px;
             padding: 40px;
             width: 100%;
             max-width: 400px;
-            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
         }
 
         .login-title {
             text-align: center;
             font-size: 2.5em;
+            font-weight: bold;
             color: #ffd700;
             margin-bottom: 30px;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
@@ -53,25 +55,42 @@
         .form-group input {
             width: 100%;
             padding: 12px;
-            border: 2px solid #555;
+            border: 2px solid #ffd700;
             border-radius: 8px;
             background: rgba(255, 255, 255, 0.1);
-            color: #fff;
+            color: #ffffff;
             font-size: 16px;
             transition: all 0.3s ease;
         }
 
         .form-group input:focus {
             outline: none;
-            border-color: #ffd700;
+            border-color: #ffed4e;
+            background: rgba(255, 255, 255, 0.2);
             box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #ffd700;
+            cursor: pointer;
+            font-size: 18px;
         }
 
         .btn-login {
             width: 100%;
             padding: 15px;
             background: linear-gradient(45deg, #ffd700, #ffed4e);
-            color: #000;
+            color: #000000;
             border: none;
             border-radius: 8px;
             font-size: 18px;
@@ -107,34 +126,19 @@
             border-radius: 5px;
             margin-bottom: 20px;
             text-align: center;
+            font-weight: bold;
         }
 
         .message.success {
-            background: rgba(0, 255, 0, 0.2);
-            border: 1px solid #00ff00;
-            color: #00ff00;
+            background-color: rgba(76, 175, 80, 0.2);
+            border: 1px solid #4CAF50;
+            color: #4CAF50;
         }
 
         .message.error {
-            background: rgba(255, 0, 0, 0.2);
-            border: 1px solid #ff0000;
-            color: #ff0000;
-        }
-
-        .password-toggle {
-            position: relative;
-        }
-
-        .password-toggle button {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: #ffd700;
-            cursor: pointer;
-            font-size: 18px;
+            background-color: rgba(244, 67, 54, 0.2);
+            border: 1px solid #f44336;
+            color: #f44336;
         }
     </style>
 </head>
@@ -143,21 +147,21 @@
         <h1 class="login-title">LOGIN</h1>
         
         <div id="message" class="message" style="display: none;"></div>
-        
+
         <form id="loginForm">
             <div class="form-group">
                 <label for="email">📧 Email:</label>
                 <input type="email" id="email" name="email" placeholder="seu@email.com" required>
             </div>
-            
+
             <div class="form-group">
                 <label for="senha">🔒 Senha:</label>
-                <div class="password-toggle">
+                <div class="password-container">
                     <input type="password" id="senha" name="senha" placeholder="Sua senha" required>
-                    <button type="button" onclick="togglePassword()">👁️</button>
+                    <button type="button" class="password-toggle" onclick="togglePassword()">👁️</button>
                 </div>
             </div>
-            
+
             <button type="submit" class="btn-login">🔐 ENTRAR</button>
         </form>
         
@@ -172,6 +176,8 @@
     </div>
 
     <script>
+        console.log('🔥 SISTEMA DE LOGIN CORRIGIDO - TRIBO DO CERRADO');
+        
         // Usuários simulados (funcionando sem backend)
         const usuarios = [
             {
@@ -207,41 +213,55 @@
             }, 5000);
         }
 
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+        // Event listener para o formulário
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('✅ DOM carregado, configurando event listeners...');
             
-            const email = document.getElementById('email').value.toLowerCase().trim();
-            const senha = document.getElementById('senha').value;
-            
-            if (!email || !senha) {
-                showMessage('Por favor, preencha todos os campos', 'error');
-                return;
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                loginForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    console.log('🔐 Formulário de login submetido');
+                    
+                    const email = document.getElementById('email').value.toLowerCase().trim();
+                    const senha = document.getElementById('senha').value;
+                    
+                    console.log('📧 Email:', email);
+                    console.log('🔒 Senha:', senha ? '***' : 'vazia');
+                    
+                    if (!email || !senha) {
+                        showMessage('Por favor, preencha todos os campos', 'error');
+                        return;
+                    }
+                    
+                    // Buscar usuário
+                    const usuario = usuarios.find(u => 
+                        u.email.toLowerCase() === email && u.senha === senha
+                    );
+                    
+                    if (!usuario) {
+                        showMessage('Email ou senha incorretos', 'error');
+                        return;
+                    }
+                    
+                    // Login bem-sucedido
+                    console.log('✅ Login bem-sucedido para:', usuario.nome);
+                    showMessage('Login realizado com sucesso! Redirecionando...', 'success');
+                    
+                    // Salvar dados do usuário
+                    localStorage.setItem('usuario_logado', JSON.stringify(usuario));
+                    console.log('💾 Usuário salvo no localStorage');
+                    
+                    // Redirecionar baseado no tipo de usuário
+                    setTimeout(() => {
+                        console.log('🚀 Redirecionando para dashboard...');
+                        window.location.href = 'dashboard.html';
+                    }, 1500);
+                });
+                console.log('✅ Event listener configurado com sucesso');
+            } else {
+                console.error('❌ Formulário de login não encontrado');
             }
-            
-            // Buscar usuário
-            const usuario = usuarios.find(u => 
-                u.email.toLowerCase() === email && u.senha === senha
-            );
-            
-            if (!usuario) {
-                showMessage('Email ou senha incorretos', 'error');
-                return;
-            }
-            
-            // Login bem-sucedido
-            showMessage('Login realizado com sucesso! Redirecionando...', 'success');
-            
-            // Salvar dados do usuário
-            localStorage.setItem('usuario_logado', JSON.stringify(usuario));
-            
-            // Redirecionar baseado no tipo de usuário
-            setTimeout(() => {
-                if (usuario.tipo === 'administrador') {
-                    window.location.href = 'dashboard.html';
-                } else {
-                    window.location.href = 'dashboard.html';
-                }
-            }, 2000);
         });
 
         // Verificar se já está logado
@@ -249,10 +269,11 @@
             const usuarioLogado = localStorage.getItem('usuario_logado');
             if (usuarioLogado) {
                 const usuario = JSON.parse(usuarioLogado);
+                console.log('👤 Usuário já logado:', usuario.nome);
                 showMessage(`Bem-vindo de volta, ${usuario.nome}! Redirecionando...`, 'success');
                 setTimeout(() => {
                     window.location.href = 'dashboard.html';
-                }, 2000);
+                }, 1500);
             }
         });
     </script>
