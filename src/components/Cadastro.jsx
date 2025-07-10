@@ -1,13 +1,11 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { supabase } from '../lib/supabase'
+import { useNavigate } from 'react-router-dom'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
 import { Label } from './ui/label'
 import { Alert, AlertDescription } from './ui/alert'
-import { Eye, EyeOff, Mail, Lock, User, Phone } from 'lucide-react'
-import logoTribo from '../assets/LogoTriboSite.png'
+import { auth, database } from '../lib/supabase'
 
 export default function Cadastro() {
   const [formData, setFormData] = useState({
@@ -17,8 +15,6 @@ export default function Cadastro() {
     password: '',
     confirmPassword: ''
   })
-  const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
@@ -51,223 +47,170 @@ export default function Cadastro() {
     }
 
     try {
-      // Criar usuário no Supabase Auth
-      const { data: authData, error: authError } = await supabase.auth.signUp({
-        email: formData.email,
-        password: formData.password,
+      // 1. Criar usuário no Supabase Auth
+      const authResult = await auth.signUp(formData.email, formData.password, {
+        nome: formData.nome,
+        telefone: formData.telefone
       })
 
-      if (authError) {
-        setError('Erro ao criar conta: ' + authError.message)
+      if (!authResult.success) {
+        setError(authResult.error)
         setLoading(false)
         return
       }
 
-      // Inserir dados adicionais na tabela usuarios
-      const { error: dbError } = await supabase
-        .from('usuarios')
-        .insert([
-          {
-            id: authData.user.id,
-            nome: formData.nome,
-            email: formData.email,
-            telefone: formData.telefone,
-            tipo: 'membro',
-            ativo: true
-          }
-        ])
-
-      if (dbError) {
-        console.error('Erro ao inserir dados do usuário:', dbError)
+      // 2. Criar registro na tabela usuarios
+      const userData = {
+        nome: formData.nome,
+        email: formData.email,
+        telefone: formData.telefone,
+        tipo: 'membro',
+        status: 'ativo',
+        auth_id: authResult.user.id
       }
 
-      setSuccess('Conta criada com sucesso! Você pode fazer login agora.')
-      setTimeout(() => {
-        navigate('/login')
-      }, 2000)
+      const dbResult = await database.createUser(userData)
+
+      if (dbResult.success) {
+        setSuccess('Cadastro realizado com sucesso! Você pode fazer login agora.')
+        setTimeout(() => {
+          navigate('/login')
+        }, 2000)
+      } else {
+        setError('Erro ao salvar dados do usuário: ' + dbResult.error)
+      }
 
     } catch (err) {
       setError('Erro inesperado. Tente novamente.')
+      console.error('Erro no cadastro:', err)
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        {/* Logo */}
-        <div className="text-center mb-8">
-          <img 
-            src={logoTribo} 
-            alt="Tribo do Cerrado MC" 
-            className="h-24 w-auto mx-auto mb-4"
-          />
-          <h1 className="text-3xl font-bold text-white mb-2">
-            Tribo do Cerrado MC
-          </h1>
-          <p className="text-orange-200">
-            Cadastro de Novo Membro
-          </p>
-        </div>
-
-        {/* Formulário de Cadastro */}
-        <Card className="bg-black/50 border-orange-500/30 backdrop-blur-sm">
-          <CardHeader>
-            <CardTitle className="text-white text-center">Criar Conta</CardTitle>
-            <CardDescription className="text-orange-200 text-center">
-              Preencha os dados para se tornar membro
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {error && (
-                <Alert className="border-red-500/50 bg-red-500/10">
-                  <AlertDescription className="text-red-200">
-                    {error}
-                  </AlertDescription>
-                </Alert>
-              )}
-
-              {success && (
-                <Alert className="border-green-500/50 bg-green-500/10">
-                  <AlertDescription className="text-green-200">
-                    {success}
-                  </AlertDescription>
-                </Alert>
-              )}
-
-              <div className="space-y-2">
-                <Label htmlFor="nome" className="text-white">Nome Completo</Label>
-                <div className="relative">
-                  <User className="absolute left-3 top-3 h-4 w-4 text-orange-400" />
-                  <Input
-                    id="nome"
-                    name="nome"
-                    type="text"
-                    placeholder="Seu nome completo"
-                    value={formData.nome}
-                    onChange={handleChange}
-                    className="pl-10 bg-black/30 border-orange-500/30 text-white placeholder:text-gray-400"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-white">Email</Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-3 h-4 w-4 text-orange-400" />
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    placeholder="seu@email.com"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="pl-10 bg-black/30 border-orange-500/30 text-white placeholder:text-gray-400"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="telefone" className="text-white">Telefone</Label>
-                <div className="relative">
-                  <Phone className="absolute left-3 top-3 h-4 w-4 text-orange-400" />
-                  <Input
-                    id="telefone"
-                    name="telefone"
-                    type="tel"
-                    placeholder="(11) 99999-9999"
-                    value={formData.telefone}
-                    onChange={handleChange}
-                    className="pl-10 bg-black/30 border-orange-500/30 text-white placeholder:text-gray-400"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="password" className="text-white">Senha</Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-3 h-4 w-4 text-orange-400" />
-                  <Input
-                    id="password"
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Mínimo 6 caracteres"
-                    value={formData.password}
-                    onChange={handleChange}
-                    className="pl-10 pr-10 bg-black/30 border-orange-500/30 text-white placeholder:text-gray-400"
-                    required
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-3 text-orange-400 hover:text-orange-300"
-                  >
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="confirmPassword" className="text-white">Confirmar Senha</Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-3 h-4 w-4 text-orange-400" />
-                  <Input
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    type={showConfirmPassword ? "text" : "password"}
-                    placeholder="Digite a senha novamente"
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                    className="pl-10 pr-10 bg-black/30 border-orange-500/30 text-white placeholder:text-gray-400"
-                    required
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-3 text-orange-400 hover:text-orange-300"
-                  >
-                    {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                </div>
-              </div>
-
-              <Button 
-                type="submit" 
-                className="w-full bg-orange-600 hover:bg-orange-700 text-white"
+    <div className="min-h-screen bg-gradient-to-br from-green-400 via-blue-500 to-purple-600 flex items-center justify-center p-4">
+      <Card className="w-full max-w-md">
+        <CardHeader className="text-center">
+          <CardTitle className="text-2xl font-bold text-gray-800">
+            📝 Cadastro
+          </CardTitle>
+          <CardDescription>
+            Registre-se como novo membro do Tribo do Cerrado
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {error && (
+              <Alert variant="destructive">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+            
+            {success && (
+              <Alert className="border-green-500 text-green-700">
+                <AlertDescription>{success}</AlertDescription>
+              </Alert>
+            )}
+            
+            <div className="space-y-2">
+              <Label htmlFor="nome">👤 Nome Completo</Label>
+              <Input
+                id="nome"
+                name="nome"
+                type="text"
+                placeholder="Seu nome completo"
+                value={formData.nome}
+                onChange={handleChange}
+                required
                 disabled={loading}
-              >
-                {loading ? 'Criando conta...' : 'Criar Conta'}
-              </Button>
-            </form>
-
-            <div className="mt-6 text-center">
-              <p className="text-gray-300">
-                Já tem uma conta?{' '}
-                <Link 
-                  to="/login" 
-                  className="text-orange-400 hover:text-orange-300 font-medium"
-                >
-                  Faça login aqui
-                </Link>
-              </p>
+              />
             </div>
-
-            <div className="mt-4 text-center">
-              <Link 
-                to="/" 
-                className="text-orange-400 hover:text-orange-300 text-sm"
-              >
-                ← Voltar ao site público
-              </Link>
+            
+            <div className="space-y-2">
+              <Label htmlFor="email">📧 Email</Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="seu@email.com"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                disabled={loading}
+              />
             </div>
-          </CardContent>
-        </Card>
-      </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="telefone">📱 Telefone</Label>
+              <Input
+                id="telefone"
+                name="telefone"
+                type="tel"
+                placeholder="(62) 99999-9999"
+                value={formData.telefone}
+                onChange={handleChange}
+                required
+                disabled={loading}
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="password">🔒 Senha</Label>
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                placeholder="Mínimo 6 caracteres"
+                value={formData.password}
+                onChange={handleChange}
+                required
+                disabled={loading}
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="confirmPassword">🔒 Confirmar Senha</Label>
+              <Input
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                placeholder="Digite a senha novamente"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                required
+                disabled={loading}
+              />
+            </div>
+            
+            <Button 
+              type="submit" 
+              className="w-full bg-green-500 hover:bg-green-600 text-white font-bold"
+              disabled={loading}
+            >
+              {loading ? '⏳ Cadastrando...' : '📝 CRIAR CONTA'}
+            </Button>
+          </form>
+          
+          <div className="mt-6 text-center space-y-2">
+            <Button 
+              variant="link" 
+              onClick={() => navigate('/login')}
+              className="text-blue-600 hover:text-blue-800"
+            >
+              🔐 Já tenho conta
+            </Button>
+            <br />
+            <Button 
+              variant="link" 
+              onClick={() => navigate('/')}
+              className="text-gray-600 hover:text-gray-800"
+            >
+              ⬅️ Voltar
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }
