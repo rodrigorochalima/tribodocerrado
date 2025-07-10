@@ -1,3 +1,0 @@
-# Dependências mínimas para Vercel Serverless
-# Sem Flask - usando apenas Python padrão
-

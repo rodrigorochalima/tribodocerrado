@@ -1,0 +1,14 @@
+{
+  "name": "tribodocerrado",
+  "version": "1.0.0",
+  "description": "Sistema da Tribo do Cerrado",
+  "main": "index.html",
+  "scripts": {
+    "build": "echo 'Build completed - static files ready'",
+    "start": "echo 'Static site ready'"
+  },
+  "keywords": ["motoclube", "tribo", "cerrado"],
+  "author": "Tribo do Cerrado",
+  "license": "MIT"
+}
+
