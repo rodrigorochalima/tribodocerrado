@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Calendar } from 'react-day-picker'
-import { format, parseISO } from 'date-fns'
+import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, parseISO } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { supabase } from '../../lib/supabase'
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
@@ -8,12 +7,11 @@ import { Button } from '../ui/button'
 import { Input } from '../ui/input'
 import { Label } from '../ui/label'
 import { Textarea } from '../ui/textarea'
-import { Badge } from '../ui/badge'
-import { CalendarDays, MapPin, Clock, Users, Plus } from 'lucide-react'
 
 export default function DashboardEventos() {
   const [eventos, setEventos] = useState([])
   const [selectedDate, setSelectedDate] = useState(new Date())
+  const [currentMonth, setCurrentMonth] = useState(new Date())
   const [showForm, setShowForm] = useState(false)
   const [novoEvento, setNovoEvento] = useState({
     titulo: '',
@@ -70,11 +68,15 @@ export default function DashboardEventos() {
     }
   }
 
-  const eventosDoMes = eventos.filter(evento => {
-    const eventoDate = parseISO(evento.data)
-    return eventoDate.getMonth() === selectedDate.getMonth() &&
-           eventoDate.getFullYear() === selectedDate.getFullYear()
-  })
+  // Gerar dias do calendário
+  const monthStart = startOfMonth(currentMonth)
+  const monthEnd = endOfMonth(currentMonth)
+  const calendarDays = eachDayOfInterval({ start: monthStart, end: monthEnd })
+
+  // Verificar se um dia tem eventos
+  const hasEvent = (day) => {
+    return eventos.some(evento => isSameDay(parseISO(evento.data), day))
+  }
 
   const eventosProximos = eventos
     .filter(evento => new Date(evento.data) >= new Date())
@@ -83,44 +85,71 @@ export default function DashboardEventos() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Eventos do Motoclube</h2>
+        <h2 className="text-2xl font-bold">📅 Eventos do Motoclube</h2>
         <Button onClick={() => setShowForm(!showForm)}>
-          <Plus className="w-4 h-4 mr-2" />
-          Novo Evento
+          ➕ Novo Evento
         </Button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Calendário */}
+        {/* Calendário Simples */}
         <Card className="lg:col-span-1">
           <CardHeader>
-            <CardTitle className="flex items-center">
-              <CalendarDays className="w-5 h-5 mr-2" />
-              Calendário
+            <CardTitle className="flex items-center justify-between">
+              <span>📅 {format(currentMonth, 'MMMM yyyy', { locale: ptBR })}</span>
+              <div className="flex gap-2">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1))}
+                >
+                  ←
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1))}
+                >
+                  →
+                </Button>
+              </div>
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <Calendar
-              mode="single"
-              selected={selectedDate}
-              onSelect={setSelectedDate}
-              locale={ptBR}
-              className="rounded-md border"
-              modifiers={{
-                evento: eventos.map(e => parseISO(e.data))
-              }}
-              modifiersStyles={{
-                evento: { 
-                  backgroundColor: '#ef4444',
-                  color: 'white',
-                  fontWeight: 'bold'
-                }
-              }}
-            />
+            <div className="grid grid-cols-7 gap-1 text-center text-sm">
+              {['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'].map(day => (
+                <div key={day} className="font-medium p-2 text-gray-500">
+                  {day}
+                </div>
+              ))}
+              
+              {calendarDays.map(day => (
+                <button
+                  key={day.toISOString()}
+                  onClick={() => setSelectedDate(day)}
+                  className={`p-2 text-sm rounded hover:bg-gray-100 ${
+                    isSameDay(day, selectedDate) 
+                      ? 'bg-blue-500 text-white' 
+                      : hasEvent(day)
+                      ? 'bg-red-100 text-red-700 font-bold'
+                      : 'text-gray-700'
+                  }`}
+                >
+                  {format(day, 'd')}
+                </button>
+              ))}
+            </div>
+            
             <div className="mt-4 text-sm text-gray-600">
-              <div className="flex items-center">
-                <div className="w-3 h-3 bg-red-500 rounded mr-2"></div>
-                Dias com eventos
+              <div className="flex items-center gap-4">
+                <div className="flex items-center">
+                  <div className="w-3 h-3 bg-red-100 border border-red-300 rounded mr-2"></div>
+                  Dias com eventos
+                </div>
+                <div className="flex items-center">
+                  <div className="w-3 h-3 bg-blue-500 rounded mr-2"></div>
+                  Selecionado
+                </div>
               </div>
             </div>
           </CardContent>
@@ -129,7 +158,7 @@ export default function DashboardEventos() {
         {/* Lista de Eventos */}
         <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle>Próximos Eventos</CardTitle>
+            <CardTitle>🏍️ Próximos Eventos</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -147,36 +176,36 @@ export default function DashboardEventos() {
                         
                         <div className="flex flex-wrap gap-4 mt-3 text-sm text-gray-500">
                           <div className="flex items-center">
-                            <CalendarDays className="w-4 h-4 mr-1" />
-                            {format(parseISO(evento.data), 'dd/MM/yyyy', { locale: ptBR })}
+                            📅 {format(parseISO(evento.data), 'dd/MM/yyyy', { locale: ptBR })}
                           </div>
                           
                           {evento.hora && (
                             <div className="flex items-center">
-                              <Clock className="w-4 h-4 mr-1" />
-                              {evento.hora}
+                              🕐 {evento.hora}
                             </div>
                           )}
                           
                           {evento.local && (
                             <div className="flex items-center">
-                              <MapPin className="w-4 h-4 mr-1" />
-                              {evento.local}
+                              📍 {evento.local}
                             </div>
                           )}
                           
                           {evento.max_participantes && (
                             <div className="flex items-center">
-                              <Users className="w-4 h-4 mr-1" />
-                              Máx: {evento.max_participantes}
+                              👥 Máx: {evento.max_participantes}
                             </div>
                           )}
                         </div>
                       </div>
                       
-                      <Badge variant="outline">
+                      <span className={`px-2 py-1 text-xs rounded ${
+                        new Date(evento.data) > new Date() 
+                          ? 'bg-green-100 text-green-700' 
+                          : 'bg-gray-100 text-gray-700'
+                      }`}>
                         {new Date(evento.data) > new Date() ? 'Agendado' : 'Realizado'}
-                      </Badge>
+                      </span>
                     </div>
                   </div>
                 ))
@@ -190,7 +219,7 @@ export default function DashboardEventos() {
       {showForm && (
         <Card>
           <CardHeader>
-            <CardTitle>Criar Novo Evento</CardTitle>
+            <CardTitle>➕ Criar Novo Evento</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={criarEvento} className="space-y-4">
@@ -270,35 +299,6 @@ export default function DashboardEventos() {
           </CardContent>
         </Card>
       )}
-
-      {/* Eventos do Mês Selecionado */}
-      <Card>
-        <CardHeader>
-          <CardTitle>
-            Eventos de {format(selectedDate, 'MMMM yyyy', { locale: ptBR })}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {eventosDoMes.length === 0 ? (
-            <p className="text-gray-500 text-center py-4">
-              Nenhum evento neste mês
-            </p>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {eventosDoMes.map((evento) => (
-                <div key={evento.id} className="border rounded-lg p-3">
-                  <h4 className="font-medium">{evento.titulo}</h4>
-                  <p className="text-sm text-gray-600 mt-1">{evento.descricao}</p>
-                  <div className="text-xs text-gray-500 mt-2">
-                    {format(parseISO(evento.data), 'dd/MM')} 
-                    {evento.hora && ` às ${evento.hora}`}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
     </div>
   )
 }
