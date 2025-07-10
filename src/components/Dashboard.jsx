@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { auth, database } from '../lib/supabase'
 import DashboardHome from './dashboard/DashboardHome'
 import DashboardEmail from './dashboard/DashboardEmail'
-import DashboardAdmin from './dashboard/DashboardAdmin'
+import DashboardEventos from './dashboard/DashboardEventos'
 import DashboardPerfil from './dashboard/DashboardPerfil'
 
 export default function Dashboard() {
@@ -98,24 +98,27 @@ export default function Dashboard() {
   }
 
   const abas = [
-    { id: 'dashboard', nome: '🏠 Dashboard', icon: '🏠' },
-    { id: 'email', nome: '📧 Email', icon: '📧' },
-    { id: 'admin', nome: '⚙️ Administrador', icon: '⚙️' },
-    { id: 'perfil', nome: '👤 Perfil', icon: '👤' }
+    { id: 'dashboard', nome: 'Dashboard', icon: '🏠' },
+    { id: 'eventos', nome: 'Eventos', icon: '📅' },
+    { id: 'email', nome: 'Email', icon: '📧' },
+    { id: 'admin', nome: 'Administrador', icon: '⚙️' },
+    { id: 'perfil', nome: 'Perfil', icon: '👤' }
   ]
 
   const renderConteudo = () => {
     switch (abaAtiva) {
       case 'dashboard':
-        return <DashboardHome usuario={usuario} />
+        return <DashboardHome />
+      case 'eventos':
+        return <DashboardEventos />
       case 'email':
-        return <DashboardEmail usuario={usuario} />
+        return <DashboardEmail />
       case 'admin':
-        return <DashboardAdmin usuario={usuario} />
+        return <DashboardAdmin />
       case 'perfil':
-        return <DashboardPerfil usuario={usuario} />
+        return <DashboardPerfil />
       default:
-        return <DashboardHome usuario={usuario} />
+        return <DashboardHome />
     }
   }
 
