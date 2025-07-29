@@ -9,6 +9,15 @@ import Dashboard from './components/Dashboard'
 import Cadastro from './components/Cadastro'
 import PaginaPublica from './components/PaginaPublica'
 
+import LoginCustomizado from './components/Login_Customizado_Final';
+import CadastroIntegrado from './components/Cadastro_Integrado_Final';
+import AreaMembros from './components/AreaMembros_Completa';
+
+// Rotas
+<Route path="/login" component={LoginCustomizado} />
+<Route path="/cadastro" component={CadastroIntegrado} />
+<Route path="/membros" component={AreaMembros} />
+
 function App() {
   const [session, setSession] = useState(null)
   const [loading, setLoading] = useState(true)
