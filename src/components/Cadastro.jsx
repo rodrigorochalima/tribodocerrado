@@ -1,221 +1,242 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card'
-import { Button } from '../ui/button'
-import { Input } from '../ui/input'
-import { Label } from '../ui/label'
-import { Alert, AlertDescription } from '../ui/alert'
-import { auth, salvarDadosUsuario } from '../lib/supabase'
+import React, { useState } from 'react';
+import { supabase } from '../lib/supabase';
 
-export default function Cadastro() {
+const CadastroIntegrado = () => {
   const [formData, setFormData] = useState({
-    nome: '',
+    nomeCompleto: '',
     email: '',
     telefone: '',
-    password: '',
-    confirmPassword: ''
-  })
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-  const [success, setSuccess] = useState('')
-  const navigate = useNavigate()
+    senha: '',
+    confirmarSenha: ''
+  });
+  const [loading, setLoading] = useState(false);
+  const [erro, setErro] = useState('');
+  const [sucesso, setSucesso] = useState(false);
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    })
-  }
+  // Função para hash simples da senha (em produção usar bcrypt)
+  const hashSenha = (senha) => {
+    return btoa(senha); // Base64 simples para teste
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-    setError('')
-    setSuccess('')
+    e.preventDefault();
+    setLoading(true);
+    setErro('');
 
     // Validações
-    if (formData.password !== formData.confirmPassword) {
-      setError('As senhas não coincidem')
-      setLoading(false)
-      return
+    if (formData.senha !== formData.confirmarSenha) {
+      setErro('As senhas não coincidem');
+      setLoading(false);
+      return;
     }
 
-    if (formData.password.length < 6) {
-      setError('A senha deve ter pelo menos 6 caracteres')
-      setLoading(false)
-      return
+    if (formData.senha.length < 6) {
+      setErro('A senha deve ter pelo menos 6 caracteres');
+      setLoading(false);
+      return;
     }
 
     try {
-      // 1. Criar usuário no Supabase Auth
-      const authResult = await auth.signUp({
-        email: formData.email,
-        password: formData.password,
-        options: {
-          data: {
-            nome: formData.nome,
-            telefone: formData.telefone
+      // Verificar se email já existe
+      const { data: emailExiste } = await supabase
+        .from('usuarios')
+        .select('email')
+        .eq('email', formData.email)
+        .single();
+
+      if (emailExiste) {
+        setErro('Este email já está cadastrado');
+        setLoading(false);
+        return;
+      }
+
+      // Hash da senha
+      const senhaHash = hashSenha(formData.senha);
+
+      // Inserir usuário na tabela customizada
+      const { data, error } = await supabase
+        .from('usuarios')
+        .insert([
+          {
+            nome_completo: formData.nomeCompleto,
+            nome: formData.nomeCompleto.split(' ')[0], // Primeiro nome
+            email: formData.email,
+            telefone: formData.telefone,
+            senha: senhaHash, // Adicionar campo senha na tabela
+            tipo: 'membro',
+            status: 'ativo',
+            ativo: true,
+            data_cadastro: new Date().toISOString(),
+            criado_em: new Date().toISOString(),
+            atualizado_em: new Date().toISOString()
           }
-        }
-      })
+        ])
+        .select();
 
-      if (!authResult.user) {
-        setError('Erro ao criar conta: ' + (authResult.error?.message || 'Erro desconhecido'))
-        setLoading(false)
-        return
+      if (error) {
+        console.error('Erro ao cadastrar:', error);
+        setErro('Erro ao salvar dados. Tente novamente.');
+        setLoading(false);
+        return;
       }
 
-      // 2. Salvar dados adicionais na tabela usuarios
-      const userData = {
-        nome: formData.nome,
-        email: formData.email,
-        telefone: formData.telefone,
-        tipo: 'membro',
-        status: 'ativo',
-        auth_id: authResult.user.id
-      }
+      // Sucesso - mostrar mensagem e redirecionar
+      setSucesso(true);
+      
+      // Aguardar 2 segundos e redirecionar para login
+      setTimeout(() => {
+        window.location.href = '/login';
+      }, 2000);
 
-      const dbResult = await salvarDadosUsuario(userData)
-
-      if (dbResult.success) {
-        setSuccess('Cadastro realizado com sucesso! Você pode fazer login agora.')
-        setTimeout(() => {
-          navigate('/login')
-        }, 2000)
-      } else {
-        setError('Erro ao salvar dados do usuário: ' + (dbResult.error || 'Erro desconhecido'))
-      }
-
-    } catch (err) {
-      setError('Erro inesperado. Tente novamente.')
-      console.error('Erro no cadastro:', err)
-    } finally {
-      setLoading(false)
+    } catch (error) {
+      console.error('Erro no cadastro:', error);
+      setErro('Erro interno. Tente novamente.');
     }
+
+    setLoading(false);
+  };
+
+  if (sucesso) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-green-400 via-blue-500 to-purple-600 flex items-center justify-center p-4">
+        <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md text-center">
+          <div className="text-6xl mb-4">🎉</div>
+          <h1 className="text-3xl font-bold text-green-600 mb-4">Cadastro Realizado!</h1>
+          <p className="text-gray-600 mb-6">
+            Sua conta foi criada com sucesso. Você será redirecionado para o login em instantes.
+          </p>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500 mx-auto"></div>
+        </div>
+      </div>
+    );
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-400 via-blue-500 to-purple-600 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold">📝 Cadastro</CardTitle>
-          <CardDescription>
-            Registre-se como novo membro do Tribo do Cerrado
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {error && (
-            <Alert className="border-red-200 bg-red-50">
-              <AlertDescription className="text-red-800">
-                {error}
-              </AlertDescription>
-            </Alert>
-          )}
-          
-          {success && (
-            <Alert className="border-green-200 bg-green-50">
-              <AlertDescription className="text-green-800">
-                {success}
-              </AlertDescription>
-            </Alert>
-          )}
+      <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-800 mb-2">📝 Cadastro</h1>
+          <p className="text-gray-600">Registre-se como novo membro do Tribo do Cerrado</p>
+        </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="nome">👤 Nome Completo</Label>
-              <Input
-                id="nome"
-                name="nome"
-                type="text"
-                placeholder="Seu nome completo"
-                value={formData.nome}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="email">📧 Email</Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="seu@email.com"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="telefone">📱 Telefone</Label>
-              <Input
-                id="telefone"
-                name="telefone"
-                type="tel"
-                placeholder="(62) 99999-9999"
-                value={formData.telefone}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="password">🔒 Senha</Label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                placeholder="Mínimo 6 caracteres"
-                value={formData.password}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="confirmPassword">🔒 Confirmar Senha</Label>
-              <Input
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                placeholder="Digite a senha novamente"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <Button 
-              type="submit" 
-              className="w-full bg-green-600 hover:bg-green-700"
-              disabled={loading}
-            >
-              {loading ? '⏳ Criando...' : '📝 CRIAR CONTA'}
-            </Button>
-          </form>
-
-          <div className="text-center space-y-2">
-            <Button
-              variant="outline"
-              onClick={() => navigate('/login')}
-              className="w-full"
-            >
-              🔐 Já tenho conta
-            </Button>
-            
-            <Button
-              variant="ghost"
-              onClick={() => navigate('/')}
-              className="w-full"
-            >
-              ⬅️ Voltar
-            </Button>
+        {erro && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            {erro}
           </div>
-        </CardContent>
-      </Card>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              👤 Nome Completo
+            </label>
+            <input
+              type="text"
+              name="nomeCompleto"
+              value={formData.nomeCompleto}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Seu nome completo"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              📧 Email
+            </label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="seu@email.com"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              📱 Telefone
+            </label>
+            <input
+              type="tel"
+              name="telefone"
+              value={formData.telefone}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="(62) 99999-9999"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              🔒 Senha
+            </label>
+            <input
+              type="password"
+              name="senha"
+              value={formData.senha}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Mínimo 6 caracteres"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              🔒 Confirmar Senha
+            </label>
+            <input
+              type="password"
+              name="confirmarSenha"
+              value={formData.confirmarSenha}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Digite a senha novamente"
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-3 px-4 rounded-lg hover:from-blue-600 hover:to-purple-700 transition duration-300 disabled:opacity-50"
+          >
+            {loading ? '⏳ Cadastrando...' : '📝 CRIAR CONTA'}
+          </button>
+        </form>
+
+        <div className="mt-6 text-center space-y-4">
+          <button
+            onClick={() => window.location.href = '/login'}
+            className="text-blue-600 hover:text-blue-800 font-medium"
+          >
+            🔐 Já tenho conta
+          </button>
+          
+          <br />
+          
+          <button
+            onClick={() => window.location.href = '/'}
+            className="text-gray-600 hover:text-gray-800"
+          >
+            ⬅️ Voltar
+          </button>
+        </div>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-
+export default CadastroIntegrado;
